@@ -1,880 +1,441 @@
 # 🎮 Ejercicios: Iniciando con Windows Forms
 
-## � Antes de Empezar - ¡Tu Kit de Supervivencia!
+## 📋 Menú de Ejercicios por Nivel
 
-### 📋 **Configuración Inicial del Entorno**
+### 🚀 **Ejercicios Cortos para Actividad en Clase**
 
-#### 1. **Creando tu primer proyecto Windows Forms**
-```
-Visual Studio 2022 → Crear nuevo proyecto → Windows Forms App (.NET)
-├── Nombre: MiPrimeraApp
-├── Ubicación: Carpeta de trabajo
-├── Framework: .NET 6.0 o superior
-└── ✅ Crear
-```
+- **[EC-01](#ec-01-hola-mundo-express)** - Hola Mundo Express
+- **[EC-02](#ec-02-contador-simple)** - Contador Simple  
+- **[EC-03](#ec-03-cambio-de-colores)** - Cambio de Colores
+- **[EC-04](#ec-04-validador-de-nombre)** - Validador de Nombre
+- **[EC-05](#ec-05-lista-interactiva)** - Lista Interactiva
 
-#### 2. **Configurando el Designer para máxima productividad**
-```csharp
-// Ve a: Herramientas → Opciones → Windows Forms Designer
-☑️ Mostrar cuadrícula (Grid)
-☑️ Ajustar a cuadrícula (Snap to Grid)
-☑️ Mostrar guías de alineación
-Grid Size: 8, 8 (recomendado)
-```
+### 📚 **Ejercicios para Practicar**
 
----
+#### 🔰 **Básico** *(20-30 minutos cada uno)*
+- **[EB-01](#eb-01-generador-de-saludos)** - Generador de Saludos Personalizado
+- **[EB-02](#eb-02-calculadora-simple)** - Calculadora de Operaciones Básicas
+- **[EB-03](#eb-03-conversor-de-temperatura)** - Conversor de Temperatura
 
-## 💡 Mejores Prácticas y Consejos de Oro
+#### 🚀 **Intermedio** *(45-60 minutos cada uno)*
+- **[EI-01](#ei-01-lista-de-tareas)** - Lista de Tareas (ToDo List)
+- **[EI-02](#ei-02-calculadora-avanzada)** - Calculadora con Historial
+- **[EI-03](#ei-03-administrador-de-contactos)** - Administrador de Contactos Simple
 
-### 🏷️ **1. Nomenclatura de Controles - ¡Nunca más "button1"!**
-
-#### **¿Por qué es importante?**
-Imagina tener 20 botones llamados `button1`, `button2`... ¡Es un caos! Una buena nomenclatura hace tu código **legible**, **mantenible** y **profesional**.
-
-#### **Convención recomendada:**
-```csharp
-// Prefijo + Descripción + Tipo (opcional)
-txtNombre        // TextBox para nombre
-btnCalcular      // Button para calcular
-lblResultado     // Label para resultado
-cboCategorias    // ComboBox para categorías
-lstProductos     // ListBox para productos
-pnlPrincipal     // Panel principal
-grpOpciones      // GroupBox para opciones
-```
-
-#### **⚡ Aplicar desde el primer momento:**
-```csharp
-// ❌ MAL - Nombres automáticos
-private void button1_Click(object sender, EventArgs e)
-{
-    textBox1.Text = textBox2.Text + textBox3.Text;
-}
-
-// ✅ BIEN - Nombres descriptivos
-private void btnCalcular_Click(object sender, EventArgs e)
-{
-    txtResultado.Text = txtNumero1.Text + txtNumero2.Text;
-}
-```
-
-### 🎨 **2. Diseño de Interfaz - Principios Fundamentales**
-
-#### **Regla de oro: "Si tu abuela no puede usarlo, rediseña"**
-
-#### **📐 Layout y Espaciado:**
-```
-┌─────────────────────────────────────┐
-│  🎯 Elementos bien alineados        │
-│                                     │
-│  Nombre:  [________________]        │
-│  Email:   [________________]        │
-│  Teléfono:[________________]        │
-│                                     │
-│           [Guardar] [Cancelar]      │
-│                                     │
-│  ✅ Espacios consistentes           │
-│  ✅ Controles alineados             │  
-│  ✅ Grupos lógicos separados        │
-└─────────────────────────────────────┘
-```
-
-#### **🎨 Colores y Tipografía:**
-```csharp
-// Paleta de colores consistente
-Color ColorPrimario = Color.FromArgb(41, 128, 185);    // Azul profesional
-Color ColorSecundario = Color.FromArgb(52, 152, 219);  // Azul claro
-Color ColorExito = Color.FromArgb(46, 125, 50);        // Verde
-Color ColorError = Color.FromArgb(183, 28, 28);        // Rojo
-Color ColorFondo = Color.FromArgb(245, 245, 245);      // Gris claro
-
-// Fuentes legibles
-this.Font = new Font("Segoe UI", 9F);                  // Fuente del sistema
-lblTitulo.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-```
-
-### ✅ **3. Validación de Datos - Tu Escudo Protector**
-
-#### **¿Cuándo validar?**
-- **Al perder el foco** (Leave event) - Validación inmediata
-- **Al hacer click en botón** - Validación final
-- **En tiempo real** (TextChanged) - Para casos específicos
-
-#### **Ejemplos prácticos:**
-```csharp
-// Validación de campo vacío
-private void txtNombre_Leave(object sender, EventArgs e)
-{
-    if (string.IsNullOrWhiteSpace(txtNombre.Text))
-    {
-        // Feedback visual inmediato
-        txtNombre.BackColor = Color.LightPink;
-        lblErrorNombre.Text = "⚠️ El nombre es requerido";
-        lblErrorNombre.Visible = true;
-    }
-    else
-    {
-        // Restaurar estado normal
-        txtNombre.BackColor = Color.White;
-        lblErrorNombre.Visible = false;
-    }
-}
-
-// Validación numérica en tiempo real
-private void txtPrecio_KeyPress(object sender, KeyPressEventArgs e)
-{
-    // Solo permite números, punto decimal y backspace
-    if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
-    {
-        e.Handled = true;
-    }
-}
-
-// Validación de email con regex
-private bool ValidarEmail(string email)
-{
-    try
-    {
-        var addr = new System.Net.Mail.MailAddress(email);
-        return addr.Address == email;
-    }
-    catch
-    {
-        return false;
-    }
-}
-```
-
-### 🛡️ **4. Manejo de Errores - Nunca Rompas la Experiencia**
-
-#### **El principio: "La aplicación nunca debe crashear"**
-
-```csharp
-// Patrón básico de manejo de errores
-private void btnCalcular_Click(object sender, EventArgs e)
-{
-    try
-    {
-        // Validar entrada
-        if (!ValidarDatos())
-        {
-            MostrarError("Por favor, revisa los datos ingresados");
-            return;
-        }
-
-        // Operación principal
-        double resultado = RealizarCalculo();
-        
-        // Mostrar resultado
-        txtResultado.Text = resultado.ToString("F2");
-        MostrarExito("Cálculo realizado correctamente");
-    }
-    catch (DivideByZeroException)
-    {
-        MostrarError("No se puede dividir por cero");
-    }
-    catch (OverflowException)
-    {
-        MostrarError("El número es demasiado grande");
-    }
-    catch (Exception ex)
-    {
-        MostrarError($"Error inesperado: {ex.Message}");
-        // Log del error para debugging
-        System.Diagnostics.Debug.WriteLine($"Error: {ex}");
-    }
-}
-
-// Método helper para mostrar errores
-private void MostrarError(string mensaje)
-{
-    MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-}
-```
-
-### 🎯 **5. Experiencia de Usuario (UX) - Haz que Amen tu App**
-
-#### **Principios fundamentales:**
-
-##### **🔄 Feedback Inmediato:**
-```csharp
-// Botón que cambia mientras procesa
-private async void btnProcesar_Click(object sender, EventArgs e)
-{
-    // Estado: Procesando
-    btnProcesar.Enabled = false;
-    btnProcesar.Text = "Procesando...";
-    this.Cursor = Cursors.WaitCursor;
-    
-    try
-    {
-        // Operación larga
-        await Task.Delay(2000); // Simula proceso
-        
-        // Estado: Completado
-        btnProcesar.Text = "✅ Completado";
-        await Task.Delay(1000);
-    }
-    finally
-    {
-        // Estado: Normal
-        btnProcesar.Enabled = true;
-        btnProcesar.Text = "Procesar";
-        this.Cursor = Cursors.Default;
-    }
-}
-```
-
-##### **⌨️ Atajos de Teclado:**
-```csharp
-// En el constructor o Load del formulario
-private void ConfigurarAtajos()
-{
-    // Ctrl+N para nuevo
-    this.KeyPreview = true;
-    this.KeyDown += Form_KeyDown;
-}
-
-private void Form_KeyDown(object sender, KeyEventArgs e)
-{
-    if (e.Control && e.KeyCode == Keys.N)
-    {
-        btnNuevo_Click(null, null);
-    }
-    else if (e.Control && e.KeyCode == Keys.S)
-    {
-        btnGuardar_Click(null, null);
-    }
-}
-```
-
-##### **📱 Responsividad Visual:**
-```csharp
-// Anclar controles para diferentes tamaños
-txtDescripcion.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-btnOK.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-
-// O usar TableLayoutPanel para layouts complejos
-```
+#### 🏆 **Avanzado** *(90+ minutos cada uno)*
+- **[EA-01](#ea-01-juego-de-memoria)** - Juego de Memory con Timer
+- **[EA-02](#ea-02-editor-de-texto)** - Editor de Texto con Menús
+- **[EA-03](#ea-03-sistema-pos)** - Sistema POS (Punto de Venta)
 
 ---
 
-## 🛠️ Herramientas y Snippets Útiles
+# 🚀 Ejercicios Cortos para Actividad en Clase
 
-### **📝 Snippets de Código Esenciales:**
+## EC-01: Hola Mundo Express
+**⏰ Tiempo:** 10 minutos | **🎯 Nivel:** Principiante
 
-#### **Validación rápida de TextBox:**
-```csharp
-private bool ValidarCampo(TextBox txt, string nombreCampo)
-{
-    if (string.IsNullOrWhiteSpace(txt.Text))
-    {
-        MessageBox.Show($"El campo {nombreCampo} es requerido", 
-                       "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        txt.Focus();
-        return false;
-    }
-    return true;
-}
-```
+### Objetivo
+Crear tu primera ventana con un botón que muestre un mensaje personalizado.
 
-#### **Limpiar formulario:**
-```csharp
-private void LimpiarFormulario()
-{
-    foreach (Control control in this.Controls)
-    {
-        if (control is TextBox txt)
-            txt.Clear();
-        else if (control is ComboBox cbo)
-            cbo.SelectedIndex = -1;
-        else if (control is CheckBox chk)
-            chk.Checked = false;
-    }
-}
-```
+### Lo que necesitas
+- 1 Label con texto "¡Presiona el botón!"
+- 1 Button con texto "Saludar"
 
-#### **Confirmar acción destructiva:**
-```csharp
-private bool ConfirmarAccion(string mensaje)
-{
-    var resultado = MessageBox.Show(mensaje, "Confirmar", 
-                                   MessageBoxButtons.YesNo, 
-                                   MessageBoxIcon.Question);
-    return resultado == DialogResult.Yes;
-}
-```
-
-### **🔧 Configuraciones Útiles:**
-
-#### **Formulario profesional desde el inicio:**
-```csharp
-public partial class Form1 : Form
-{
-    public Form1()
-    {
-        InitializeComponent();
-        ConfigurarFormulario();
-    }
-    
-    private void ConfigurarFormulario()
-    {
-        // Centrar en pantalla
-        this.StartPosition = FormStartPosition.CenterScreen;
-        
-        // Tamaño fijo (opcional)
-        this.FormBorderStyle = FormBorderStyle.FixedSingle;
-        this.MaximizeBox = false;
-        
-        // Icono personalizado (opcional)
-        // this.Icon = new Icon("mi_icono.ico");
-        
-        // Focus inicial
-        this.ActiveControl = txtPrimerCampo;
-        
-        // Enter actúa como Tab
-        this.KeyPreview = true;
-    }
-}
-```
+### Resultado esperado
+Al presionar el botón → aparece MessageBox con "¡Hola desde Windows Forms!"
 
 ---
 
-## ⏰ Cuándo y Cómo Aplicar Cada Consejo
+## EC-02: Contador Simple  
+**⏰ Tiempo:** 15 minutos | **🎯 Nivel:** Principiante
 
-### **🚦 Fase 1: Planificación (5-10 minutos)**
-```
-├── 📝 Boceto en papel de la interfaz
-├── 🏷️ Lista de controles con sus nombres
-├── 🔄 Definir flujo de usuario principal
-└── ✅ Identificar validaciones necesarias
-```
+### Objetivo
+Botones para sumar y restar que muestren el resultado en tiempo real.
 
-### **🚦 Fase 2: Diseño Visual (15-20 minutos)**
-```
-├── 🎨 Arrastrar controles del Toolbox
-├── 🏷️ Renombrar TODOS los controles importantes
-├── 📐 Ajustar alineación y espaciado
-└── 🎯 Configurar propiedades básicas
-```
+### Lo que necesitas
+- 1 Label grande para mostrar el número (empezar en 0)
+- 1 Button con texto "+" 
+- 1 Button con texto "-"
 
-### **🚦 Fase 3: Programación (Tiempo variable)**
-```
-├── 🛡️ Agregar validaciones básicas
-├── ⚡ Implementar funcionalidad principal
-├── 🚨 Agregar manejo de errores
-└── 🎨 Pulir UX (feedback, atajos, etc.)
-```
-
-### **🚦 Fase 4: Testing (10-15 minutos)**
-```
-├── 🧪 Probar casos normales
-├── 💥 Probar casos extremos
-├── 📱 Probar en diferentes tamaños
-└── 👤 Probar facilidad de uso
-```
+### Funcionalidad
+- Botón "+" aumenta el número en 1
+- Botón "-" disminuye el número en 1
+- El número se actualiza inmediatamente
 
 ---
 
-## �📋 Instrucciones Generales
+## EC-03: Cambio de Colores
+**⏰ Tiempo:** 12 minutos | **🎯 Nivel:** Principiante  
 
-1. **Proyecto tipo**: Windows Forms App (.NET) en Visual Studio 2022
-2. **Nomenclatura**: Usa nombres descriptivos para todos los controles
-3. **Validación**: Siempre valida la entrada del usuario
-4. **UX**: Piensa en la experiencia del usuario final
-5. **Designer**: Usa el diseñador visual para crear las interfaces
+### Objetivo
+Botones que cambien el color de fondo del formulario.
 
----
+### Lo que necesitas
+- 3 Buttons: "Rojo", "Verde", "Azul"
+- 1 Button: "Normal" (para volver al color original)
 
-## 🔰 Ejercicios Básicos - ¡Tus Primeras Apps!
-
-### **Ejercicio 1: Hola Mundo Personalizado** 
-**Dificultad:** ⭐  
-**Tiempo estimado:** 20 minutos
-
-Crea tu primera aplicación Windows Forms que permita al usuario ingresar su nombre y recibir un saludo personalizado.
-
-#### 📋 **Requisitos:**
-- **TextBox** para ingresar el nombre
-- **Label** con instrucciones claras
-- **Button** para generar el saludo
-- **Label** para mostrar el resultado
-- Validar que el nombre no esté vacío
-
-#### 🎨 **Diseño sugerido:**
-```
-┌─────────────────────────────────────┐
-│  👋 Generador de Saludos             │
-├─────────────────────────────────────┤
-│                                     │
-│  ¿Cuál es tu nombre?                │
-│  ┌─────────────────────────────────┐ │
-│  │ [Escribe aquí...]               │ │
-│  └─────────────────────────────────┘ │
-│                                     │
-│           [ ¡Saludarme! ]           │
-│                                     │
-│  ╔═══════════════════════════════╗ │
-│  ║ ¡Hola [Nombre]!               ║ │
-│  ║ ¡Bienvenido/a a Windows Forms!║ │
-│  ╚═══════════════════════════════╝ │
-└─────────────────────────────────────┘
-```
-
-#### ✅ **Características adicionales:**
-- Saludo diferente según la hora del día
-- Limpiar campos con un botón adicional
-- Mostrar la fecha actual en el saludo
+### Funcionalidad
+Cada botón cambia el color de fondo del formulario al color correspondiente.
 
 ---
 
-### **Ejercicio 2: Contador Interactivo**
-**Dificultad:** ⭐  
-**Tiempo estimado:** 25 minutos
+## EC-04: Validador de Nombre
+**⏰ Tiempo:** 15 minutos | **🎯 Nivel:** Principiante
 
-Desarrolla un contador que permita incrementar, decrementar y resetear un número.
+### Objetivo  
+TextBox que valide si el texto ingresado es un nombre válido.
 
-#### 📋 **Requisitos:**
-- **Label** grande para mostrar el número actual
-- **Button** para incrementar (+1)
-- **Button** para decrementar (-1) 
-- **Button** para resetear a 0
-- **Label** que muestre si el número es par o impar
+### Lo que necesitas
+- 1 Label: "Ingresa tu nombre:"
+- 1 TextBox para escribir
+- 1 Label para mostrar resultado (inicialmente vacío)
 
-#### 🎨 **Diseño sugerido:**
-```
-┌─────────────────────────────────────┐
-│  🔢 Contador Mágico                  │
-├─────────────────────────────────────┤
-│                                     │
-│            📊 0 📊                  │
-│         (Número Par)                │
-│                                     │
-│  [ - ]     [ Reset ]     [ + ]      │
-│                                     │
-│  Historial: 0 → 1 → 0               │
-└─────────────────────────────────────┘
-```
-
-#### ✅ **Características adicionales:**
-- Límites mínimo (-10) y máximo (+10)
-- Cambiar color del número según su valor
-- Historial de los últimos 5 cambios
-- Sonido al llegar a múltiplos de 5
+### Funcionalidad
+- Si el TextBox está vacío → "⚠️ Nombre requerido"
+- Si tiene texto → "✅ Nombre válido: [texto]"
+- La validación ocurre al escribir (evento TextChanged)
 
 ---
 
-### **Ejercicio 3: Generador de Colores Aleatorios**
-**Dificultad:** ⭐⭐  
-**Tiempo estimado:** 30 minutos
+## EC-05: Lista Interactiva
+**⏰ Tiempo:** 15 minutos | **🎯 Nivel:** Principiante
 
-Crea una aplicación que genere colores aleatorios y permita copiar los códigos de color.
+### Objetivo
+Agregar y quitar elementos de una lista con botones.
 
-#### 📋 **Requisitos:**
-- **Panel** grande que muestre el color actual
-- **Button** para generar color aleatorio
-- **Labels** para mostrar códigos RGB y Hexadecimal
-- **Button** para copiar código al clipboard
-- **ListBox** con historial de colores generados
+### Lo que necesitas
+- 1 TextBox para escribir nombres de frutas
+- 1 Button "Agregar"
+- 1 ListBox para mostrar las frutas
+- 1 Button "Quitar Seleccionado"
 
-#### 🎨 **Funcionalidades:**
-- Generar colores RGB aleatorios
-- Mostrar vista previa del color
-- Copiar código hex al portapapeles
-- Historial de últimos 10 colores
-- Información del color (claro/oscuro)
+### Funcionalidad
+- Agregar: toma el texto del TextBox y lo agrega a la ListBox
+- Quitar: elimina el elemento seleccionado de la ListBox
 
 ---
 
-## 🚀 Ejercicios Intermedios - ¡Subiendo el Nivel!
+# 📚 Ejercicios para Practicar
 
-### **Ejercicio 4: Calculadora Básica**
-**Dificultad:** ⭐⭐  
-**Tiempo estimado:** 45 minutos
+# 🔰 Básico
 
-Desarrolla una calculadora con operaciones básicas y una interfaz intuitiva.
+## EB-01: Generador de Saludos Personalizado
+**⏰ Tiempo:** 25 minutos | **🎯 Nivel:** Básico
 
-#### 📋 **Requisitos:**
-- **TextBox** para mostrar números y resultados
-- **Buttons** para dígitos (0-9)
-- **Buttons** para operaciones (+, -, ×, ÷)
-- **Button** para igual (=) y limpiar (C)
-- Manejo de errores (división por cero)
+### Descripción
+Aplicación que genere saludos personalizados según la hora del día y el nombre del usuario.
 
-#### 🎨 **Layout sugerido:**
-```
-┌─────────────────────────────────────┐
-│  🧮 Mi Calculadora                   │
-├─────────────────────────────────────┤
-│  ┌─────────────────────────────────┐ │
-│  │              0              │ │ │
-│  └─────────────────────────────────┘ │
-│                                     │
-│  [ C ] [ ± ] [ % ] [ ÷ ]           │
-│  [ 7 ] [ 8 ] [ 9 ] [ × ]           │
-│  [ 4 ] [ 5 ] [ 6 ] [ - ]           │
-│  [ 1 ] [ 2 ] [ 3 ] [ + ]           │
-│  [   0   ] [ . ] [ = ]             │
-└─────────────────────────────────────┘
-```
+### Controles necesarios
+- **Label:** "¿Cuál es tu nombre?"
+- **TextBox:** Para ingresar nombre
+- **Button:** "¡Saludarme!"
+- **Label:** Para mostrar resultado (Font más grande)
+- **Button:** "Limpiar"
 
-#### ✅ **Características adicionales:**
-- Historial de operaciones
-- Memoria (M+, M-, MR, MC)
-- Operaciones científicas básicas
-- Modo oscuro/claro
+### Funcionalidades
+1. Validar que el nombre no esté vacío
+2. Generar saludo según la hora:
+   - 6-12: "¡Buenos días, [nombre]!"
+   - 12-18: "¡Buenas tardes, [nombre]!" 
+   - 18-24: "¡Buenas noches, [nombre]!"
+   - 0-6: "¡Muy buenas madrugadas, [nombre]!"
+3. Mostrar también la fecha actual
+4. Botón limpiar que borre todo
+
+### Bonus
+- Cambiar color del saludo según la hora
+- Agregar emojis según el momento del día
 
 ---
 
-### **Ejercicio 5: Lista de Tareas (ToDo List)**
-**Dificultad:** ⭐⭐  
-**Tiempo estimado:** 50 minutos
+## EB-02: Calculadora Simple  
+**⏰ Tiempo:** 30 minutos | **🎯 Nivel:** Básico
 
-Crea una aplicación completa para gestionar tareas pendientes.
+### Descripción
+Calculadora básica con las 4 operaciones fundamentales.
 
-#### 📋 **Requisitos:**
-- **TextBox** para nueva tarea
-- **Button** para agregar tarea
-- **ListBox** o **CheckedListBox** para mostrar tareas
-- **Buttons** para marcar como completada y eliminar
-- **Labels** para estadísticas (total, pendientes, completadas)
+### Controles necesarios
+- **2 TextBox:** Para números
+- **4 Buttons:** +, -, ×, ÷
+- **Label:** Para mostrar resultado
+- **Button:** Limpiar
+- **Labels:** Para identificar "Número 1", "Número 2", "Resultado"
 
-#### 🎨 **Funcionalidades:**
-- Agregar nuevas tareas
-- Marcar tareas como completadas
-- Eliminar tareas
-- Contador de tareas pendientes/completadas
-- Limpiar todas las tareas completadas
+### Funcionalidades
+1. Validar que ambos números sean válidos
+2. Realizar la operación seleccionada
+3. Mostrar resultado con 2 decimales
+4. Manejar división por cero
+5. Limpiar todos los campos
 
-#### 🎯 **Interfaz sugerida:**
-```
-┌─────────────────────────────────────┐
-│  ✅ Mis Tareas                       │
-├─────────────────────────────────────┤
-│  Nueva tarea:                       │
-│  ┌─────────────────────────────────┐ │
-│  │ [Escribe tu tarea...]           │ │
-│  └─────────────────────────────────┘ │
-│                [ Agregar ]          │
-│                                     │
-│  📋 Tareas:                         │
-│  ┌─────────────────────────────────┐ │
-│  │ ☐ Estudiar Windows Forms        │ │
-│  │ ☑ Hacer ejercicios             │ │
-│  │ ☐ Crear mi primera app         │ │
-│  └─────────────────────────────────┘ │
-│                                     │
-│  [ Completar ] [ Eliminar ]         │
-│                                     │
-│  📊 Total: 3 | Pendientes: 2 | ✅: 1 │
-└─────────────────────────────────────┘
-```
+### Validaciones requeridas
+- Solo permitir números en los TextBox
+- Mostrar mensajes de error claros
+- No permitir operaciones con campos vacíos
 
 ---
 
-### **Ejercicio 6: Conversor de Unidades Avanzado**
-**Dificultad:** ⭐⭐⭐  
-**Tiempo estimado:** 60 minutos
+## EB-03: Conversor de Temperatura
+**⏰ Tiempo:** 25 minutos | **🎯 Nivel:** Básico
 
-Desarrolla un conversor completo con múltiples categorías de unidades.
+### Descripción
+Convertir temperaturas entre Celsius, Fahrenheit y Kelvin.
 
-#### 📋 **Requisitos:**
-- **ComboBox** para seleccionar categoría (Longitud, Peso, Temperatura)
-- **ComboBoxes** para unidad origen y destino
-- **TextBox** para valor a convertir
-- **TextBox** readonly para resultado
-- **Button** para intercambiar unidades
-- Validación numérica completa
+### Controles necesarios
+- **TextBox:** Temperatura a convertir
+- **3 RadioButtons:** Celsius, Fahrenheit, Kelvin (origen)
+- **3 CheckBoxes:** Para seleccionar conversiones destino
+- **Button:** "Convertir"
+- **ListBox:** Para mostrar todos los resultados
+- **Button:** "Limpiar"
 
-#### 🎨 **Categorías a implementar:**
-
-**Longitud:**
-- Metro, Kilómetro, Centímetro, Milímetro
-- Pie, Pulgada, Yarda, Milla
-
-**Peso:**
-- Kilogramo, Gramo, Libra, Onza
-
-**Temperatura:**
-- Celsius, Fahrenheit, Kelvin
-
-#### ✅ **Características adicionales:**
-- Conversión automática mientras escribe
-- Historial de conversiones
-- Copiar resultado al clipboard
-- Intercambiar unidades con un click
+### Funcionalidades
+1. Seleccionar escala de origen (solo una)
+2. Seleccionar escalas de destino (una o más)
+3. Mostrar todas las conversiones en la ListBox
+4. Fórmulas:
+   - C a F: (C × 9/5) + 32
+   - C a K: C + 273.15
+   - F a C: (F - 32) × 5/9
+   - Y las combinaciones restantes
 
 ---
 
-## 🏆 Ejercicios Avanzados - ¡Para Expertos!
+# 🚀 Intermedio
 
-### **Ejercicio 7: Juego de Memoria (Memory Game)**
-**Dificultad:** ⭐⭐⭐  
-**Tiempo estimado:** 90 minutos
+## EI-01: Lista de Tareas (ToDo List)
+**⏰ Tiempo:** 50 minutos | **🎯 Nivel:** Intermedio
 
-Crea un juego de memoria con cartas que se voltean para encontrar parejas.
+### Descripción
+Aplicación completa para gestionar tareas pendientes con estadísticas.
 
-#### 📋 **Requisitos:**
-- Grilla de **Buttons** representando cartas (4x4 = 16 cartas)
-- Sistema de puntuación y intentos
-- Cronómetro para medir tiempo
-- **Labels** para mostrar estadísticas
-- Diferentes niveles de dificultad
+### Controles necesarios
+- **TextBox:** Nueva tarea
+- **Button:** "Agregar Tarea"
+- **CheckedListBox:** Lista de tareas
+- **3 Buttons:** "Completar", "Eliminar", "Limpiar Completadas"
+- **3 Labels:** Total, Pendientes, Completadas (con contadores)
+- **ProgressBar:** Progreso visual de completitud
 
-#### 🎮 **Mecánicas del juego:**
-- Al inicio, todas las cartas están boca abajo
-- Click en carta la voltea y muestra símbolo
-- Si dos cartas coinciden, quedan volteadas
-- Si no coinciden, se voltean automáticamente
-- Ganar cuando todas las parejas están encontradas
+### Funcionalidades
+1. Agregar nuevas tareas (no vacías, no duplicadas)
+2. Marcar tareas como completadas
+3. Eliminar tareas seleccionadas
+4. Limpiar solo las completadas
+5. Actualizar contadores automáticamente
+6. Barra de progreso que muestre % de completitud
 
-#### 🎨 **Símbolos sugeridos:**
-🎯 🎮 🎲 🎪 🎨 🎭 🎸 🎺
-
-#### ✅ **Características adicionales:**
-- Diferentes tamaños de grilla (3x4, 4x4, 5x4)
-- Efectos sonoros para match/no match
-- Ranking de mejores tiempos
-- Animaciones simples para voltear cartas
+### Características adicionales
+- Confirmar eliminación con MessageBox
+- Cambiar color de tareas completadas
+- Atajos de teclado (Enter para agregar)
 
 ---
 
-### **Ejercicio 8: Editor de Texto Simple**
-**Dificultad:** ⭐⭐⭐  
-**Tiempo estimado:** 75 minutos
+## EI-02: Calculadora Avanzada
+**⏰ Tiempo:** 60 minutos | **🎯 Nivel:** Intermedio
 
-Desarrolla un editor de texto básico con funciones de archivo y formato.
+### Descripción
+Calculadora con historial de operaciones y funciones adicionales.
 
-#### 📋 **Requisitos:**
-- **TextBox** multilínea grande para editar texto
-- **MenuStrip** con menús Archivo y Formato
-- **StatusStrip** para mostrar información del documento
-- Funciones: Nuevo, Abrir, Guardar, Guardar Como
-- Formato: Fuente, Tamaño, Color, Negrita, Cursiva
+### Controles necesarios
+- **TextBox:** Display principal
+- **16 Buttons:** Dígitos 0-9, operaciones +,-,×,÷, =, C
+- **ListBox:** Historial de operaciones
+- **4 Buttons:** M+, M-, MR, MC (memoria)
+- **Label:** Indicador de memoria
+- **Button:** "Limpiar Historial"
 
-#### 🎨 **Estructura de menús:**
-```
-Archivo
-├── Nuevo         (Ctrl+N)
-├── Abrir         (Ctrl+O)  
-├── Guardar       (Ctrl+S)
-├── Guardar Como  (Ctrl+Shift+S)
-├── ─────────────
-└── Salir         (Alt+F4)
+### Funcionalidades
+1. Calculadora completamente funcional
+2. Historial de todas las operaciones
+3. Sistema de memoria (guardar, sumar, restar, recuperar)
+4. Soporte para operaciones en cadena
+5. Manejo de errores elegante
 
-Formato
-├── Fuente...
-├── Color...
-├── ─────────────
-├── Negrita       (Ctrl+B)
-├── Cursiva       (Ctrl+I)
-└── Subrayado     (Ctrl+U)
+### Características técnicas
+- Validar entrada numérica
+- Manejar operadores consecutivos
+- Precisión decimal adecuada
+- Interface similar a calculadora de Windows
 
-Ver
-├── Barra de estado
-└── Zoom
-    ├── Acercar   (Ctrl++)
-    ├── Alejar    (Ctrl+-)
-    └── Normal    (Ctrl+0)
-```
+---
 
-#### ✅ **Características adicionales:**
-- Contador de caracteres y palabras en tiempo real
+## EI-03: Administrador de Contactos Simple
+**⏰ Tiempo:** 55 minutos | **🎯 Nivel:** Intermedio
+
+### Descripción
+Sistema básico para gestionar información de contactos personales.
+
+### Controles necesarios
+- **4 TextBoxes:** Nombre, Apellido, Teléfono, Email
+- **1 TextBox multilínea:** Notas
+- **DataGridView:** Lista de contactos
+- **4 Buttons:** Agregar, Editar, Eliminar, Limpiar
+- **TextBox:** Buscador
+- **Label:** Contador de contactos
+
+### Funcionalidades
+1. Agregar contactos con validación completa
+2. Editar contacto seleccionado
+3. Eliminar con confirmación
+4. Búsqueda en tiempo real (nombre o apellido)
+5. Mostrar contactos en grilla organizada
+6. Validar formato de email y teléfono
+
+### Validaciones requeridas
+- Nombre y apellido obligatorios
+- Email con formato válido
+- Teléfono solo números y guiones
+- No duplicar contactos (mismo nombre y apellido)
+
+---
+
+# 🏆 Avanzado
+
+## EA-01: Juego de Memory con Timer
+**⏰ Tiempo:** 90 minutos | **🎯 Nivel:** Avanzado
+
+### Descripción
+Juego completo de memoria con cartas, puntuación y niveles de dificultad.
+
+### Controles necesarios
+- **16 Buttons:** Cartas (4x4)
+- **Timer:** Cronómetro
+- **Labels:** Tiempo, Intentos, Parejas encontradas
+- **ComboBox:** Nivel de dificultad
+- **2 Buttons:** Nuevo Juego, Reiniciar
+- **ProgressBar:** Progreso del juego
+
+### Funcionalidades
+1. Grilla de cartas con símbolos ocultos
+2. Cronómetro que cuenta tiempo transcurrido
+3. Sistema de puntuación (menos tiempo = más puntos)
+4. Diferentes niveles (3x4, 4x4, 5x4)
+5. Animaciones básicas (voltear cartas)
+6. Tabla de mejores tiempos
+
+### Mecánica del juego
+- Click revela carta por 1 segundo
+- Dos cartas iguales = pareja encontrada
+- Dos cartas diferentes = se ocultan automáticamente
+- Ganar = encontrar todas las parejas
+- Ranking por tiempo y nivel
+
+---
+
+## EA-02: Editor de Texto con Menús
+**⏰ Tiempo:** 85 minutos | **🎯 Nivel:** Avanzado
+
+### Descripción
+Editor de texto básico con funcionalidades de archivo y formato.
+
+### Controles necesarios
+- **TextBox multilínea:** Área de edición principal
+- **MenuStrip:** Menús Archivo, Edición, Formato, Ver
+- **StatusStrip:** Barra de estado
+- **FontDialog, ColorDialog, OpenFileDialog, SaveFileDialog**
+
+### Funcionalidades - Menú Archivo
+1. Nuevo (Ctrl+N)
+2. Abrir (Ctrl+O) 
+3. Guardar (Ctrl+S)
+4. Guardar Como (Ctrl+Shift+S)
+5. Salir (Alt+F4)
+
+### Funcionalidades - Formato
+1. Cambiar fuente
+2. Cambiar color de texto
+3. Negrita, Cursiva, Subrayado
+4. Alineación (Izquierda, Centro, Derecha)
+
+### Características adicionales
+- Detectar cambios no guardados
+- Contador de palabras y caracteres en tiempo real
 - Buscar y reemplazar texto
-- Modo oscuro/claro
 - Zoom del texto
-- Verificar cambios no guardados al cerrar
+- Configurar margins y wrap de línea
 
 ---
 
-### **Ejercicio 9: Sistema de Gestión de Contactos**
-**Dificultad:** ⭐⭐⭐⭐  
-**Tiempo estimado:** 120 minutos
+## EA-03: Sistema POS (Punto de Venta)
+**⏰ Tiempo:** 120 minutos | **🎯 Nivel:** Avanzado
 
-Crea una aplicación completa para gestionar una libreta de contactos.
+### Descripción
+Sistema completo de punto de venta para pequeña tienda con inventario básico.
 
-#### 📋 **Requisitos principales:**
-- **DataGridView** para mostrar lista de contactos
-- **Forms** secundarios para agregar/editar contactos
-- Campos: Nombre, Apellido, Teléfono, Email, Dirección, Notas
-- Funciones: Agregar, Editar, Eliminar, Buscar
+### Controles necesarios
+- **DataGridView:** Productos disponibles
+- **DataGridView:** Items de venta actual
+- **TextBox:** Búsqueda de productos
+- **Labels:** Subtotal, IVA, Total
+- **ComboBox:** Forma de pago
+- **NumericUpDown:** Cantidad
+- **Multiple Buttons:** Agregar, Quitar, Procesar Venta, Nueva Venta
+
+### Módulos requeridos
+
+#### 1. Gestión de Productos
+- Lista predefinida de productos (código, nombre, precio, stock)
+- Búsqueda rápida por código o nombre
+- Actualización automática de stock
+
+#### 2. Proceso de Venta
+- Agregar productos al ticket actual
+- Modificar cantidades
+- Calcular automáticamente subtotal, IVA (21%), total
+- Validar stock disponible
+
+#### 3. Finalización
+- Procesar venta completa
+- Actualizar inventario
+- Mostrar cambio si es efectivo
+- Limpiar para nueva venta
+
+### Funcionalidades técnicas
 - Validación completa de datos
-
-#### 🗂️ **Estructura de datos:**
-```csharp
-public class Contacto
-{
-    public string Nombre { get; set; }
-    public string Apellido { get; set; }
-    public string Telefono { get; set; }
-    public string Email { get; set; }
-    public string Direccion { get; set; }
-    public string Notas { get; set; }
-    public DateTime FechaCreacion { get; set; }
-}
-```
-
-#### 🎨 **Diseño de interfaz:**
-
-**Formulario Principal:**
-```
-┌─────────────────────────────────────────────────────────┐
-│  📇 Gestor de Contactos                [_] [□] [×]      │
-├─────────────────────────────────────────────────────────┤
-│  🔍 [Buscar contacto...]          [ Nuevo ] [ Editar ] │
-│                                                         │
-│  ┌─────────────────────────────────────────────────────┐ │
-│  │ Nombre    │ Apellido   │ Teléfono    │ Email       │ │
-│  ├─────────────────────────────────────────────────────┤ │
-│  │ Juan      │ Pérez      │ 123-456-789 │ j@email.com │ │
-│  │ María     │ González   │ 987-654-321 │ m@email.com │ │
-│  │ ...       │ ...        │ ...         │ ...         │ │
-│  └─────────────────────────────────────────────────────┘ │
-│                                                         │
-│  [ Eliminar ] [ Exportar ] [ Importar ]  Total: 25     │
-└─────────────────────────────────────────────────────────┘
-```
-
-#### ✅ **Características adicionales:**
-- Exportar/Importar desde CSV
-- Fotos de contactos
-- Categorías (Familia, Trabajo, Amigos)
-- Historial de comunicación
-- Backup automático
-
----
-
-## 🎯 Proyecto Final - ¡Tu Obra Maestra!
-
-### **Ejercicio 10: Sistema POS (Point of Sale) Básico**
-**Dificultad:** ⭐⭐⭐⭐⭐  
-**Tiempo estimado:** 180 minutos (3 horas)
-
-Desarrolla un sistema de punto de venta completo para una pequeña tienda.
-
-#### 📋 **Módulos requeridos:**
-
-**1. Gestión de Productos:**
-- Alta, baja, modificación de productos
-- Código, nombre, precio, stock, categoría
-- Búsqueda y filtrado
-
-**2. Ventas:**
-- Interfaz de caja registradora
-- Escaneo/búsqueda de productos
-- Cálculo de totales e impuestos
-- Múltiples formas de pago
-
-**3. Reportes:**
-- Ventas del día
-- Productos más vendidos
-- Inventario bajo stock
-- Ingresos por período
-
-#### 🏪 **Diseño sugerido:**
-
-**Ventana Principal - Venta:**
-```
-┌───────────────────────────────────────────────────────────────┐
-│  🏪 Sistema POS - Tienda ABC    [Productos] [Reportes] [Config]│
-├───────────────────────────────────────────────────────────────┤
-│                                                               │
-│  🔍 [Buscar producto...]                    Cliente: General  │
-│                                                               │
-│  ┌─── Productos Disponibles ─────┐  ┌─── Venta Actual ─────┐ │
-│  │ [001] Coca Cola - $2.50      │  │ Coca Cola      $2.50 │ │
-│  │ [002] Agua      - $1.00      │  │ Pan Integral   $3.20 │ │
-│  │ [003] Pan Integral - $3.20   │  │ Leche          $4.50 │ │
-│  │ ...                          │  │ ──────────────────── │ │
-│  │                              │  │ Subtotal:    $10.20 │ │
-│  │ [Agregar Producto]           │  │ IVA (21%):    $2.14 │ │
-│  └──────────────────────────────┘  │ TOTAL:       $12.34 │ │
-│                                    │                      │ │
-│  💰 Pago: [Efectivo ▼] $20.00      │ [ - ] [Cantidad] [ X ] │
-│     Cambio: $7.66                  └──────────────────────┘ │
-│                                                               │
-│  [Cancelar Venta]  [Procesar Venta]  [Imprimir Ticket]       │
-│                                                               │
-│  🕐 15:30:45  👤 Usuario: Admin  📊 Ventas hoy: $458.30      │
-└───────────────────────────────────────────────────────────────┘
-```
-
-#### 🗃️ **Estructura de datos:**
-```csharp
-public class Producto
-{
-    public string Codigo { get; set; }
-    public string Nombre { get; set; }
-    public decimal Precio { get; set; }
-    public int Stock { get; set; }
-    public string Categoria { get; set; }
-}
-
-public class ItemVenta
-{
-    public Producto Producto { get; set; }
-    public int Cantidad { get; set; }
-    public decimal Subtotal => Producto.Precio * Cantidad;
-}
-
-public class Venta
-{
-    public int NumeroVenta { get; set; }
-    public DateTime Fecha { get; set; }
-    public List<ItemVenta> Items { get; set; }
-    public decimal Total { get; set; }
-    public string FormaPago { get; set; }
-}
-```
-
-#### ✅ **Características mínimas:**
-- Gestión completa de productos
-- Proceso de venta con múltiples items
-- Cálculo automático de totales
-- Impresión de tickets
-- Reportes básicos
-
-#### 🌟 **Características avanzadas:**
-- Código de barras simulado
-- Descuentos y promociones
-- Múltiples formas de pago
-- Base de datos simple (archivos)
-- Sistema de usuarios
+- Manejo de stock insuficiente
+- Cálculos precisos con decimales
+- Interface intuitiva tipo caja registradora
 
 ---
 
 ## 📊 Criterios de Evaluación
 
-### **Funcionalidad (35%)**
-- [ ] Todas las características implementadas
-- [ ] Sin errores durante uso normal
-- [ ] Validaciones apropiadas
-- [ ] Flujo de trabajo intuitivo
+### **Funcionalidad (40%)**
+- ✅ Todas las características implementadas correctamente
+- ✅ Sin errores durante uso normal
+- ✅ Validaciones apropiadas funcionando
+- ✅ Flujo de trabajo intuitivo
 
-### **Diseño de Interfaz (25%)**
-- [ ] Controles bien organizados
-- [ ] Uso efectivo del espacio
-- [ ] Colores y fuentes apropiados
-- [ ] Navegación clara
+### **Diseño de Interfaz (30%)**
+- ✅ Controles bien organizados y alineados
+- ✅ Uso efectivo del espacio disponible
+- ✅ Colores y fuentes apropiados y consistentes
+- ✅ Navegación clara y lógica
 
-### **Calidad del Código (25%)**
-- [ ] Nombres descriptivos para controles
-- [ ] Event handlers bien estructurados
-- [ ] Manejo de excepciones
-- [ ] Código limpio y comentado
+### **Calidad del Código (20%)**
+- ✅ Nombres descriptivos para controles y variables
+- ✅ Event handlers bien estructurados
+- ✅ Manejo adecuado de excepciones
+- ✅ Código limpio y comentado
 
-### **Experiencia de Usuario (15%)**
-- [ ] Aplicación fácil de usar
-- [ ] Mensajes informativos claros
-- [ ] Respuesta adecuada a errores
-- [ ] Diseño atractivo
+### **Experiencia de Usuario (10%)**
+- ✅ Aplicación fácil de usar e intuitiva
+- ✅ Mensajes informativos claros
+- ✅ Respuesta adecuada a errores
+- ✅ Diseño atractivo y profesional
 
 ---
 
-##  ¡A Programar!
+## 🚀 ¡A Programar!
 
-¡Estos ejercicios te darán una base sólida en Windows Forms! Empieza con los básicos y ve subiendo de nivel gradualmente. 
+¡Estos ejercicios te darán una base sólida en Windows Forms! 
 
-**Recuerda:** La práctica hace al maestro. ¡No tengas miedo de experimentar y hacer tus aplicaciones únicas! 
+**💡 Consejos finales:**
+- Empieza con los ejercicios de clase para dominar lo básico
+- Practica con los básicos antes de avanzar
+- Los ejercicios avanzados son desafiantes, ¡tómate tu tiempo!
+- No tengas miedo de experimentar y personalizar
 
 💪 **¡Tu primera aplicación Windows Forms te está esperando!** 🎯
