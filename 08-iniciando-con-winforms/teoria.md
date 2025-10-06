@@ -1,5 +1,75 @@
 # 🖥️ Módulo 08: Iniciando con Windows Forms
 
+## 📋 Menú de Navegación
+
+### 🚀 **Fundamentos**
+- **[🎯 Objetivos de Aprendizaje](#🎯-objetivos-de-aprendizaje)**
+- **[🚀 ¡Bienvenido al Mundo Visual!](#🚀-¡bienvenido-al-mundo-visual)**
+
+### 🏗️ **Configuración y Primeros Pasos**
+- **[1. Creando tu Primera Aplicación](#🏗️-1-creando-tu-primera-aplicación-windows-forms)**
+  - [Mejores Prácticas: Configuración Inicial](#🚀-mejores-prácticas-configuración-inicial)
+  - [Paso a Paso: "Hola Mundo Visual"](#paso-a-paso-hola-mundo-visual)
+
+### 🎨 **Diseño Visual**
+- **[2. Diseñador Visual](#🎨-2-diseñador-visual---tu-nuevo-mejor-amigo)**
+  - [Mejores Prácticas: Nomenclatura de Controles](#🎯-mejores-prácticas-nomenclatura-de-controles)
+  - [Elementos del Designer](#🖱️-elementos-del-designer)
+  - [Tu Primer Formulario Paso a Paso](#🎯-tu-primer-formulario-paso-a-paso)
+
+### ⚡ **Programación Interactiva**
+- **[3. Eventos](#🎮-3-eventos---haciendo-que-las-cosas-pasen)**
+  - [Mejores Prácticas: Manejo Profesional de Eventos](#🎯-mejores-prácticas-manejo-profesional-de-eventos)
+  - [Eventos Más Comunes](#🔥-eventos-más-comunes-y-cuándo-usarlos)
+  - [Creando Event Handlers](#📝-creando-event-handlers)
+
+### 🛠️ **Controles Básicos**
+- **[4. Controles Básicos](#🛠️-4-controles-básicos---tu-kit-de-herramientas)**
+  - [Mejores Prácticas: Diseño Profesional](#🎯-mejores-prácticas-diseño-de-interfaz-profesional)
+  - [🏷️ Label - Etiquetas de Texto](#🏷️-label---etiquetas-de-texto)
+  - [📝 TextBox - Entrada de Texto](#📝-textbox---entrada-de-texto)
+  - [🔲 Button - Botones Interactivos](#🔲-button---botones-interactivos)
+  - [📋 ListBox - Listas de Elementos](#📋-listbox---listas-de-elementos)
+
+### 🎨 **Layout y Diseño**
+- **[5. Layout y Posicionamiento](#🎨-5-layout-y-posicionamiento)**
+  - [Mejores Prácticas: Layouts Profesionales](#🎯-mejores-prácticas-layouts-que-escalan-profesionalmente)
+  - [Reglas de Oro del Posicionamiento](#📐-reglas-de-oro-del-posicionamiento)
+  - [Contenedores Avanzados](#🏗️-contenedores-avanzados)
+
+### 🛡️ **Validación y Errores**
+- **[6. Manejo de Errores y Validación](#🚨-6-manejo-de-errores-y-validación)**
+  - [Validación de Entrada](#✅-validación-de-entrada)
+  - [Manejo de Excepciones](#🛡️-manejo-de-excepciones)
+
+### 🎪 **Proyecto Práctico**
+- **[7. Ejemplo Completo: Calculadora de IMC](#🎪-7-ejemplo-completo-calculadora-de-imc)**
+  - [Especificaciones](#📋-especificaciones)
+  - [Diseño de la Interfaz](#🎨-diseño-de-la-interfaz)
+  - [Código Completo](#💻-código-completo)
+
+### 🎨 **Personalización**
+- **[8. Mejorando la Apariencia](#🎨-8-mejorando-la-apariencia)**
+  - [Colores y Temas](#🌈-colores-y-temas)
+  - [Fuentes y Tipografía](#🔤-fuentes-y-tipografía)
+  - [Imágenes e Iconos](#🖼️-imágenes-e-iconos)
+
+### 🏆 **Buenas Prácticas**
+- **[9. Mejores Prácticas y Consejos](#🏆-9-mejores-prácticas-y-consejos)**
+  - [Do's y Don'ts](#✅-dos-haz-esto)
+  - [Consejos de UX](#🎯-consejos-de-ux)
+
+### 🔧 **Debugging**
+- **[10. Debugging y Troubleshooting](#🔧-10-debugging-y-troubleshooting)**
+  - [Errores Comunes](#🐛-errores-comunes)
+  - [Herramientas de Debugging](#🔍-herramientas-de-debugging)
+
+### 🎯 **Resumen**
+- **[Conceptos Clave para Recordar](#🎯-conceptos-clave-para-recordar)**
+- **[¡Siguiente Paso!](#🚀-¡siguiente-paso)**
+
+---
+
 ## 🎯 Objetivos de Aprendizaje
 
 Al finalizar este módulo, podrás:
