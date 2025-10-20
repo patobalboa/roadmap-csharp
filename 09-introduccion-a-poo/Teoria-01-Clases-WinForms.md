@@ -1,821 +1,545 @@
-# 📖 Teoría 01: Fundamentos de Clases Aplicadas a Windows Forms
+# 📖 Teoría 01: Fundamentos de Clases con Windows Forms
 
 ## 🎯 Objetivos de Aprendizaje
 Al finalizar esta lección, podrás:
-- Entender qué es una clase usando controles de Windows Forms como ejemplo
-- Identificar los componentes básicos de una clase aplicados a formularios
-- Crear clases que interactúan con la interfaz gráfica
-- Usar constructores para inicializar objetos que manejan datos de formularios
-- Visualizar conceptos abstractos a través de elementos gráficos concretos
+- Entender qué es una clase usando ejemplos simples
+- Crear tu primera clase que funcione con Windows Forms
+- Usar propiedades y métodos básicos
+- Hacer que los datos se muestren en la pantalla
 
-## 🤔 ¿Qué es una Clase? (Perspectiva Visual)
+## 🤔 ¿Qué es una Clase?
 
-### Analogía del Mundo Real con Controles
-Piensa en un **botón** de Windows Forms:
-- **Características visibles**: Text, BackColor, Size, Location, Enabled
-- **Acciones que puede realizar**: Click, MouseEnter, MouseLeave
-- **Datos internos**: estado presionado/no presionado, eventos asociados
+### Analogía Simple
+Una **clase** es como un molde para hacer galletas:
+- El molde define la forma (la clase)
+- Cada galleta que haces es un objeto
+- Todas tienen la misma forma, pero pueden tener diferentes sabores
 
-En POO, una **clase** es como el diseño de ese botón que define:
-- **Propiedades**: qué características visuales puede tener
-- **Métodos**: qué acciones puede realizar
-- **Eventos**: cómo responde a la interacción del usuario
-
-### De Python a C# con Interfaz Visual
-```python
-# Python con tkinter - Concepto básico
-import tkinter as tk
-
-class CalculadoraSimple:
-    def __init__(self):
-        self.ventana = tk.Tk()
-        self.resultado = 0
-        self.crear_interfaz()
-    
-    def sumar(self, a, b):
-        self.resultado = a + b
-        return self.resultado
+```
+    📋 CLASE PERSONA              👤 OBJETO PERSONA
+    ===============              =================
+    - Nombre                     - Nombre: "Ana"
+    - Edad                       - Edad: 25
+    - Saludar()                  - Saludar() → "¡Hola!"
 ```
 
-```csharp
-// C# con Windows Forms - Implementación visual
-using System;
-using System.Windows.Forms;
+### En Windows Forms
+Piensa en un botón:
+- La clase Button es el "molde"
+- Cada botón que pones en tu formulario es un "objeto"
 
-public partial class CalculadoraSimple : Form
+## 🏗️ Mi Primera Clase Simple
+
+Vamos a crear una clase **Persona** paso a paso:
+
+```csharp
+// Paso 1: Definir la clase
+public class Persona
 {
-    // Campos (datos internos de la clase)
-    private double _resultado;
-    private double _numeroActual;
+    // Paso 2: Propiedades (características)
+    public string Nombre { get; set; }
+    public int Edad { get; set; }
     
-    // Controles (elementos visuales)
-    private TextBox txtDisplay;
-    private Button btnSumar;
-    private Button btnIgual;
-    
-    // Constructor (inicializa la interfaz)
-    public CalculadoraSimple()
+    // Paso 3: Constructor (cómo crear una persona)
+    public Persona()
     {
-        InitializeComponent();
-        _resultado = 0;
-        _numeroActual = 0;
+        Nombre = "Sin nombre";
+        Edad = 0;
     }
     
-    // Método (acción que puede realizar)
-    public double Sumar(double a, double b)
+    // Paso 4: Método (qué puede hacer)
+    public string Saludar()
     {
-        _resultado = a + b;
-        ActualizarDisplay();
-        return _resultado;
-    }
-    
-    // Método privado para actualizar la interfaz
-    private void ActualizarDisplay()
-    {
-        txtDisplay.Text = _resultado.ToString();
+        return "¡Hola! Soy " + Nombre;
     }
 }
 ```
 
-## 🏗️ Anatomía de una Clase aplicada a Windows Forms
+## 🖥️ Usando la Clase en Windows Forms
 
-### Ejemplo Práctico: Clase Producto con Interfaz Visual
+Ahora vamos a usar nuestra clase **Persona** en un formulario simple:
 
 ```csharp
-using System;
-using System.Drawing;
-using System.Windows.Forms;
-
-public partial class FormProducto : Form
+public partial class Form1 : Form
 {
-    // 1. CAMPOS PRIVADOS (datos internos)
-    private Producto _productoActual;
+    // Crear un objeto de la clase Persona
+    private Persona miPersona;
     
-    // 2. CONTROLES (elementos visuales)
+    // Controles del formulario
     private TextBox txtNombre;
-    private TextBox txtPrecio;
-    private TextBox txtStock;
-    private Label lblTotal;
-    private Button btnGuardar;
-    private Button btnCalcular;
+    private TextBox txtEdad;
+    private Button btnCrear;
+    private Button btnSaludar;
+    private Label lblResultado;
     
-    // 3. CONSTRUCTOR (inicialización)
-    public FormProducto()
+    public Form1()
     {
         InitializeComponent();
-        _productoActual = new Producto();
-        ConfigurarEventos();
-    }
-    
-    // 4. MÉTODOS PRIVADOS (lógica interna)
-    private void ConfigurarEventos()
-    {
-        btnGuardar.Click += BtnGuardar_Click;
-        btnCalcular.Click += BtnCalcular_Click;
-        
-        // Validación en tiempo real
-        txtPrecio.KeyPress += ValidarNumeros;
-        txtStock.KeyPress += ValidarNumeros;
-    }
-    
-    private void ValidarNumeros(object sender, KeyPressEventArgs e)
-    {
-        if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
-        {
-            e.Handled = true;
-        }
-    }
-    
-    // 5. EVENTOS (respuesta a acciones del usuario)
-    private void BtnGuardar_Click(object sender, EventArgs e)
-    {
-        try
-        {
-            _productoActual.Nombre = txtNombre.Text;
-            _productoActual.Precio = decimal.Parse(txtPrecio.Text);
-            _productoActual.Stock = int.Parse(txtStock.Text);
-            
-            MessageBox.Show("Producto guardado correctamente", "Éxito", 
-                          MessageBoxButtons.OK, MessageBoxIcon.Information);
-            LimpiarFormulario();
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Error: {ex.Message}", "Error", 
-                          MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-    }
-    
-    private void BtnCalcular_Click(object sender, EventArgs e)
-    {
-        if (_productoActual != null)
-        {
-            decimal valorTotal = _productoActual.CalcularValorInventario();
-            lblTotal.Text = $"Valor Total: ${valorTotal:F2}";
-            lblTotal.ForeColor = valorTotal > 1000 ? Color.Green : Color.Orange;
-        }
-    }
-    
-    private void LimpiarFormulario()
-    {
-        txtNombre.Clear();
-        txtPrecio.Clear();
-        txtStock.Clear();
-        lblTotal.Text = "Valor Total: $0.00";
-        txtNombre.Focus();
-    }
-}
-
-// Clase de datos (modelo)
-public class Producto
-{
-    // Campos privados
-    private string _nombre;
-    private decimal _precio;
-    private int _stock;
-    
-    // Propiedades con validación visual
-    public string Nombre
-    {
-        get { return _nombre; }
-        set
-        {
-            if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("El nombre no puede estar vacío");
-            _nombre = value.Trim();
-        }
-    }
-    
-    public decimal Precio
-    {
-        get { return _precio; }
-        set
-        {
-            if (value < 0)
-                throw new ArgumentException("El precio no puede ser negativo");
-            _precio = value;
-        }
-    }
-    
-    public int Stock
-    {
-        get { return _stock; }
-        set
-        {
-            if (value < 0)
-                throw new ArgumentException("El stock no puede ser negativo");
-            _stock = value;
-        }
-    }
-    
-    // Propiedad calculada
-    public decimal ValorInventario
-    {
-        get { return _precio * _stock; }
-    }
-    
-    // Constructor
-    public Producto()
-    {
-        _nombre = "";
-        _precio = 0;
-        _stock = 0;
-    }
-    
-    public Producto(string nombre, decimal precio, int stock)
-    {
-        Nombre = nombre;
-        Precio = precio;
-        Stock = stock;
-    }
-    
-    // Métodos
-    public decimal CalcularValorInventario()
-    {
-        return Precio * Stock;
-    }
-    
-    public bool VenderProducto(int cantidad)
-    {
-        if (cantidad <= 0 || cantidad > _stock)
-            return false;
-            
-        _stock -= cantidad;
-        return true;
-    }
-    
-    public override string ToString()
-    {
-        return $"{_nombre} - ${_precio:F2} ({_stock} unidades)";
-    }
-}
-```
-
-## 🎨 Diseño Visual del Formulario
-
-### InitializeComponent() - Diseño de la Interfaz
-```csharp
-private void InitializeComponent()
-{
-    // Configuración del formulario principal
-    this.Text = "Gestión de Productos";
-    this.Size = new Size(400, 300);
-    this.StartPosition = FormStartPosition.CenterScreen;
-    this.FormBorderStyle = FormBorderStyle.FixedSingle;
-    this.MaximizeBox = false;
-    
-    // TextBox para nombre
-    txtNombre = new TextBox();
-    txtNombre.Location = new Point(120, 30);
-    txtNombre.Size = new Size(200, 20);
-    
-    // TextBox para precio
-    txtPrecio = new TextBox();
-    txtPrecio.Location = new Point(120, 70);
-    txtPrecio.Size = new Size(100, 20);
-    
-    // TextBox para stock
-    txtStock = new TextBox();
-    txtStock.Location = new Point(120, 110);
-    txtStock.Size = new Size(100, 20);
-    
-    // Label para mostrar total
-    lblTotal = new Label();
-    lblTotal.Location = new Point(120, 150);
-    lblTotal.Size = new Size(200, 20);
-    lblTotal.Text = "Valor Total: $0.00";
-    lblTotal.Font = new Font("Arial", 10, FontStyle.Bold);
-    
-    // Botón guardar
-    btnGuardar = new Button();
-    btnGuardar.Location = new Point(50, 200);
-    btnGuardar.Size = new Size(100, 30);
-    btnGuardar.Text = "Guardar";
-    btnGuardar.BackColor = Color.LightBlue;
-    
-    // Botón calcular
-    btnCalcular = new Button();
-    btnCalcular.Location = new Point(200, 200);
-    btnCalcular.Size = new Size(100, 30);
-    btnCalcular.Text = "Calcular Total";
-    btnCalcular.BackColor = Color.LightGreen;
-    
-    // Labels descriptivos
-    Label lblNombre = new Label() { Text = "Nombre:", Location = new Point(50, 30), Size = new Size(60, 20) };
-    Label lblPrecio = new Label() { Text = "Precio:", Location = new Point(50, 70), Size = new Size(60, 20) };
-    Label lblStock = new Label() { Text = "Stock:", Location = new Point(50, 110), Size = new Size(60, 20) };
-    
-    // Agregar controles al formulario
-    this.Controls.Add(lblNombre);
-    this.Controls.Add(txtNombre);
-    this.Controls.Add(lblPrecio);
-    this.Controls.Add(txtPrecio);
-    this.Controls.Add(lblStock);
-    this.Controls.Add(txtStock);
-    this.Controls.Add(lblTotal);
-    this.Controls.Add(btnGuardar);
-    this.Controls.Add(btnCalcular);
-}
-```
-
-## 🔧 Componentes de una Clase Visualizados
-
-### 1. Campos vs Propiedades (Demostración Visual)
-```csharp
-public partial class FormEjemplo : Form
-{
-    // CAMPO PRIVADO - no visible directamente en la interfaz
-    private string _datosInternos = "Datos ocultos";
-    
-    // PROPIEDAD PÚBLICA - conectada a control visual
-    public string DatosVisibles 
-    { 
-        get { return txtDisplay.Text; }
-        set { txtDisplay.Text = value; }
-    }
-    
-    private TextBox txtDisplay;
-    private Button btnMostrarCampo;
-    private Button btnCambiarPropiedad;
-    
-    public FormEjemplo()
-    {
-        InitializeComponent();
-        ConfigurarEventos();
-    }
-    
-    private void ConfigurarEventos()
-    {
-        // El botón muestra la diferencia entre campo y propiedad
-        btnMostrarCampo.Click += (s, e) => 
-        {
-            MessageBox.Show($"Campo privado: {_datosInternos}\nPropiedad visible: {DatosVisibles}");
-        };
-        
-        btnCambiarPropiedad.Click += (s, e) =>
-        {
-            DatosVisibles = DateTime.Now.ToString();
-        };
-    }
-}
-```
-
-### 2. Constructores Aplicados a Formularios
-```csharp
-public partial class FormContacto : Form
-{
-    private Contacto _contacto;
-    
-    // Constructor por defecto - formulario vacío
-    public FormContacto()
-    {
-        InitializeComponent();
-        _contacto = new Contacto();
-        ConfigurarFormularioVacio();
-    }
-    
-    // Constructor con datos - formulario prellenado
-    public FormContacto(Contacto contactoExistente)
-    {
-        InitializeComponent();
-        _contacto = contactoExistente;
-        CargarDatosEnFormulario();
-    }
-    
-    // Constructor para modo solo lectura
-    public FormContacto(Contacto contacto, bool soloLectura)
-    {
-        InitializeComponent();
-        _contacto = contacto;
-        CargarDatosEnFormulario();
-        
-        if (soloLectura)
-        {
-            HabilitarModoLectura();
-        }
-    }
-    
-    private void ConfigurarFormularioVacio()
-    {
-        txtNombre.Text = "";
-        txtTelefono.Text = "";
-        txtEmail.Text = "";
-        txtNombre.Focus();
-    }
-    
-    private void CargarDatosEnFormulario()
-    {
-        txtNombre.Text = _contacto.Nombre;
-        txtTelefono.Text = _contacto.Telefono;
-        txtEmail.Text = _contacto.Email;
-    }
-    
-    private void HabilitarModoLectura()
-    {
-        txtNombre.ReadOnly = true;
-        txtTelefono.ReadOnly = true;
-        txtEmail.ReadOnly = true;
-        btnGuardar.Enabled = false;
-        
-        // Cambiar colores para indicar modo lectura
-        txtNombre.BackColor = Color.LightGray;
-        txtTelefono.BackColor = Color.LightGray;
-        txtEmail.BackColor = Color.LightGray;
-    }
-}
-```
-
-### 3. Métodos con Retroalimentación Visual
-```csharp
-public class ValidadorFormulario
-{
-    // Método estático que proporciona validación visual
-    public static bool ValidarCampo(TextBox campo, Label labelError, string nombreCampo)
-    {
-        if (string.IsNullOrWhiteSpace(campo.Text))
-        {
-            // Retroalimentación visual de error
-            campo.BackColor = Color.LightPink;
-            labelError.Text = $"{nombreCampo} es requerido";
-            labelError.ForeColor = Color.Red;
-            labelError.Visible = true;
-            return false;
-        }
-        else
-        {
-            // Retroalimentación visual de éxito
-            campo.BackColor = Color.LightGreen;
-            labelError.Visible = false;
-            return true;
-        }
-    }
-    
-    public static bool ValidarEmail(TextBox campoEmail, Label labelError)
-    {
-        try
-        {
-            var direccion = new System.Net.Mail.MailAddress(campoEmail.Text);
-            campoEmail.BackColor = Color.LightGreen;
-            labelError.Visible = false;
-            return true;
-        }
-        catch
-        {
-            campoEmail.BackColor = Color.LightPink;
-            labelError.Text = "Formato de email inválido";
-            labelError.ForeColor = Color.Red;
-            labelError.Visible = true;
-            return false;
-        }
-    }
-}
-
-// Uso en el formulario
-public partial class FormRegistro : Form
-{
-    private void btnValidar_Click(object sender, EventArgs e)
-    {
-        bool nombreValido = ValidadorFormulario.ValidarCampo(txtNombre, lblErrorNombre, "Nombre");
-        bool emailValido = ValidadorFormulario.ValidarEmail(txtEmail, lblErrorEmail);
-        
-        if (nombreValido && emailValido)
-        {
-            MessageBox.Show("✅ Todos los campos son válidos", "Validación Exitosa", 
-                          MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-        else
-        {
-            MessageBox.Show("❌ Por favor corrige los errores", "Errores de Validación", 
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        }
-    }
-}
-```
-
-## 🎯 Ejemplo Completo: Sistema de Biblioteca Visual
-
-```csharp
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-
-// Clase de datos - Libro
-public class Libro
-{
-    public string ISBN { get; set; }
-    public string Titulo { get; set; }
-    public string Autor { get; set; }
-    public bool EstaPrestado { get; private set; }
-    public DateTime FechaPrestamo { get; private set; }
-    
-    public Libro(string isbn, string titulo, string autor)
-    {
-        ISBN = isbn;
-        Titulo = titulo;
-        Autor = autor;
-        EstaPrestado = false;
-    }
-    
-    public bool Prestar()
-    {
-        if (!EstaPrestado)
-        {
-            EstaPrestado = true;
-            FechaPrestamo = DateTime.Now;
-            return true;
-        }
-        return false;
-    }
-    
-    public void Devolver()
-    {
-        EstaPrestado = false;
-        FechaPrestamo = DateTime.MinValue;
-    }
-    
-    public override string ToString()
-    {
-        string estado = EstaPrestado ? "PRESTADO" : "DISPONIBLE";
-        return $"{Titulo} - {Autor} [{estado}]";
-    }
-}
-
-// Formulario principal de la biblioteca
-public partial class FormBiblioteca : Form
-{
-    private List<Libro> _libros;
-    private ListBox lstLibros;
-    private TextBox txtISBN, txtTitulo, txtAutor;
-    private Button btnAgregar, btnPrestar, btnDevolver;
-    private Label lblEstado, lblTotal, lblDisponibles, lblPrestados;
-    
-    public FormBiblioteca()
-    {
-        InitializeComponent();
-        _libros = new List<Libro>();
-        InicializarDatosPrueba();
-        ActualizarEstadisticas();
     }
     
     private void InitializeComponent()
     {
-        // Configuración del formulario
-        this.Text = "Sistema de Biblioteca - POO Visual";
-        this.Size = new Size(600, 500);
-        this.StartPosition = FormStartPosition.CenterScreen;
+        // Configurar el formulario
+        this.Text = "Mi Primera Clase - Persona";
+        this.Size = new Size(400, 300);
         
-        // Panel de entrada de datos
-        GroupBox gbDatos = new GroupBox();
-        gbDatos.Text = "Datos del Libro";
-        gbDatos.Location = new Point(20, 20);
-        gbDatos.Size = new Size(250, 150);
+        // Crear los controles
+        Label lblNom = new Label();
+        lblNom.Text = "Nombre:";
+        lblNom.Location = new Point(20, 20);
+        lblNom.Size = new Size(60, 20);
         
-        Label lblISBN = new Label() { Text = "ISBN:", Location = new Point(10, 30), Size = new Size(50, 20) };
-        txtISBN = new TextBox() { Location = new Point(70, 30), Size = new Size(150, 20) };
+        txtNombre = new TextBox();
+        txtNombre.Location = new Point(90, 20);
+        txtNombre.Size = new Size(150, 20);
         
-        Label lblTit = new Label() { Text = "Título:", Location = new Point(10, 60), Size = new Size(50, 20) };
-        txtTitulo = new TextBox() { Location = new Point(70, 60), Size = new Size(150, 20) };
+        Label lblEd = new Label();
+        lblEd.Text = "Edad:";
+        lblEd.Location = new Point(20, 60);
+        lblEd.Size = new Size(60, 20);
         
-        Label lblAut = new Label() { Text = "Autor:", Location = new Point(10, 90), Size = new Size(50, 20) };
-        txtAutor = new TextBox() { Location = new Point(70, 90), Size = new Size(150, 20) };
+        txtEdad = new TextBox();
+        txtEdad.Location = new Point(90, 60);
+        txtEdad.Size = new Size(80, 20);
         
-        btnAgregar = new Button() { Text = "Agregar Libro", Location = new Point(70, 120), Size = new Size(100, 25), BackColor = Color.LightBlue };
+        btnCrear = new Button();
+        btnCrear.Text = "Crear Persona";
+        btnCrear.Location = new Point(20, 100);
+        btnCrear.Size = new Size(100, 30);
+        btnCrear.Click += BtnCrear_Click;  // ← Conectar el evento
         
-        gbDatos.Controls.AddRange(new Control[] { lblISBN, txtISBN, lblTit, txtTitulo, lblAut, txtAutor, btnAgregar });
+        btnSaludar = new Button();
+        btnSaludar.Text = "Saludar";
+        btnSaludar.Location = new Point(140, 100);
+        btnSaludar.Size = new Size(100, 30);
+        btnSaludar.Click += BtnSaludar_Click;  // ← Conectar el evento
         
-        // Lista de libros
-        GroupBox gbLista = new GroupBox();
-        gbLista.Text = "Inventario de Libros";
-        gbLista.Location = new Point(290, 20);
-        gbLista.Size = new Size(280, 300);
-        
-        lstLibros = new ListBox();
-        lstLibros.Location = new Point(10, 30);
-        lstLibros.Size = new Size(260, 200);
-        lstLibros.SelectionMode = SelectionMode.One;
-        
-        btnPrestar = new Button() { Text = "Prestar", Location = new Point(10, 240), Size = new Size(80, 30), BackColor = Color.LightGreen };
-        btnDevolver = new Button() { Text = "Devolver", Location = new Point(100, 240), Size = new Size(80, 30), BackColor = Color.LightCoral };
-        
-        gbLista.Controls.AddRange(new Control[] { lstLibros, btnPrestar, btnDevolver });
-        
-        // Panel de estadísticas
-        GroupBox gbEstadisticas = new GroupBox();
-        gbEstadisticas.Text = "Estadísticas";
-        gbEstadisticas.Location = new Point(20, 180);
-        gbEstadisticas.Size = new Size(250, 140);
-        
-        lblTotal = new Label() { Location = new Point(10, 30), Size = new Size(200, 20), Font = new Font("Arial", 9, FontStyle.Bold) };
-        lblDisponibles = new Label() { Location = new Point(10, 55), Size = new Size(200, 20), ForeColor = Color.Green };
-        lblPrestados = new Label() { Location = new Point(10, 80), Size = new Size(200, 20), ForeColor = Color.Red };
-        lblEstado = new Label() { Location = new Point(10, 105), Size = new Size(230, 20), ForeColor = Color.Blue };
-        
-        gbEstadisticas.Controls.AddRange(new Control[] { lblTotal, lblDisponibles, lblPrestados, lblEstado });
+        lblResultado = new Label();
+        lblResultado.Location = new Point(20, 150);
+        lblResultado.Size = new Size(300, 40);
+        lblResultado.BorderStyle = BorderStyle.FixedSingle;
+        lblResultado.Text = "Aquí aparecerá el resultado";
         
         // Agregar todos los controles al formulario
-        this.Controls.AddRange(new Control[] { gbDatos, gbLista, gbEstadisticas });
-        
-        // Configurar eventos
-        btnAgregar.Click += BtnAgregar_Click;
-        btnPrestar.Click += BtnPrestar_Click;
-        btnDevolver.Click += BtnDevolver_Click;
-        lstLibros.SelectedIndexChanged += LstLibros_SelectedIndexChanged;
+        this.Controls.Add(lblNom);
+        this.Controls.Add(txtNombre);
+        this.Controls.Add(lblEd);
+        this.Controls.Add(txtEdad);
+        this.Controls.Add(btnCrear);
+        this.Controls.Add(btnSaludar);
+        this.Controls.Add(lblResultado);
     }
     
-    private void InicializarDatosPrueba()
+    // Evento del botón "Crear Persona"
+    private void BtnCrear_Click(object sender, EventArgs e)
     {
-        _libros.Add(new Libro("978-84-376-0494-7", "1984", "George Orwell"));
-        _libros.Add(new Libro("978-84-376-0495-4", "Cien años de soledad", "Gabriel García Márquez"));
-        _libros.Add(new Libro("978-84-376-0496-1", "El Quijote", "Miguel de Cervantes"));
-        ActualizarListaLibros();
+        // ¡Aquí usamos nuestra clase!
+        miPersona = new Persona();  // ← Crear objeto
+        miPersona.Nombre = txtNombre.Text;  // ← Asignar nombre
+        miPersona.Edad = int.Parse(txtEdad.Text);  // ← Asignar edad
+        
+        lblResultado.Text = "Persona creada: " + miPersona.Nombre;
     }
     
-    private void BtnAgregar_Click(object sender, EventArgs e)
+    // Evento del botón "Saludar"
+    private void BtnSaludar_Click(object sender, EventArgs e)
     {
-        try
+        if (miPersona != null)
         {
-            if (string.IsNullOrWhiteSpace(txtISBN.Text) || 
-                string.IsNullOrWhiteSpace(txtTitulo.Text) || 
-                string.IsNullOrWhiteSpace(txtAutor.Text))
-            {
-                MessageBox.Show("Todos los campos son requeridos", "Error", 
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            
-            // Verificar ISBN único
-            if (_libros.Any(l => l.ISBN == txtISBN.Text))
-            {
-                MessageBox.Show("Ya existe un libro con este ISBN", "Error", 
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            
-            Libro nuevoLibro = new Libro(txtISBN.Text, txtTitulo.Text, txtAutor.Text);
-            _libros.Add(nuevoLibro);
-            
-            ActualizarListaLibros();
-            ActualizarEstadisticas();
-            LimpiarFormulario();
-            
-            MessageBox.Show("Libro agregado correctamente", "Éxito", 
-                          MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Error al agregar libro: {ex.Message}", "Error", 
-                          MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-    }
-    
-    private void BtnPrestar_Click(object sender, EventArgs e)
-    {
-        if (lstLibros.SelectedItem == null)
-        {
-            MessageBox.Show("Selecciona un libro de la lista", "Advertencia", 
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return;
-        }
-        
-        Libro libroSeleccionado = (Libro)lstLibros.SelectedItem;
-        
-        if (libroSeleccionado.Prestar())
-        {
-            ActualizarListaLibros();
-            ActualizarEstadisticas();
-            MessageBox.Show($"Libro '{libroSeleccionado.Titulo}' prestado correctamente", "Préstamo Exitoso", 
-                          MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // ¡Usar el método de nuestra clase!
+            string saludo = miPersona.Saludar();  // ← Llamar método
+            lblResultado.Text = saludo;
         }
         else
         {
-            MessageBox.Show("Este libro ya está prestado", "Error", 
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            lblResultado.Text = "Primero crea una persona";
         }
-    }
-    
-    private void BtnDevolver_Click(object sender, EventArgs e)
-    {
-        if (lstLibros.SelectedItem == null)
-        {
-            MessageBox.Show("Selecciona un libro de la lista", "Advertencia", 
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return;
-        }
-        
-        Libro libroSeleccionado = (Libro)lstLibros.SelectedItem;
-        
-        if (libroSeleccionado.EstaPrestado)
-        {
-            libroSeleccionado.Devolver();
-            ActualizarListaLibros();
-            ActualizarEstadisticas();
-            MessageBox.Show($"Libro '{libroSeleccionado.Titulo}' devuelto correctamente", "Devolución Exitosa", 
-                          MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-        else
-        {
-            MessageBox.Show("Este libro no está prestado", "Error", 
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        }
-    }
-    
-    private void LstLibros_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        if (lstLibros.SelectedItem != null)
-        {
-            Libro libroSeleccionado = (Libro)lstLibros.SelectedItem;
-            lblEstado.Text = libroSeleccionado.EstaPrestado 
-                ? $"Estado: PRESTADO desde {libroSeleccionado.FechaPrestamo:dd/MM/yyyy}"
-                : "Estado: DISPONIBLE";
-            
-            btnPrestar.Enabled = !libroSeleccionado.EstaPrestado;
-            btnDevolver.Enabled = libroSeleccionado.EstaPrestado;
-        }
-    }
-    
-    private void ActualizarListaLibros()
-    {
-        lstLibros.Items.Clear();
-        foreach (var libro in _libros.OrderBy(l => l.Titulo))
-        {
-            lstLibros.Items.Add(libro);
-        }
-    }
-    
-    private void ActualizarEstadisticas()
-    {
-        int total = _libros.Count;
-        int disponibles = _libros.Count(l => !l.EstaPrestado);
-        int prestados = _libros.Count(l => l.EstaPrestado);
-        
-        lblTotal.Text = $"📚 Total de libros: {total}";
-        lblDisponibles.Text = $"✅ Disponibles: {disponibles}";
-        lblPrestados.Text = $"📤 Prestados: {prestados}";
-        
-        // Cambiar color según disponibilidad
-        if (disponibles == 0 && total > 0)
-        {
-            lblDisponibles.ForeColor = Color.Red;
-        }
-        else
-        {
-            lblDisponibles.ForeColor = Color.Green;
-        }
-    }
-    
-    private void LimpiarFormulario()
-    {
-        txtISBN.Clear();
-        txtTitulo.Clear();
-        txtAutor.Clear();
-        txtISBN.Focus();
-    }
-}
-
-// Programa principal
-public partial class Program
-{
-    [STAThread]
-    static void Main()
-    {
-        Application.EnableVisualStyles();
-        Application.SetCompatibleTextRenderingDefault(false);
-        Application.Run(new FormBiblioteca());
     }
 }
 ```
 
-## ✅ Beneficios del Aprendizaje Visual de POO
+### 📝 Así se ve en pantalla:
+```
+┌─────────────────────────────────────┐
+│  Mi Primera Clase - Persona    [X]  │
+├─────────────────────────────────────┤
+│  Nombre: [Ana García          ]     │
+│  Edad:   [25]                       │
+│                                     │
+│  [Crear Persona] [Saludar]          │
+│                                     │
+│  ┌─────────────────────────────────┐ │
+│  │ ¡Hola! Soy Ana García           │ │
+│  └─────────────────────────────────┘ │
+└─────────────────────────────────────┘
+```
 
-### 1. **Conceptos Tangibles**
-- Los **campos** se ven como datos en controles
-- Las **propiedades** se visualizan como valores que cambian en la interfaz
-- Los **métodos** producen cambios visibles inmediatos
+## 🔧 Partes de una Clase (Explicación Simple)
 
-### 2. **Retroalimentación Inmediata**
-- Validaciones que cambian colores de controles
-- Mensajes visuales de éxito o error
-- Estados que se reflejan en la interfaz
+### 1. Propiedades (Los Datos)
+```csharp
+public class Estudiante
+{
+    // Estas son las "características" del estudiante
+    public string Nombre { get; set; }    // ← Su nombre
+    public int Edad { get; set; }         // ← Su edad
+    public double Nota { get; set; }      // ← Su nota
+}
+```
 
-### 3. **Interactividad**
-- Los estudiantes pueden "tocar" y manipular los objetos
-- Ver causa y efecto de manera inmediata
-- Experimentar con diferentes valores y ver resultados
+### 2. Constructor (Cómo se Crea)
+```csharp
+public class Estudiante
+{
+    public string Nombre { get; set; }
+    public int Edad { get; set; }
+    public double Nota { get; set; }
+    
+    // Constructor - se ejecuta cuando haces "new Estudiante()"
+    public Estudiante()
+    {
+        Nombre = "Nuevo Estudiante";  // ← Valores por defecto
+        Edad = 18;
+        Nota = 0.0;
+    }
+}
+```
 
-### 4. **Motivación Aumentada**
-- Crear aplicaciones "reales" desde el primer día
-- Ver resultados profesionales rápidamente
-- Conectar teoría con aplicaciones prácticas
+### 3. Métodos (Lo Que Puede Hacer)
+```csharp
+public class Estudiante
+{
+    public string Nombre { get; set; }
+    public int Edad { get; set; }
+    public double Nota { get; set; }
+    
+    public Estudiante()
+    {
+        Nombre = "Nuevo Estudiante";
+        Edad = 18;
+        Nota = 0.0;
+    }
+    
+    // Método - una acción que puede hacer el estudiante
+    public string EstadoAprobacion()
+    {
+        if (Nota >= 10.5)
+        {
+            return "APROBADO ✅";
+        }
+        else
+        {
+            return "REPROBADO ❌";
+        }
+    }
+    
+    // Otro método
+    public void CumplirAnios()
+    {
+        Edad = Edad + 1;  // ← Aumentar la edad
+    }
+}
+```
 
-## 🔚 Resumen
+## � Ejemplo Práctico: Calculadora Simple
 
-- Las **clases** son moldes que definen características y comportamientos visibles
-- Los **campos** almacenan datos internos, las **propiedades** los exponen controladamente
-- Los **constructores** inicializan tanto datos como interfaz visual
-- Los **métodos** realizan acciones que se reflejan visualmente
-- La **validación** se puede implementar con retroalimentación visual inmediata
-- Windows Forms hace que conceptos abstractos se vuelvan tangibles y manipulables
+Vamos a crear una clase **Calculadora** y usarla en un formulario:
+
+### Paso 1: Crear la Clase Calculadora
+```csharp
+public class Calculadora
+{
+    // Propiedades (datos que guarda)
+    public double NumeroActual { get; set; }
+    public double Resultado { get; set; }
+    
+    // Constructor
+    public Calculadora()
+    {
+        NumeroActual = 0;
+        Resultado = 0;
+    }
+    
+    // Métodos (lo que puede hacer)
+    public double Sumar(double numero)
+    {
+        Resultado = NumeroActual + numero;
+        return Resultado;
+    }
+    
+    public double Restar(double numero)
+    {
+        Resultado = NumeroActual - numero;
+        return Resultado;
+    }
+    
+    public void Limpiar()
+    {
+        NumeroActual = 0;
+        Resultado = 0;
+    }
+}
+```
+
+### Paso 2: Usar la Clase en el Formulario
+```csharp
+public partial class FormCalculadora : Form
+{
+    // Crear objeto de nuestra clase
+    private Calculadora miCalculadora;
+    
+    // Controles del formulario
+    private TextBox txtNumero1;
+    private TextBox txtNumero2;
+    private Button btnSumar;
+    private Button btnRestar;
+    private Button btnLimpiar;
+    private Label lblResultado;
+    
+    public FormCalculadora()
+    {
+        InitializeComponent();
+        
+        // ¡Crear la calculadora!
+        miCalculadora = new Calculadora();
+    }
+    
+    private void InitializeComponent()
+    {
+        this.Text = "Mi Calculadora con Clases";
+        this.Size = new Size(350, 250);
+        
+        // Número 1
+        Label lbl1 = new Label();
+        lbl1.Text = "Número 1:";
+        lbl1.Location = new Point(20, 20);
+        lbl1.Size = new Size(80, 20);
+        
+        txtNumero1 = new TextBox();
+        txtNumero1.Location = new Point(110, 20);
+        txtNumero1.Size = new Size(100, 20);
+        
+        // Número 2
+        Label lbl2 = new Label();
+        lbl2.Text = "Número 2:";
+        lbl2.Location = new Point(20, 60);
+        lbl2.Size = new Size(80, 20);
+        
+        txtNumero2 = new TextBox();
+        txtNumero2.Location = new Point(110, 60);
+        txtNumero2.Size = new Size(100, 20);
+        
+        // Botones
+        btnSumar = new Button();
+        btnSumar.Text = "Sumar";
+        btnSumar.Location = new Point(20, 100);
+        btnSumar.Size = new Size(60, 30);
+        btnSumar.Click += BtnSumar_Click;
+        
+        btnRestar = new Button();
+        btnRestar.Text = "Restar";
+        btnRestar.Location = new Point(90, 100);
+        btnRestar.Size = new Size(60, 30);
+        btnRestar.Click += BtnRestar_Click;
+        
+        btnLimpiar = new Button();
+        btnLimpiar.Text = "Limpiar";
+        btnLimpiar.Location = new Point(160, 100);
+        btnLimpiar.Size = new Size(60, 30);
+        btnLimpiar.Click += BtnLimpiar_Click;
+        
+        // Resultado
+        Label lblRes = new Label();
+        lblRes.Text = "Resultado:";
+        lblRes.Location = new Point(20, 150);
+        lblRes.Size = new Size(80, 20);
+        
+        lblResultado = new Label();
+        lblResultado.Location = new Point(110, 150);
+        lblResultado.Size = new Size(150, 30);
+        lblResultado.BorderStyle = BorderStyle.FixedSingle;
+        lblResultado.Text = "0";
+        lblResultado.Font = new Font("Arial", 12, FontStyle.Bold);
+        
+        // Agregar todo al formulario
+        this.Controls.Add(lbl1);
+        this.Controls.Add(txtNumero1);
+        this.Controls.Add(lbl2);
+        this.Controls.Add(txtNumero2);
+        this.Controls.Add(btnSumar);
+        this.Controls.Add(btnRestar);
+        this.Controls.Add(btnLimpiar);
+        this.Controls.Add(lblRes);
+        this.Controls.Add(lblResultado);
+    }
+    
+    // Evento del botón Sumar
+    private void BtnSumar_Click(object sender, EventArgs e)
+    {
+        // Obtener números de las cajas de texto
+        double num1 = double.Parse(txtNumero1.Text);
+        double num2 = double.Parse(txtNumero2.Text);
+        
+        // Usar nuestra clase Calculadora
+        miCalculadora.NumeroActual = num1;
+        double resultado = miCalculadora.Sumar(num2);
+        
+        // Mostrar resultado
+        lblResultado.Text = resultado.ToString();
+    }
+    
+    // Evento del botón Restar
+    private void BtnRestar_Click(object sender, EventArgs e)
+    {
+        double num1 = double.Parse(txtNumero1.Text);
+        double num2 = double.Parse(txtNumero2.Text);
+        
+        miCalculadora.NumeroActual = num1;
+        double resultado = miCalculadora.Restar(num2);
+        
+        lblResultado.Text = resultado.ToString();
+    }
+    
+    // Evento del botón Limpiar
+    private void BtnLimpiar_Click(object sender, EventArgs e)
+    {
+        miCalculadora.Limpiar();
+        txtNumero1.Text = "";
+        txtNumero2.Text = "";
+        lblResultado.Text = "0";
+    }
+}
+```
+
+### 📝 Así se ve la calculadora:
+```
+┌─────────────────────────────────┐
+│  Mi Calculadora con Clases [X]  │
+├─────────────────────────────────┤
+│  Número 1: [5        ]          │
+│  Número 2: [3        ]          │
+│                                 │
+│  [Sumar] [Restar] [Limpiar]     │
+│                                 │
+│  Resultado: ┌─────────────────┐  │
+│             │       8         │  │
+│             └─────────────────┘  │
+└─────────────────────────────────┘
+```
+
+## 🎮 ¡Tú Hazlo! - Ejercicio Paso a Paso
+
+### Crea una clase "Contador"
+
+1. **Crea la clase:**
+```csharp
+public class Contador
+{
+    // Tu código aquí:
+    // - Una propiedad llamada "Valor" (tipo int)
+    // - Un constructor que ponga Valor = 0
+    // - Un método "Incrementar()" que sume 1 al valor
+    // - Un método "Decrementar()" que reste 1 al valor
+    // - Un método "Reiniciar()" que ponga el valor en 0
+}
+```
+
+2. **Úsala en un formulario:**
+```csharp
+public partial class FormContador : Form
+{
+    private Contador miContador;  // ← Tu objeto contador
+    private Label lblNumero;      // ← Para mostrar el número
+    private Button btnMas;        // ← Botón +
+    private Button btnMenos;      // ← Botón -
+    private Button btnReinicio;   // ← Botón reiniciar
+    
+    // Completa el resto...
+}
+```
+
+3. **El resultado debe verse así:**
+```
+┌─────────────────────┐
+│  Contador      [X]  │
+├─────────────────────┤
+│        ┌───┐        │
+│        │ 5 │        │
+│        └───┘        │
+│                     │
+│   [+]  [-]  [🔄]    │
+└─────────────────────┘
+```
+
+## 💡 Puntos Importantes (Para Recordar)
+
+### ✅ Lo que SÍ debes hacer:
+```csharp
+// 1. Siempre crear el objeto antes de usarlo
+miPersona = new Persona();  // ← ¡Crear primero!
+miPersona.Nombre = "Ana";   // ← Luego usar
+
+// 2. Usar nombres claros
+public class Estudiante  // ← Claro y descriptivo
+{
+    public string Nombre { get; set; }  // ← Se entiende qué es
+}
+
+// 3. Inicializar en el constructor
+public Persona()
+{
+    Nombre = "Sin nombre";  // ← Siempre dar valores iniciales
+    Edad = 0;
+}
+```
+
+### ❌ Lo que NO debes hacer:
+```csharp
+// 1. NO usar un objeto sin crearlo
+miPersona.Nombre = "Ana";  // ← ¡ERROR! miPersona es null
+
+// 2. NO usar nombres confusos
+public class X  // ← ¿Qué es X?
+{
+    public string A { get; set; }  // ← ¿Qué es A?
+}
+
+// 3. NO dejar propiedades sin inicializar
+public Persona()
+{
+    // Vacío = ¡MALO!
+}
+```
+
+## 🎯 Resumen en 3 Pasos
+
+1. **Crear la clase** (el molde):
+```csharp
+public class MiClase
+{
+    public string Propiedad { get; set; }
+    public MiClase() { /* inicializar */ }
+    public void Metodo() { /* hacer algo */ }
+}
+```
+
+2. **Crear el objeto** (usar el molde):
+```csharp
+MiClase miObjeto = new MiClase();
+```
+
+3. **Usar el objeto** (interactuar):
+```csharp
+miObjeto.Propiedad = "valor";
+miObjeto.Metodo();
+```
+
+## � Resumen
+
+- Una **clase** es como un molde de galletas
+- Un **objeto** es cada galleta que haces
+- Las **propiedades** son las características (sabor, forma)
+- Los **métodos** son las acciones (hornear, decorar)
+- ¡Y lo puedes ver funcionando en Windows Forms!
 
 ## ➡️ Siguiente: [Teoría 02: Trabajando con Objetos en Windows Forms](Teoria-02-Objetos-WinForms.md)
