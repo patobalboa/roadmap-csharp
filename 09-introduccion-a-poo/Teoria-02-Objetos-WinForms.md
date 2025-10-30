@@ -2,1192 +2,674 @@
 
 ## 🎯 Objetivos de Aprendizaje
 Al finalizar esta lección, podrás:
-- Crear múltiples objetos e instancias de formularios
-- Gestionar referencias entre formularios y objetos
-- Diferenciar entre métodos estáticos y de instancia en contexto visual
-- Manejar el ciclo de vida de objetos y formularios
-- Crear aplicaciones con múltiples ventanas que intercambian datos
+- Entender qué es un objeto y cómo se diferencia de una clase
+- Crear múltiples objetos desde una misma clase
+- Almacenar y manipular objetos en memoria
+- Usar objetos para construir aplicaciones Windows Forms
 
-## 🏭 ¿Qué es un Objeto Visual?
+## 🤔 ¿Qué es un Objeto?
 
-### Analogía con Formularios
-Si una **clase** es el diseño de un formulario en el diseñador, entonces un **objeto** es cada ventana que aparece en pantalla cuando ejecutas la aplicación. Puedes abrir múltiples ventanas (objetos) usando el mismo diseño (clase), pero cada una será independiente.
+### Analogía de la Vida Real
 
-### Ejemplo Visual: Múltiples Ventanas de la Misma Clase
+Imagina que tienes una **receta de pastel** (esto es como una CLASE):
+- La receta dice qué ingredientes llevar
+- La receta explica los pasos
+
+Pero cuando SIGUES esa receta y horneas un pastel, **ESO es un OBJETO**.
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  📜 RECETA (CLASE)                                      │
+│  ─────────────────                                      │
+│  Clase: Pastel                                          │
+│  - sabor                                                │
+│  - tamaño                                               │
+│  - Hornear()                                            │
+└─────────────────────────────────────────────────────────┘
+              │
+              │ Usamos la receta 3 veces
+              ↓
+┌──────────────┐   ┌──────────────┐   ┌──────────────┐
+│ 🍰 OBJETO 1  │   │ 🍰 OBJETO 2  │   │ 🍰 OBJETO 3  │
+│ ────────────│   │ ────────────│   │ ────────────│
+│ sabor: Fresa │   │ sabor: Choco │   │ sabor: Vain  │
+│ tamaño: Gde  │   │ tamaño: Med  │   │ tamaño: Peq  │
+└──────────────┘   └──────────────┘   └──────────────┘
+```
+
+### Diferencia Clave
+- **CLASE**: El plano, la plantilla, el molde (solo existe 1)
+- **OBJETO**: La cosa real que construyes (puedes hacer muchos)
+
+## 📦 Crear un Objeto: Paso a Paso
+
+### Paso 1: Tener una Clase
+
+Primero necesitas una clase. Usemos esta clase **Estudiante**:
+
 ```csharp
-// Clase base para ventana de calculadora
-public partial class FormCalculadora : Form
+public class Estudiante
 {
-    private double _resultado;
-    private string _operacion;
-    private double _numeroAnterior;
+    // Propiedades
+    public string Nombre { get; set; }
+    public int Nota { get; set; }
     
-    public string Titulo { get; set; }
-    public int NumeroInstancia { get; private set; }
-    private static int _contadorInstancias = 0;
-    
-    public FormCalculadora()
+    // Constructor
+    public Estudiante()
     {
-        InitializeComponent();
-        _contadorInstancias++;
-        NumeroInstancia = _contadorInstancias;
-        Titulo = $"Calculadora #{NumeroInstancia}";
-        this.Text = Titulo;
-        InicializarCalculadora();
+        Nombre = "";
+        Nota = 0;
     }
     
-    public FormCalculadora(string titulo) : this()
+    // Método
+    public string ObtenerEstado()
     {
-        Titulo = titulo;
-        this.Text = titulo;
-    }
-    
-    private void InicializarCalculadora()
-    {
-        _resultado = 0;
-        _operacion = "";
-        _numeroAnterior = 0;
-        txtDisplay.Text = "0";
-        
-        // Cambiar color de fondo según la instancia
-        this.BackColor = ObtenerColorInstancia();
-    }
-    
-    private Color ObtenerColorInstancia()
-    {
-        Color[] colores = { Color.LightBlue, Color.LightGreen, Color.LightPink, 
-                           Color.LightYellow, Color.LightCyan };
-        return colores[(NumeroInstancia - 1) % colores.Length];
-    }
-    
-    public static int ObtenerNumeroInstancias()
-    {
-        return _contadorInstancias;
+        if (Nota >= 60)
+            return "Aprobado";
+        else
+            return "Reprobado";
     }
 }
 ```
 
-## 🔧 Instanciación Visual de Objetos
+### Paso 2: Crear el Objeto
 
-### Crear Múltiples Formularios Dinámicamente
+Para crear un objeto usamos la palabra clave **`new`**:
+
 ```csharp
-public partial class FormPrincipal : Form
+// Sintaxis:
+// TipoDeDato nombreVariable = new Constructor();
+
+Estudiante estudiante1 = new Estudiante();
+```
+
+**Visual del proceso:**
+```
+┌─────────────────────────────────────────────┐
+│  MEMORIA DE LA COMPUTADORA                  │
+│                                             │
+│  estudiante1 ──────→ 📦 Objeto Estudiante  │
+│                         Nombre: ""          │
+│                         Nota: 0             │
+│                                             │
+└─────────────────────────────────────────────┘
+```
+
+### Paso 3: Darle Valores al Objeto
+
+```csharp
+estudiante1.Nombre = "Ana García";
+estudiante1.Nota = 85;
+```
+
+**Ahora la memoria se ve así:**
+```
+┌─────────────────────────────────────────────┐
+│  MEMORIA                                    │
+│                                             │
+│  estudiante1 ──────→ 📦 Objeto Estudiante  │
+│                         Nombre: "Ana García"│
+│                         Nota: 85            │
+│                                             │
+└─────────────────────────────────────────────┘
+```
+
+### Paso 4: Usar los Métodos del Objeto
+
+```csharp
+string resultado = estudiante1.ObtenerEstado();
+// resultado ahora tiene "Aprobado"
+```
+
+## 🎭 Múltiples Objetos de la Misma Clase
+
+¡Aquí está la magia! Puedes crear MUCHOS objetos de la misma clase:
+
+```csharp
+// Crear 3 estudiantes diferentes
+Estudiante est1 = new Estudiante();
+est1.Nombre = "Ana";
+est1.Nota = 85;
+
+Estudiante est2 = new Estudiante();
+est2.Nombre = "Luis";
+est2.Nota = 55;
+
+Estudiante est3 = new Estudiante();
+est3.Nombre = "María";
+est3.Nota = 92;
+```
+
+**Visual en memoria:**
+```
+┌─────────────────────────────────────────────────────────┐
+│  MEMORIA DE LA COMPUTADORA                              │
+│                                                         │
+│  est1 ────→ 📦 Objeto 1          (Independiente)       │
+│                Nombre: "Ana"                            │
+│                Nota: 85                                 │
+│                                                         │
+│  est2 ────→ 📦 Objeto 2          (Independiente)       │
+│                Nombre: "Luis"                           │
+│                Nota: 55                                 │
+│                                                         │
+│  est3 ────→ 📦 Objeto 3          (Independiente)       │
+│                Nombre: "María"                          │
+│                Nota: 92                                 │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+**¡IMPORTANTE!** Cada objeto es INDEPENDIENTE. Cambiar `est1.Nota` NO afecta a `est2.Nota`.
+
+## 💡 Ejemplo Completo con Windows Forms
+
+### Clase Producto
+
+```csharp
+public class Producto
 {
-    private List<FormCalculadora> _calculadoras;
-    private int _posicionX = 100;
-    private int _posicionY = 100;
+    // Propiedades
+    public string Codigo { get; set; }
+    public string Nombre { get; set; }
+    public decimal Precio { get; set; }
+    public int Stock { get; set; }
     
-    public FormPrincipal()
+    // Constructor vacío
+    public Producto()
+    {
+        Codigo = "";
+        Nombre = "";
+        Precio = 0;
+        Stock = 0;
+    }
+    
+    // Constructor con parámetros
+    public Producto(string codigo, string nombre, decimal precio, int stock)
+    {
+        Codigo = codigo;
+        Nombre = nombre;
+        Precio = precio;
+        Stock = stock;
+    }
+    
+    // Métodos
+    public decimal CalcularTotal(int cantidad)
+    {
+        return Precio * cantidad;
+    }
+    
+    public bool HayStock(int cantidad)
+    {
+        return Stock >= cantidad;
+    }
+    
+    public string ObtenerInfo()
+    {
+        return $"{Codigo} - {Nombre}\n" +
+               $"Precio: ${Precio:N2}\n" +
+               $"Stock: {Stock} unidades";
+    }
+}
+```
+
+### Usando Objetos en el Formulario
+
+**Diseño del Form:**
+```
+┌────────────────────────────────────────┐
+│  Sistema de Productos                  │
+├────────────────────────────────────────┤
+│                                        │
+│  Código:    [txtCodigo  ]             │
+│  Nombre:    [txtNombre  ]             │
+│  Precio:    [txtPrecio  ]             │
+│  Stock:     [txtStock   ]             │
+│                                        │
+│  [btnCrearProducto]  [btnMostrarInfo] │
+│                                        │
+│  ┌──────────────────────────────────┐ │
+│  │  txtResultado                    │ │
+│  │  (MultiLine)                     │ │
+│  │                                  │ │
+│  └──────────────────────────────────┘ │
+└────────────────────────────────────────┘
+```
+
+**Código del formulario:**
+
+```csharp
+public partial class Form1 : Form
+{
+    // Variable para guardar el objeto producto
+    private Producto productoActual;
+    
+    public Form1()
     {
         InitializeComponent();
-        _calculadoras = new List<FormCalculadora>();
-        ConfigurarInterfaz();
     }
     
-    private void ConfigurarInterfaz()
+    private void btnCrearProducto_Click(object sender, EventArgs e)
     {
-        this.Text = "Gestor de Calculadoras - Demostración de Objetos";
-        this.Size = new Size(400, 300);
-        this.StartPosition = FormStartPosition.CenterScreen;
-        
-        Button btnNuevaCalculadora = new Button();
-        btnNuevaCalculadora.Text = "Nueva Calculadora";
-        btnNuevaCalculadora.Location = new Point(50, 50);
-        btnNuevaCalculadora.Size = new Size(150, 30);
-        btnNuevaCalculadora.Click += BtnNuevaCalculadora_Click;
-        
-        Button btnCalculadoraPersonalizada = new Button();
-        btnCalculadoraPersonalizada.Text = "Calculadora Personal";
-        btnCalculadoraPersonalizada.Location = new Point(50, 100);
-        btnCalculadoraPersonalizada.Size = new Size(150, 30);
-        btnCalculadoraPersonalizada.Click += BtnCalculadoraPersonalizada_Click;
-        
-        Button btnMostrarEstadisticas = new Button();
-        btnMostrarEstadisticas.Text = "Ver Estadísticas";
-        btnMostrarEstadisticas.Location = new Point(50, 150);
-        btnMostrarEstadisticas.Size = new Size(150, 30);
-        btnMostrarEstadisticas.Click += BtnMostrarEstadisticas_Click;
-        
-        Button btnCerrarTodas = new Button();
-        btnCerrarTodas.Text = "Cerrar Todas";
-        btnCerrarTodas.Location = new Point(50, 200);
-        btnCerrarTodas.Size = new Size(150, 30);
-        btnCerrarTodas.BackColor = Color.LightCoral;
-        btnCerrarTodas.Click += BtnCerrarTodas_Click;
-        
-        this.Controls.AddRange(new Control[] { 
-            btnNuevaCalculadora, btnCalculadoraPersonalizada, 
-            btnMostrarEstadisticas, btnCerrarTodas 
-        });
-    }
-    
-    private void BtnNuevaCalculadora_Click(object sender, EventArgs e)
-    {
-        // Crear nueva instancia (objeto) de calculadora
-        FormCalculadora nuevaCalculadora = new FormCalculadora();
-        
-        // Posicionar la ventana
-        nuevaCalculadora.StartPosition = FormStartPosition.Manual;
-        nuevaCalculadora.Location = new Point(_posicionX, _posicionY);
-        
-        // Actualizar posición para la siguiente ventana
-        _posicionX += 30;
-        _posicionY += 30;
-        if (_posicionX > 600) _posicionX = 100;
-        if (_posicionY > 400) _posicionY = 100;
-        
-        // Agregar a la lista de calculadoras activas
-        _calculadoras.Add(nuevaCalculadora);
-        
-        // Configurar evento cuando se cierre
-        nuevaCalculadora.FormClosed += (s, ev) => 
+        // Validar campos
+        if (string.IsNullOrWhiteSpace(txtCodigo.Text))
         {
-            _calculadoras.Remove(nuevaCalculadora);
-        };
-        
-        // Mostrar la ventana
-        nuevaCalculadora.Show();
-        
-        // Mensaje visual
-        this.Text = $"Gestor - {_calculadoras.Count} calculadoras activas";
-    }
-    
-    private void BtnCalculadoraPersonalizada_Click(object sender, EventArgs e)
-    {
-        // Solicitar nombre personalizado
-        string nombre = Microsoft.VisualBasic.Interaction.InputBox(
-            "Ingresa un nombre para tu calculadora:", 
-            "Calculadora Personalizada", 
-            $"Mi Calculadora {DateTime.Now:HH:mm}");
-        
-        if (!string.IsNullOrEmpty(nombre))
-        {
-            // Crear objeto con constructor personalizado
-            FormCalculadora calculadoraPersonal = new FormCalculadora(nombre);
-            calculadoraPersonal.StartPosition = FormStartPosition.CenterScreen;
-            
-            _calculadoras.Add(calculadoraPersonal);
-            calculadoraPersonal.FormClosed += (s, ev) => _calculadoras.Remove(calculadoraPersonal);
-            calculadoraPersonal.Show();
-            
-            this.Text = $"Gestor - {_calculadoras.Count} calculadoras activas";
-        }
-    }
-    
-    private void BtnMostrarEstadisticas_Click(object sender, EventArgs e)
-    {
-        string estadisticas = $"📊 Estadísticas de Objetos:\n\n";
-        estadisticas += $"🔢 Total de instancias creadas: {FormCalculadora.ObtenerNumeroInstancias()}\n";
-        estadisticas += $"🖥️ Calculadoras activas: {_calculadoras.Count}\n";
-        estadisticas += $"❌ Calculadoras cerradas: {FormCalculadora.ObtenerNumeroInstancias() - _calculadoras.Count}\n\n";
-        
-        if (_calculadoras.Count > 0)
-        {
-            estadisticas += "📋 Lista de calculadoras activas:\n";
-            foreach (var calc in _calculadoras)
-            {
-                estadisticas += $"• {calc.Titulo}\n";
-            }
-        }
-        
-        MessageBox.Show(estadisticas, "Estadísticas de Objetos", 
-                       MessageBoxButtons.OK, MessageBoxIcon.Information);
-    }
-    
-    private void BtnCerrarTodas_Click(object sender, EventArgs e)
-    {
-        if (_calculadoras.Count == 0)
-        {
-            MessageBox.Show("No hay calculadoras abiertas", "Información", 
-                           MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Ingrese un código");
             return;
         }
         
-        DialogResult resultado = MessageBox.Show(
-            $"¿Estás seguro de cerrar todas las {_calculadoras.Count} calculadoras?", 
-            "Confirmar Cierre", 
-            MessageBoxButtons.YesNo, 
-            MessageBoxIcon.Question);
+        // Crear el objeto con el constructor con parámetros
+        productoActual = new Producto(
+            txtCodigo.Text,
+            txtNombre.Text,
+            decimal.Parse(txtPrecio.Text),
+            int.Parse(txtStock.Text)
+        );
         
-        if (resultado == DialogResult.Yes)
+        MessageBox.Show("¡Producto creado exitosamente!");
+    }
+    
+    private void btnMostrarInfo_Click(object sender, EventArgs e)
+    {
+        if (productoActual == null)
         {
-            // Crear copia de la lista para evitar modificación durante iteración
-            var calculadorasACerrar = new List<FormCalculadora>(_calculadoras);
-            
-            foreach (var calculadora in calculadorasACerrar)
-            {
-                calculadora.Close();
-            }
-            
-            this.Text = "Gestor de Calculadoras - Demostración de Objetos";
+            MessageBox.Show("Primero cree un producto");
+            return;
         }
+        
+        // Usar el método del objeto
+        txtResultado.Text = productoActual.ObtenerInfo();
+        
+        // Usar otro método
+        bool hayStock = productoActual.HayStock(5);
+        txtResultado.Text += $"\n\n¿Hay stock para 5 unidades? {(hayStock ? "Sí" : "No")}";
+        
+        // Calcular un total
+        decimal total = productoActual.CalcularTotal(5);
+        txtResultado.Text += $"\nTotal por 5 unidades: ${total:N2}";
     }
 }
 ```
 
-## 🔗 Referencias y Comunicación entre Objetos
+## 🎯 Ejercicio Guiado: Lista de Tareas
 
-### Formularios que se Comunican Entre Sí
+Vamos a crear una aplicación para gestionar tareas usando objetos.
+
+### Paso 1: Crear la Clase Tarea
+
 ```csharp
-// Clase para datos compartidos
-public class ContactoData
+public class Tarea
 {
-    public string Nombre { get; set; }
-    public string Telefono { get; set; }
-    public string Email { get; set; }
+    // Propiedades
+    public string Titulo { get; set; }
+    public string Descripcion { get; set; }
+    public bool Completada { get; set; }
     public DateTime FechaCreacion { get; set; }
     
-    public ContactoData()
+    // Constructor
+    public Tarea(string titulo, string descripcion)
     {
+        Titulo = titulo;
+        Descripcion = descripcion;
+        Completada = false;
         FechaCreacion = DateTime.Now;
     }
     
-    public override string ToString()
+    // Métodos
+    public void Completar()
     {
-        return $"{Nombre} - {Telefono}";
+        Completada = true;
+    }
+    
+    public string ObtenerResumen()
+    {
+        string estado = Completada ? "✓ Completada" : "○ Pendiente";
+        return $"{estado} - {Titulo}\n{Descripcion}\nCreada: {FechaCreacion:dd/MM/yyyy}";
     }
 }
+```
 
-// Formulario principal de contactos
-public partial class FormContactos : Form
+### Paso 2: Diseño del Formulario
+
+```
+┌──────────────────────────────────────────┐
+│  📋 Gestor de Tareas                     │
+├──────────────────────────────────────────┤
+│                                          │
+│  Nueva Tarea:                            │
+│  Título:       [txtTitulo         ]      │
+│  Descripción:  [txtDescripcion    ]      │
+│                                          │
+│  [btnAgregarTarea]  [btnCompletar]       │
+│                                          │
+│  Tareas:                                 │
+│  ┌────────────────────────────────────┐ │
+│  │ lstTareas                          │ │
+│  │                                    │ │
+│  │                                    │ │
+│  └────────────────────────────────────┘ │
+│                                          │
+│  Detalle:                                │
+│  ┌────────────────────────────────────┐ │
+│  │ txtDetalle                         │ │
+│  │                                    │ │
+│  └────────────────────────────────────┘ │
+└──────────────────────────────────────────┘
+```
+
+### Paso 3: Código del Formulario
+
+```csharp
+public partial class FormTareas : Form
 {
-    private List<ContactoData> _contactos;
-    private ListBox lstContactos;
-    private FormDetalleContacto _formDetalle; // Referencia a formulario de detalle
+    // Lista para guardar múltiples objetos Tarea
+    private List<Tarea> listaTareas;
     
-    public FormContactos()
+    public FormTareas()
     {
         InitializeComponent();
-        _contactos = new List<ContactoData>();
-        InicializarDatosPrueba();
+        listaTareas = new List<Tarea>();
     }
     
-    private void InitializeComponent()
+    private void btnAgregarTarea_Click(object sender, EventArgs e)
     {
-        this.Text = "Lista de Contactos";
-        this.Size = new Size(400, 500);
-        this.StartPosition = FormStartPosition.CenterScreen;
+        // Validar
+        if (string.IsNullOrWhiteSpace(txtTitulo.Text))
+        {
+            MessageBox.Show("Ingrese un título");
+            return;
+        }
         
-        Label lblTitulo = new Label();
-        lblTitulo.Text = "📞 Gestión de Contactos";
-        lblTitulo.Font = new Font("Arial", 14, FontStyle.Bold);
-        lblTitulo.Location = new Point(20, 20);
-        lblTitulo.Size = new Size(300, 30);
+        // Crear nuevo objeto Tarea
+        Tarea nuevaTarea = new Tarea(
+            txtTitulo.Text,
+            txtDescripcion.Text
+        );
         
-        lstContactos = new ListBox();
-        lstContactos.Location = new Point(20, 60);
-        lstContactos.Size = new Size(340, 250);
-        lstContactos.SelectionMode = SelectionMode.One;
+        // Agregar a la lista
+        listaTareas.Add(nuevaTarea);
         
-        Button btnNuevo = new Button();
-        btnNuevo.Text = "➕ Nuevo Contacto";
-        btnNuevo.Location = new Point(20, 330);
-        btnNuevo.Size = new Size(120, 35);
-        btnNuevo.BackColor = Color.LightGreen;
-        btnNuevo.Click += BtnNuevo_Click;
-        
-        Button btnEditar = new Button();
-        btnEditar.Text = "✏️ Editar";
-        btnEditar.Location = new Point(150, 330);
-        btnEditar.Size = new Size(100, 35);
-        btnEditar.BackColor = Color.LightBlue;
-        btnEditar.Click += BtnEditar_Click;
-        
-        Button btnEliminar = new Button();
-        btnEliminar.Text = "🗑️ Eliminar";
-        btnEliminar.Location = new Point(260, 330);
-        btnEliminar.Size = new Size(100, 35);
-        btnEliminar.BackColor = Color.LightCoral;
-        btnEliminar.Click += BtnEliminar_Click;
-        
-        Button btnMostrarEstadisticas = new Button();
-        btnMostrarEstadisticas.Text = "📊 Estadísticas";
-        btnMostrarEstadisticas.Location = new Point(20, 380);
-        btnMostrarEstadisticas.Size = new Size(340, 30);
-        btnMostrarEstadisticas.BackColor = Color.LightYellow;
-        btnMostrarEstadisticas.Click += BtnMostrarEstadisticas_Click;
-        
-        this.Controls.AddRange(new Control[] { 
-            lblTitulo, lstContactos, btnNuevo, btnEditar, btnEliminar, btnMostrarEstadisticas 
-        });
-        
-        // Doble clic para editar
-        lstContactos.DoubleClick += BtnEditar_Click;
-    }
-    
-    private void InicializarDatosPrueba()
-    {
-        _contactos.Add(new ContactoData { Nombre = "Ana García", Telefono = "555-0101", Email = "ana@email.com" });
-        _contactos.Add(new ContactoData { Nombre = "Luis Martínez", Telefono = "555-0102", Email = "luis@email.com" });
-        _contactos.Add(new ContactoData { Nombre = "María López", Telefono = "555-0103", Email = "maria@email.com" });
+        // Actualizar la interfaz
         ActualizarLista();
-    }
-    
-    private void BtnNuevo_Click(object sender, EventArgs e)
-    {
-        // Crear nuevo objeto de contacto
-        ContactoData nuevoContacto = new ContactoData();
         
-        // Abrir formulario de detalle para edición
-        AbrirFormularioDetalle(nuevoContacto, true);
-    }
-    
-    private void BtnEditar_Click(object sender, EventArgs e)
-    {
-        if (lstContactos.SelectedItem == null)
-        {
-            MessageBox.Show("Selecciona un contacto para editar", "Advertencia", 
-                           MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return;
-        }
+        // Limpiar campos
+        txtTitulo.Clear();
+        txtDescripcion.Clear();
+        txtTitulo.Focus();
         
-        ContactoData contactoSeleccionado = (ContactoData)lstContactos.SelectedItem;
-        AbrirFormularioDetalle(contactoSeleccionado, false);
-    }
-    
-    private void AbrirFormularioDetalle(ContactoData contacto, bool esNuevo)
-    {
-        // Verificar si ya hay un formulario de detalle abierto
-        if (_formDetalle != null && !_formDetalle.IsDisposed)
-        {
-            _formDetalle.Focus();
-            MessageBox.Show("Ya hay un formulario de detalle abierto", "Información", 
-                           MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-        }
-        
-        // Crear nueva instancia del formulario de detalle
-        _formDetalle = new FormDetalleContacto(contacto, esNuevo);
-        
-        // Configurar evento para cuando se guarde el contacto
-        _formDetalle.ContactoGuardado += (contactoGuardado) =>
-        {
-            if (esNuevo)
-            {
-                _contactos.Add(contactoGuardado);
-            }
-            ActualizarLista();
-        };
-        
-        // Mostrar formulario como modal
-        _formDetalle.ShowDialog();
-    }
-    
-    private void BtnEliminar_Click(object sender, EventArgs e)
-    {
-        if (lstContactos.SelectedItem == null)
-        {
-            MessageBox.Show("Selecciona un contacto para eliminar", "Advertencia", 
-                           MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return;
-        }
-        
-        ContactoData contactoSeleccionado = (ContactoData)lstContactos.SelectedItem;
-        
-        DialogResult resultado = MessageBox.Show(
-            $"¿Estás seguro de eliminar a {contactoSeleccionado.Nombre}?", 
-            "Confirmar Eliminación", 
-            MessageBoxButtons.YesNo, 
-            MessageBoxIcon.Question);
-        
-        if (resultado == DialogResult.Yes)
-        {
-            _contactos.Remove(contactoSeleccionado);
-            ActualizarLista();
-            MessageBox.Show("Contacto eliminado correctamente", "Éxito", 
-                           MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-    }
-    
-    private void BtnMostrarEstadisticas_Click(object sender, EventArgs e)
-    {
-        MostrarEstadisticasVisuales();
-    }
-    
-    private void MostrarEstadisticasVisuales()
-    {
-        FormEstadisticas formStats = new FormEstadisticas(_contactos);
-        formStats.ShowDialog();
+        MessageBox.Show("Tarea agregada exitosamente");
     }
     
     private void ActualizarLista()
     {
-        lstContactos.Items.Clear();
-        foreach (var contacto in _contactos.OrderBy(c => c.Nombre))
+        lstTareas.Items.Clear();
+        
+        // Recorrer todos los objetos de la lista
+        foreach (Tarea tarea in listaTareas)
         {
-            lstContactos.Items.Add(contacto);
-        }
-        
-        // Actualizar título con contador
-        this.Text = $"Lista de Contactos ({_contactos.Count})";
-    }
-}
-
-// Formulario de detalle que recibe referencia a objeto
-public partial class FormDetalleContacto : Form
-{
-    private ContactoData _contacto;
-    private bool _esNuevo;
-    private TextBox txtNombre, txtTelefono, txtEmail;
-    private Label lblFecha;
-    
-    // Evento para comunicar cambios al formulario padre
-    public event Action<ContactoData> ContactoGuardado;
-    
-    public FormDetalleContacto(ContactoData contacto, bool esNuevo)
-    {
-        _contacto = contacto;
-        _esNuevo = esNuevo;
-        InitializeComponent();
-        CargarDatos();
-    }
-    
-    private void InitializeComponent()
-    {
-        this.Text = _esNuevo ? "Nuevo Contacto" : "Editar Contacto";
-        this.Size = new Size(400, 300);
-        this.StartPosition = FormStartPosition.CenterParent;
-        this.FormBorderStyle = FormBorderStyle.FixedDialog;
-        this.MaximizeBox = false;
-        this.MinimizeBox = false;
-        
-        Label lblTitulo = new Label();
-        lblTitulo.Text = _esNuevo ? "➕ Nuevo Contacto" : "✏️ Editar Contacto";
-        lblTitulo.Font = new Font("Arial", 12, FontStyle.Bold);
-        lblTitulo.Location = new Point(20, 20);
-        lblTitulo.Size = new Size(300, 25);
-        
-        Label lblNom = new Label() { Text = "Nombre:", Location = new Point(20, 60), Size = new Size(80, 20) };
-        txtNombre = new TextBox() { Location = new Point(110, 60), Size = new Size(200, 20) };
-        
-        Label lblTel = new Label() { Text = "Teléfono:", Location = new Point(20, 100), Size = new Size(80, 20) };
-        txtTelefono = new TextBox() { Location = new Point(110, 100), Size = new Size(200, 20) };
-        
-        Label lblEm = new Label() { Text = "Email:", Location = new Point(20, 140), Size = new Size(80, 20) };
-        txtEmail = new TextBox() { Location = new Point(110, 140), Size = new Size(200, 20) };
-        
-        lblFecha = new Label();
-        lblFecha.Location = new Point(20, 180);
-        lblFecha.Size = new Size(300, 20);
-        lblFecha.ForeColor = Color.Gray;
-        
-        Button btnGuardar = new Button();
-        btnGuardar.Text = "💾 Guardar";
-        btnGuardar.Location = new Point(120, 220);
-        btnGuardar.Size = new Size(80, 30);
-        btnGuardar.BackColor = Color.LightGreen;
-        btnGuardar.Click += BtnGuardar_Click;
-        
-        Button btnCancelar = new Button();
-        btnCancelar.Text = "❌ Cancelar";
-        btnCancelar.Location = new Point(210, 220);
-        btnCancelar.Size = new Size(80, 30);
-        btnCancelar.BackColor = Color.LightCoral;
-        btnCancelar.Click += (s, e) => this.Close();
-        
-        this.Controls.AddRange(new Control[] { 
-            lblTitulo, lblNom, txtNombre, lblTel, txtTelefono, 
-            lblEm, txtEmail, lblFecha, btnGuardar, btnCancelar 
-        });
-        
-        // Configurar validación en tiempo real
-        txtNombre.TextChanged += ValidarFormulario;
-        txtTelefono.TextChanged += ValidarFormulario;
-        txtEmail.TextChanged += ValidarFormulario;
-    }
-    
-    private void CargarDatos()
-    {
-        txtNombre.Text = _contacto.Nombre ?? "";
-        txtTelefono.Text = _contacto.Telefono ?? "";
-        txtEmail.Text = _contacto.Email ?? "";
-        
-        if (_esNuevo)
-        {
-            lblFecha.Text = "Fecha: Se asignará al guardar";
-        }
-        else
-        {
-            lblFecha.Text = $"Creado: {_contacto.FechaCreacion:dd/MM/yyyy HH:mm}";
+            string icono = tarea.Completada ? "✓" : "○";
+            lstTareas.Items.Add($"{icono} {tarea.Titulo}");
         }
     }
     
-    private void ValidarFormulario(object sender, EventArgs e)
+    private void lstTareas_SelectedIndexChanged(object sender, EventArgs e)
     {
-        // Cambiar color de fondo según validación
-        TextBox txt = sender as TextBox;
-        if (string.IsNullOrWhiteSpace(txt.Text))
-        {
-            txt.BackColor = Color.LightPink;
-        }
-        else
-        {
-            txt.BackColor = Color.LightGreen;
-        }
+        if (lstTareas.SelectedIndex < 0) return;
+        
+        // Obtener el objeto seleccionado
+        Tarea tareaSeleccionada = listaTareas[lstTareas.SelectedIndex];
+        
+        // Mostrar su información usando el método
+        txtDetalle.Text = tareaSeleccionada.ObtenerResumen();
     }
     
-    private void BtnGuardar_Click(object sender, EventArgs e)
+    private void btnCompletar_Click(object sender, EventArgs e)
     {
-        if (ValidarDatos())
+        if (lstTareas.SelectedIndex < 0)
         {
-            // Modificar el objeto original (referencia)
-            _contacto.Nombre = txtNombre.Text.Trim();
-            _contacto.Telefono = txtTelefono.Text.Trim();
-            _contacto.Email = txtEmail.Text.Trim();
-            
-            if (_esNuevo)
-            {
-                _contacto.FechaCreacion = DateTime.Now;
-            }
-            
-            // Notificar al formulario padre
-            ContactoGuardado?.Invoke(_contacto);
-            
-            MessageBox.Show("Contacto guardado correctamente", "Éxito", 
-                           MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
-            this.Close();
-        }
-    }
-    
-    private bool ValidarDatos()
-    {
-        List<string> errores = new List<string>();
-        
-        if (string.IsNullOrWhiteSpace(txtNombre.Text))
-            errores.Add("• El nombre es requerido");
-            
-        if (string.IsNullOrWhiteSpace(txtTelefono.Text))
-            errores.Add("• El teléfono es requerido");
-            
-        if (!string.IsNullOrWhiteSpace(txtEmail.Text))
-        {
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(txtEmail.Text);
-            }
-            catch
-            {
-                errores.Add("• El formato del email es inválido");
-            }
+            MessageBox.Show("Seleccione una tarea");
+            return;
         }
         
-        if (errores.Count > 0)
-        {
-            string mensaje = "Errores de validación:\n\n" + string.Join("\n", errores);
-            MessageBox.Show(mensaje, "Errores de Validación", 
-                           MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return false;
-        }
+        // Obtener la tarea seleccionada
+        Tarea tarea = listaTareas[lstTareas.SelectedIndex];
         
-        return true;
-    }
-}
-
-// Formulario de estadísticas que recibe colección de objetos
-public partial class FormEstadisticas : Form
-{
-    private List<ContactoData> _contactos;
-    
-    public FormEstadisticas(List<ContactoData> contactos)
-    {
-        _contactos = contactos;
-        InitializeComponent();
-        MostrarEstadisticas();
-    }
-    
-    private void InitializeComponent()
-    {
-        this.Text = "📊 Estadísticas de Contactos";
-        this.Size = new Size(500, 400);
-        this.StartPosition = FormStartPosition.CenterParent;
-        this.FormBorderStyle = FormBorderStyle.FixedDialog;
-        this.MaximizeBox = false;
+        // Llamar a su método Completar
+        tarea.Completar();
         
-        Button btnCerrar = new Button();
-        btnCerrar.Text = "Cerrar";
-        btnCerrar.Location = new Point(200, 320);
-        btnCerrar.Size = new Size(100, 30);
-        btnCerrar.Click += (s, e) => this.Close();
+        // Actualizar la interfaz
+        ActualizarLista();
+        txtDetalle.Text = tarea.ObtenerResumen();
         
-        this.Controls.Add(btnCerrar);
-    }
-    
-    private void MostrarEstadisticas()
-    {
-        int yPos = 20;
-        
-        // Título
-        Label lblTitulo = new Label();
-        lblTitulo.Text = "📊 Análisis de Contactos";
-        lblTitulo.Font = new Font("Arial", 14, FontStyle.Bold);
-        lblTitulo.Location = new Point(20, yPos);
-        lblTitulo.Size = new Size(400, 30);
-        this.Controls.Add(lblTitulo);
-        yPos += 40;
-        
-        // Estadísticas básicas
-        Label lblTotal = new Label();
-        lblTotal.Text = $"📱 Total de contactos: {_contactos.Count}";
-        lblTotal.Location = new Point(20, yPos);
-        lblTotal.Size = new Size(300, 20);
-        this.Controls.Add(lblTotal);
-        yPos += 30;
-        
-        // Contactos con email
-        int conEmail = _contactos.Count(c => !string.IsNullOrWhiteSpace(c.Email));
-        Label lblEmail = new Label();
-        lblEmail.Text = $"📧 Con email: {conEmail} ({(conEmail * 100.0 / Math.Max(_contactos.Count, 1)):F1}%)";
-        lblEmail.Location = new Point(20, yPos);
-        lblEmail.Size = new Size(300, 20);
-        this.Controls.Add(lblEmail);
-        yPos += 30;
-        
-        // Contacto más reciente
-        if (_contactos.Count > 0)
-        {
-            var masReciente = _contactos.OrderByDescending(c => c.FechaCreacion).First();
-            Label lblReciente = new Label();
-            lblReciente.Text = $"🆕 Más reciente: {masReciente.Nombre} ({masReciente.FechaCreacion:dd/MM/yyyy})";
-            lblReciente.Location = new Point(20, yPos);
-            lblReciente.Size = new Size(400, 20);
-            this.Controls.Add(lblReciente);
-            yPos += 30;
-        }
-        
-        // Lista de contactos
-        Label lblLista = new Label();
-        lblLista.Text = "📋 Lista completa:";
-        lblLista.Font = new Font("Arial", 10, FontStyle.Bold);
-        lblLista.Location = new Point(20, yPos);
-        lblLista.Size = new Size(200, 20);
-        this.Controls.Add(lblLista);
-        yPos += 25;
-        
-        ListBox lstDetalle = new ListBox();
-        lstDetalle.Location = new Point(20, yPos);
-        lstDetalle.Size = new Size(450, 150);
-        
-        foreach (var contacto in _contactos.OrderBy(c => c.Nombre))
-        {
-            string item = $"{contacto.Nombre} - {contacto.Telefono}";
-            if (!string.IsNullOrWhiteSpace(contacto.Email))
-                item += $" - {contacto.Email}";
-            lstDetalle.Items.Add(item);
-        }
-        
-        this.Controls.Add(lstDetalle);
+        MessageBox.Show("¡Tarea completada!");
     }
 }
 ```
 
-## 🔄 Métodos Estáticos vs de Instancia en Contexto Visual
+### Visual del Proceso en Memoria
 
-### Utilitarios Estáticos para Formularios
+```
+┌─────────────────────────────────────────────────────────┐
+│  listaTareas (List<Tarea>)                              │
+│  ═══════════════════════════                            │
+│                                                         │
+│  [0] ──→ 📦 Tarea 1                                     │
+│           Titulo: "Estudiar C#"                         │
+│           Descripcion: "Repasar clases"                 │
+│           Completada: false                             │
+│           FechaCreacion: 30/10/2025                     │
+│                                                         │
+│  [1] ──→ 📦 Tarea 2                                     │
+│           Titulo: "Hacer ejercicios"                    │
+│           Descripcion: "Completar 5 ejercicios"         │
+│           Completada: true                              │
+│           FechaCreacion: 30/10/2025                     │
+│                                                         │
+│  [2] ──→ 📦 Tarea 3                                     │
+│           Titulo: "Proyecto final"                      │
+│           Descripcion: "Terminar WinForms"              │
+│           Completada: false                             │
+│           FechaCreacion: 30/10/2025                     │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+## 🔄 Ciclo de Vida de un Objeto
+
+Entender qué pasa con un objeto desde que nace hasta que muere:
+
+```
+1. CREACIÓN
+   ════════
+   Tarea t = new Tarea("Título", "Descripción");
+   
+   📦 Objeto creado en memoria
+   
+   
+2. USO
+   ════
+   t.Completar();
+   string info = t.ObtenerResumen();
+   
+   📦 Objeto existe y funciona
+   
+   
+3. REFERENCIA NULA
+   ══════════════
+   t = null;
+   
+   💀 Ya no podemos acceder al objeto
+   
+   
+4. RECOLECCIÓN DE BASURA (Garbage Collection)
+   ═══════════════════════════════════════════
+   (Automático en C#)
+   
+   🗑️ El objeto se elimina de la memoria
+```
+
+## 🎨 Conceptos Importantes
+
+### 1. Referencia vs Valor
+
 ```csharp
-public static class UtilFormularios
-{
-    // Método estático - no necesita instancia de formulario
-    public static void CentrarFormulario(Form formulario, Form padre = null)
-    {
-        if (padre != null)
-        {
-            formulario.StartPosition = FormStartPosition.Manual;
-            formulario.Location = new Point(
-                padre.Location.X + (padre.Width - formulario.Width) / 2,
-                padre.Location.Y + (padre.Height - formulario.Height) / 2
-            );
-        }
-        else
-        {
-            formulario.StartPosition = FormStartPosition.CenterScreen;
-        }
-    }
-    
-    public static void AplicarTemaOscuro(Form formulario)
-    {
-        formulario.BackColor = Color.FromArgb(45, 45, 48);
-        formulario.ForeColor = Color.White;
-        
-        foreach (Control control in formulario.Controls)
-        {
-            AplicarTemaOscuroControl(control);
-        }
-    }
-    
-    private static void AplicarTemaOscuroControl(Control control)
-    {
-        if (control is Button btn)
-        {
-            btn.BackColor = Color.FromArgb(62, 62, 66);
-            btn.ForeColor = Color.White;
-            btn.FlatStyle = FlatStyle.Flat;
-        }
-        else if (control is TextBox txt)
-        {
-            txt.BackColor = Color.FromArgb(51, 51, 55);
-            txt.ForeColor = Color.White;
-        }
-        else if (control is Label lbl)
-        {
-            lbl.ForeColor = Color.White;
-        }
-        
-        // Aplicar recursivamente a controles hijos
-        foreach (Control hijo in control.Controls)
-        {
-            AplicarTemaOscuroControl(hijo);
-        }
-    }
-    
-    public static DialogResult MostrarMensajePersonalizado(string mensaje, string titulo, 
-                                                          MessageBoxIcon icono = MessageBoxIcon.Information)
-    {
-        return MessageBox.Show(mensaje, titulo, MessageBoxButtons.OK, icono);
-    }
-    
-    // Método estático para validación común
-    public static bool ValidarCamposRequeridos(params TextBox[] campos)
-    {
-        bool todosValidos = true;
-        
-        foreach (var campo in campos)
-        {
-            if (string.IsNullOrWhiteSpace(campo.Text))
-            {
-                campo.BackColor = Color.LightPink;
-                todosValidos = false;
-            }
-            else
-            {
-                campo.BackColor = Color.LightGreen;
-            }
-        }
-        
-        return todosValidos;
-    }
-}
+// Los objetos son REFERENCIAS
+Tarea tarea1 = new Tarea("Tarea A", "Desc A");
+Tarea tarea2 = tarea1;  // ¡tarea2 apunta al MISMO objeto!
 
-// Formulario que usa métodos estáticos
-public partial class FormEjemploMetodos : Form
-{
-    private TextBox txtNombre, txtEmail;
-    private Button btnValidar, btnTemaOscuro, btnCentrar;
-    
-    public FormEjemploMetodos()
-    {
-        InitializeComponent();
-        ConfigurarEventos();
-    }
-    
-    private void ConfigurarEventos()
-    {
-        // Usar método estático para validación
-        btnValidar.Click += (s, e) => 
-        {
-            bool esValido = UtilFormularios.ValidarCamposRequeridos(txtNombre, txtEmail);
-            
-            if (esValido)
-            {
-                UtilFormularios.MostrarMensajePersonalizado(
-                    "✅ Todos los campos son válidos", 
-                    "Validación Exitosa", 
-                    MessageBoxIcon.Information);
-            }
-            else
-            {
-                UtilFormularios.MostrarMensajePersonalizado(
-                    "❌ Por favor completa todos los campos", 
-                    "Campos Requeridos", 
-                    MessageBoxIcon.Warning);
-            }
-        };
-        
-        // Usar método estático para tema
-        btnTemaOscuro.Click += (s, e) => 
-        {
-            UtilFormularios.AplicarTemaOscuro(this);
-        };
-        
-        // Usar método estático para centrar
-        btnCentrar.Click += (s, e) => 
-        {
-            UtilFormularios.CentrarFormulario(this);
-        };
-    }
-    
-    // Método de instancia - específico de este formulario
-    public void MostrarDatosFormulario()
-    {
-        string info = $"Formulario: {this.Text}\n";
-        info += $"Tamaño: {this.Size}\n";
-        info += $"Posición: {this.Location}\n";
-        info += $"Campos: Nombre='{txtNombre.Text}', Email='{txtEmail.Text}'";
-        
-        MessageBox.Show(info, "Información del Formulario");
-    }
-}
+tarea2.Titulo = "Tarea B";
+
+// ¿Qué muestra esto?
+MessageBox.Show(tarea1.Titulo);  // Muestra "Tarea B"
 ```
 
-## ♻️ Ciclo de Vida Visual de Objetos
+**Visual:**
+```
+┌─────────────────────────────────────────┐
+│  MEMORIA                                │
+│                                         │
+│  tarea1 ────┐                           │
+│             ├──→ 📦 Objeto Tarea        │
+│  tarea2 ────┘     Titulo: "Tarea B"    │
+│                   Descripcion: "Desc A" │
+│                                         │
+└─────────────────────────────────────────┘
+     Ambas variables apuntan al mismo objeto
+```
 
-### Demostración del Ciclo de Vida con Formularios
+### 2. Objeto Null
+
 ```csharp
-public partial class FormCicloVida : Form
-{
-    private static int _contadorFormularios = 0;
-    private int _idFormulario;
-    private DateTime _fechaCreacion;
-    private Timer _timerVida;
-    private Label _lblTiempoVida;
-    
-    public FormCicloVida()
-    {
-        // Fase 1: Creación
-        _contadorFormularios++;
-        _idFormulario = _contadorFormularios;
-        _fechaCreacion = DateTime.Now;
-        
-        InitializeComponent();
-        IniciarCicloVida();
-        
-        Console.WriteLine($"✅ Formulario #{_idFormulario} creado a las {_fechaCreacion:HH:mm:ss}");
-    }
-    
-    private void InitializeComponent()
-    {
-        this.Text = $"Ciclo de Vida #{_idFormulario}";
-        this.Size = new Size(400, 300);
-        this.StartPosition = FormStartPosition.CenterScreen;
-        
-        _lblTiempoVida = new Label();
-        _lblTiempoVida.Location = new Point(50, 50);
-        _lblTiempoVida.Size = new Size(300, 30);
-        _lblTiempoVida.Font = new Font("Arial", 12, FontStyle.Bold);
-        _lblTiempoVida.ForeColor = Color.Blue;
-        
-        Label lblInfo = new Label();
-        lblInfo.Text = $"Formulario creado: {_fechaCreacion:dd/MM/yyyy HH:mm:ss}";
-        lblInfo.Location = new Point(50, 100);
-        lblInfo.Size = new Size(300, 20);
-        
-        Button btnSimularTrabajo = new Button();
-        btnSimularTrabajo.Text = "🔧 Simular Trabajo";
-        btnSimularTrabajo.Location = new Point(50, 150);
-        btnSimularTrabajo.Size = new Size(120, 30);
-        btnSimularTrabajo.Click += SimularTrabajo;
-        
-        Button btnCerrar = new Button();
-        btnCerrar.Text = "❌ Cerrar";
-        btnCerrar.Location = new Point(200, 150);
-        btnCerrar.Size = new Size(100, 30);
-        btnCerrar.BackColor = Color.LightCoral;
-        btnCerrar.Click += (s, e) => this.Close();
-        
-        this.Controls.AddRange(new Control[] { _lblTiempoVida, lblInfo, btnSimularTrabajo, btnCerrar });
-        
-        // Configurar eventos del ciclo de vida
-        this.Load += FormCicloVida_Load;
-        this.Activated += FormCicloVida_Activated;
-        this.Deactivate += FormCicloVida_Deactivate;
-        this.FormClosing += FormCicloVida_FormClosing;
-        this.FormClosed += FormCicloVida_FormClosed;
-    }
-    
-    private void IniciarCicloVida()
-    {
-        // Fase 2: Uso activo - Timer para mostrar tiempo de vida
-        _timerVida = new Timer();
-        _timerVida.Interval = 1000; // 1 segundo
-        _timerVida.Tick += ActualizarTiempoVida;
-        _timerVida.Start();
-    }
-    
-    private void ActualizarTiempoVida(object sender, EventArgs e)
-    {
-        TimeSpan tiempoVida = DateTime.Now - _fechaCreacion;
-        _lblTiempoVida.Text = $"⏱️ Tiempo de vida: {tiempoVida:hh\\:mm\\:ss}";
-        
-        // Cambiar color según el tiempo de vida
-        if (tiempoVida.TotalSeconds > 30)
-            _lblTiempoVida.ForeColor = Color.Red;
-        else if (tiempoVida.TotalSeconds > 15)
-            _lblTiempoVida.ForeColor = Color.Orange;
-    }
-    
-    private void SimularTrabajo(object sender, EventArgs e)
-    {
-        // Simular trabajo del objeto
-        Button btn = sender as Button;
-        btn.Text = "⚙️ Trabajando...";
-        btn.Enabled = false;
-        
-        // Usar Task para no bloquear la UI
-        Task.Run(() =>
-        {
-            System.Threading.Thread.Sleep(2000); // Simular trabajo de 2 segundos
-            
-            this.Invoke((Action)(() =>
-            {
-                btn.Text = "✅ Trabajo Completado";
-                btn.BackColor = Color.LightGreen;
-                Task.Delay(1000).ContinueWith(t =>
-                {
-                    this.Invoke((Action)(() =>
-                    {
-                        btn.Text = "🔧 Simular Trabajo";
-                        btn.BackColor = SystemColors.Control;
-                        btn.Enabled = true;
-                    }));
-                });
-            }));
-        });
-        
-        Console.WriteLine($"🔧 Formulario #{_idFormulario} realizando trabajo...");
-    }
-    
-    // Eventos del ciclo de vida
-    private void FormCicloVida_Load(object sender, EventArgs e)
-    {
-        Console.WriteLine($"📥 Formulario #{_idFormulario} cargado completamente");
-    }
-    
-    private void FormCicloVida_Activated(object sender, EventArgs e)
-    {
-        this.BackColor = Color.LightGreen;
-        Console.WriteLine($"🎯 Formulario #{_idFormulario} activado (enfocado)");
-    }
-    
-    private void FormCicloVida_Deactivate(object sender, EventArgs e)
-    {
-        this.BackColor = SystemColors.Control;
-        Console.WriteLine($"😴 Formulario #{_idFormulario} desactivado");
-    }
-    
-    private void FormCicloVida_FormClosing(object sender, FormClosingEventArgs e)
-    {
-        DialogResult resultado = MessageBox.Show(
-            $"¿Estás seguro de cerrar el formulario #{_idFormulario}?", 
-            "Confirmar Cierre", 
-            MessageBoxButtons.YesNo, 
-            MessageBoxIcon.Question);
-        
-        if (resultado == DialogResult.No)
-        {
-            e.Cancel = true; // Cancelar el cierre
-            Console.WriteLine($"❌ Cierre del formulario #{_idFormulario} cancelado");
-        }
-        else
-        {
-            Console.WriteLine($"🚪 Formulario #{_idFormulario} cerrándose...");
-        }
-    }
-    
-    private void FormCicloVida_FormClosed(object sender, FormClosedEventArgs e)
-    {
-        // Fase 3: Limpieza
-        _timerVida?.Stop();
-        _timerVida?.Dispose();
-        
-        TimeSpan tiempoTotal = DateTime.Now - _fechaCreacion;
-        Console.WriteLine($"💀 Formulario #{_idFormulario} cerrado después de {tiempoTotal:hh\\:mm\\:ss}");
-    }
-    
-    // Finalizer - se ejecuta durante la recolección de basura
-    ~FormCicloVida()
-    {
-        Console.WriteLine($"🗑️ Formulario #{_idFormulario} siendo recolectado por GC");
-    }
-    
-    public static int ObtenerContadorFormularios()
-    {
-        return _contadorFormularios;
-    }
-}
+Tarea tarea = null;  // No apunta a ningún objeto
 
-// Formulario principal para demostrar múltiples ciclos de vida
-public partial class FormDemostradorCicloVida : Form
-{
-    private List<FormCicloVida> _formulariosActivos;
-    
-    public FormDemostradorCicloVida()
-    {
-        InitializeComponent();
-        _formulariosActivos = new List<FormCicloVida>();
-    }
-    
-    private void InitializeComponent()
-    {
-        this.Text = "Demostrador de Ciclo de Vida de Objetos";
-        this.Size = new Size(500, 400);
-        this.StartPosition = FormStartPosition.CenterScreen;
-        
-        Label lblTitulo = new Label();
-        lblTitulo.Text = "🔄 Ciclo de Vida de Objetos Visuales";
-        lblTitulo.Font = new Font("Arial", 14, FontStyle.Bold);
-        lblTitulo.Location = new Point(50, 30);
-        lblTitulo.Size = new Size(400, 30);
-        
-        Button btnNuevoFormulario = new Button();
-        btnNuevoFormulario.Text = "➕ Crear Nuevo Formulario";
-        btnNuevoFormulario.Location = new Point(50, 80);
-        btnNuevoFormulario.Size = new Size(180, 35);
-        btnNuevoFormulario.BackColor = Color.LightBlue;
-        btnNuevoFormulario.Click += BtnNuevoFormulario_Click;
-        
-        Button btnMostrarEstadisticas = new Button();
-        btnMostrarEstadisticas.Text = "📊 Ver Estadísticas";
-        btnMostrarEstadisticas.Location = new Point(250, 80);
-        btnMostrarEstadisticas.Size = new Size(150, 35);
-        btnMostrarEstadisticas.BackColor = Color.LightGreen;
-        btnMostrarEstadisticas.Click += BtnMostrarEstadisticas_Click;
-        
-        Button btnForzarGC = new Button();
-        btnForzarGC.Text = "🗑️ Forzar Recolección de Basura";
-        btnForzarGC.Location = new Point(50, 130);
-        btnForzarGC.Size = new Size(200, 35);
-        btnForzarGC.BackColor = Color.LightYellow;
-        btnForzarGC.Click += BtnForzarGC_Click;
-        
-        Button btnCerrarTodos = new Button();
-        btnCerrarTodos.Text = "❌ Cerrar Todos";
-        btnCerrarTodos.Location = new Point(270, 130);
-        btnCerrarTodos.Size = new Size(130, 35);
-        btnCerrarTodos.BackColor = Color.LightCoral;
-        btnCerrarTodos.Click += BtnCerrarTodos_Click;
-        
-        TextBox txtConsola = new TextBox();
-        txtConsola.Multiline = true;
-        txtConsola.ScrollBars = ScrollBars.Vertical;
-        txtConsola.ReadOnly = true;
-        txtConsola.Location = new Point(50, 180);
-        txtConsola.Size = new Size(400, 150);
-        txtConsola.BackColor = Color.Black;
-        txtConsola.ForeColor = Color.Green;
-        txtConsola.Font = new Font("Consolas", 9);
-        
-        // Redirigir Console.WriteLine a TextBox
-        Console.SetOut(new TextBoxWriter(txtConsola));
-        
-        this.Controls.AddRange(new Control[] { 
-            lblTitulo, btnNuevoFormulario, btnMostrarEstadisticas, 
-            btnForzarGC, btnCerrarTodos, txtConsola 
-        });
-    }
-    
-    private void BtnNuevoFormulario_Click(object sender, EventArgs e)
-    {
-        FormCicloVida nuevoForm = new FormCicloVida();
-        _formulariosActivos.Add(nuevoForm);
-        
-        nuevoForm.FormClosed += (s, ev) => _formulariosActivos.Remove(nuevoForm);
-        nuevoForm.Show();
-    }
-    
-    private void BtnMostrarEstadisticas_Click(object sender, EventArgs e)
-    {
-        string stats = $"📊 Estadísticas de Objetos:\n\n";
-        stats += $"• Total formularios creados: {FormCicloVida.ObtenerContadorFormularios()}\n";
-        stats += $"• Formularios activos: {_formulariosActivos.Count}\n";
-        stats += $"• Formularios destruidos: {FormCicloVida.ObtenerContadorFormularios() - _formulariosActivos.Count}\n";
-        stats += $"• Memoria usada: {GC.GetTotalMemory(false) / 1024:N0} KB\n";
-        
-        MessageBox.Show(stats, "Estadísticas de Ciclo de Vida", 
-                       MessageBoxButtons.OK, MessageBoxIcon.Information);
-    }
-    
-    private void BtnForzarGC_Click(object sender, EventArgs e)
-    {
-        long memoriaAntes = GC.GetTotalMemory(false);
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
-        GC.Collect();
-        long memoriaDespues = GC.GetTotalMemory(true);
-        
-        Console.WriteLine($"🗑️ Recolección de basura ejecutada");
-        Console.WriteLine($"   Memoria antes: {memoriaAntes / 1024:N0} KB");
-        Console.WriteLine($"   Memoria después: {memoriaDespues / 1024:N0} KB");
-        Console.WriteLine($"   Memoria liberada: {(memoriaAntes - memoriaDespues) / 1024:N0} KB");
-    }
-    
-    private void BtnCerrarTodos_Click(object sender, EventArgs e)
-    {
-        var formulariosACerrar = new List<FormCicloVida>(_formulariosActivos);
-        foreach (var form in formulariosACerrar)
-        {
-            form.Close();
-        }
-    }
-}
+// ¡PELIGRO! Esto causará un error:
+// tarea.Completar();  // NullReferenceException
 
-// Clase auxiliar para redirigir Console.WriteLine a TextBox
-public class TextBoxWriter : System.IO.TextWriter
+// Siempre verificar:
+if (tarea != null)
 {
-    private TextBox _textBox;
-    
-    public TextBoxWriter(TextBox textBox)
-    {
-        _textBox = textBox;
-    }
-    
-    public override void WriteLine(string value)
-    {
-        if (_textBox.InvokeRequired)
-        {
-            _textBox.Invoke((Action)(() => {
-                _textBox.AppendText($"{DateTime.Now:HH:mm:ss} - {value}\r\n");
-                _textBox.SelectionStart = _textBox.Text.Length;
-                _textBox.ScrollToCaret();
-            }));
-        }
-        else
-        {
-            _textBox.AppendText($"{DateTime.Now:HH:mm:ss} - {value}\r\n");
-            _textBox.SelectionStart = _textBox.Text.Length;
-            _textBox.ScrollToCaret();
-        }
-    }
-    
-    public override System.Text.Encoding Encoding => System.Text.Encoding.UTF8;
+    tarea.Completar();
 }
 ```
 
-## ✅ Resumen de Conceptos Visualizados
+**Visual:**
+```
+┌─────────────────────────────────┐
+│  tarea ──→ ∅ (null)             │
+│                                 │
+│  No hay ningún objeto           │
+└─────────────────────────────────┘
+```
 
-### 🎯 **Objetos Múltiples**
-- Cada formulario abierto es un **objeto independiente** de la misma clase
-- Los objetos pueden tener **estados diferentes** (diferentes valores en sus campos)
-- Las **referencias** permiten que los formularios se comuniquen entre sí
+### 3. Muchos Objetos, Una Clase
 
-### 🔗 **Referencias Visuales**
-- Los formularios pueden **pasar objetos** entre sí
-- Las modificaciones a un objeto se **reflejan en todos los formularios** que lo referencian
-- Los **eventos** permiten comunicación entre objetos
+```
+        📋 CLASE ESTUDIANTE (1 sola)
+                  │
+        ┌─────────┼─────────┐
+        │         │         │
+        ↓         ↓         ↓
+    📦 Ana    📦 Luis   📦 María
+  (Objeto 1) (Objeto 2) (Objeto 3)
+  
+  Nota: 85   Nota: 55   Nota: 92
+```
 
-### ⚡ **Métodos Estáticos vs Instancia**
-- Métodos **estáticos**: utilidades que no dependen de objetos específicos
-- Métodos **de instancia**: acciones específicas de cada formulario/objeto
-- Los métodos estáticos son ideales para **validaciones** y **utilidades** comunes
+## 📝 Ejercicios Prácticos
 
-### ♻️ **Ciclo de Vida Visual**
-- **Creación**: `new`, constructor, `InitializeComponent()`
-- **Uso**: eventos, interacción del usuario, actualización de datos
-- **Destrucción**: `Close()`, `Dispose()`, recolección de basura
-- Los **eventos** del formulario muestran cada fase del ciclo
+### Ejercicio 1: Biblioteca de Libros
 
-### 🎨 **Beneficios del Aprendizaje Visual**
-- **Ver** cómo los objetos nacen, viven y mueren
-- **Interactuar** con múltiples instancias simultáneamente
-- **Experimentar** con referencias y comunicación entre objetos
-- **Observar** el impacto inmediato de los cambios
+Crea una aplicación que gestione una biblioteca:
 
-## 🔚 Resumen
+**Clase a crear:**
+```csharp
+public class Libro
+{
+    public string Titulo { get; set; }
+    public string Autor { get; set; }
+    public int Año { get; set; }
+    public bool Prestado { get; set; }
+    
+    // Agrega constructor y métodos:
+    // - Prestar()
+    // - Devolver()
+    // - ObtenerInfo()
+}
+```
 
-- Un **objeto** es una instancia concreta de una clase, como cada formulario abierto
-- Múltiples objetos pueden existir simultáneamente con **estados independientes**
-- Las **referencias** permiten que los objetos se comuniquen y compartan datos
-- Los **métodos estáticos** son utilidades globales, los **de instancia** son específicos de cada objeto
-- El **ciclo de vida** incluye creación, uso activo y destrucción
-- Windows Forms hace visible y tangible el comportamiento de los objetos
+**Formulario:**
+- Campos para ingresar libro
+- Botón para agregar
+- Lista de libros
+- Botones para prestar/devolver
 
-## ➡️ Siguiente: [Teoría 03: Encapsulación Visual](Teoria-03-Encapsulacion-WinForms.md)
+### Ejercicio 2: Contador de Clics
+
+Crea una clase `Contador` con:
+- Propiedad `Valor` (int)
+- Método `Incrementar()`
+- Método `Decrementar()`
+- Método `Reiniciar()`
+
+Crea 3 contadores diferentes en el formulario con botones para cada uno.
+
+### Ejercicio 3: Calculadora de Áreas
+
+Crea una clase `Rectangulo` con:
+- Propiedades: `Base`, `Altura`
+- Métodos: `CalcularArea()`, `CalcularPerimetro()`
+
+En el formulario, permite crear varios rectángulos y calcular sus áreas.
+
+## 🎓 Resumen
+
+### Lo que Aprendiste
+
+✅ **Objeto**: Una instancia concreta de una clase
+✅ **new**: Palabra clave para crear objetos
+✅ **Múltiples objetos**: Puedes crear muchos de la misma clase
+✅ **Independencia**: Cada objeto tiene sus propios valores
+✅ **Referencias**: Los objetos se guardan por referencia
+✅ **null**: Cuando una variable no apunta a ningún objeto
+✅ **Métodos de objeto**: Funciones que operan sobre ese objeto específico
+
+### Diagrama Final: Clase vs Objeto
+
+```
+╔═══════════════════════════════════════════════════════╗
+║                    CLASE                              ║
+║  ─────────────────────────────                        ║
+║  • Es el MOLDE / PLANTILLA                            ║
+║  • Define ESTRUCTURA (propiedades)                    ║
+║  • Define COMPORTAMIENTO (métodos)                    ║
+║  • Solo existe 1 en el código                         ║
+║  • Se escribe con "class NombreClase"                 ║
+╚═══════════════════════════════════════════════════════╝
+                        │
+                        │ new
+                        ↓
+╔═══════════════════════════════════════════════════════╗
+║                   OBJETOS                             ║
+║  ─────────────────────────────                        ║
+║  • Son INSTANCIAS concretas de la clase               ║
+║  • Cada uno tiene sus PROPIOS DATOS                   ║
+║  • Se crean con "new NombreClase()"                   ║
+║  • Puedes crear MUCHOS                                ║
+║  • Existen en MEMORIA mientras el programa corre      ║
+╚═══════════════════════════════════════════════════════╝
+
+Ejemplo:
+  Clase:   Estudiante (la definición)
+  Objetos: est1, est2, est3 (estudiantes específicos)
+```
+
+## 🚀 Próximos Pasos
+
+En la siguiente lección aprenderás sobre **Encapsulación**, que te permitirá:
+- Proteger los datos de tus objetos
+- Crear propiedades con validación
+- Hacer código más seguro y robusto
+
+---
+
+**💡 Consejo Final:** Practica creando muchos objetos diferentes. La clave para entender POO es experimentar. ¡No tengas miedo de crear objetos y ver qué pasa!
