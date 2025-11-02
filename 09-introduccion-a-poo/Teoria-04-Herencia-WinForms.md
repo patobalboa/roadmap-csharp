@@ -389,222 +389,743 @@ public class Gerente : Empleado
 └──────────────────────────────────────────────────────┘
 ```
 
-### Código del Formulario
+### 🎨 Archivo: FormEmpleados.Designer.cs
+
+**Este archivo contiene el DISEÑO VISUAL del formulario (lo genera Visual Studio)**
 
 ```csharp
-public partial class FormEmpleados : Form
+namespace SistemaEmpleados
 {
-    // Lista que puede contener cualquier tipo de Empleado
-    private List<Empleado> empleados;
-    
-    public FormEmpleados()
+    partial class FormEmpleados
     {
-        InitializeComponent();
-        empleados = new List<Empleado>();
-        ConfigurarFormulario();
-    }
-    
-    private void ConfigurarFormulario()
-    {
-        // Configurar radio buttons
-        rdoPorHora.CheckedChanged += TipoEmpleado_CheckedChanged;
-        rdoComision.CheckedChanged += TipoEmpleado_CheckedChanged;
-        rdoGerente.CheckedChanged += TipoEmpleado_CheckedChanged;
-        
-        rdoPorHora.Checked = true;
-    }
-    
-    private void TipoEmpleado_CheckedChanged(object sender, EventArgs e)
-    {
-        // Limpiar panel específico
-        panelEspecifico.Controls.Clear();
-        
-        if (rdoPorHora.Checked)
+        /// <summary>
+        /// Variable del diseñador necesaria.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Limpiar los recursos que se estén usando.
+        /// </summary>
+        protected override void Dispose(bool disposing)
         {
-            MostrarCamposPorHora();
-        }
-        else if (rdoComision.Checked)
-        {
-            MostrarCamposComision();
-        }
-        else if (rdoGerente.Checked)
-        {
-            MostrarCamposGerente();
-        }
-    }
-    
-    private void MostrarCamposPorHora()
-    {
-        Label lblTarifa = new Label { Text = "Tarifa por Hora:", Left = 10, Top = 10, Width = 120 };
-        TextBox txtTarifa = new TextBox { Name = "txtTarifa", Left = 140, Top = 10, Width = 150 };
-        
-        Label lblHoras = new Label { Text = "Horas Trabajadas:", Left = 10, Top = 40, Width = 120 };
-        TextBox txtHoras = new TextBox { Name = "txtHoras", Left = 140, Top = 40, Width = 150 };
-        
-        panelEspecifico.Controls.AddRange(new Control[] { lblTarifa, txtTarifa, lblHoras, txtHoras });
-    }
-    
-    private void MostrarCamposComision()
-    {
-        Label lblPorcentaje = new Label { Text = "% Comisión:", Left = 10, Top = 10, Width = 120 };
-        TextBox txtPorcentaje = new TextBox { Name = "txtPorcentaje", Left = 140, Top = 10, Width = 150 };
-        
-        Label lblVentas = new Label { Text = "Total Ventas:", Left = 10, Top = 40, Width = 120 };
-        TextBox txtVentas = new TextBox { Name = "txtVentas", Left = 140, Top = 40, Width = 150 };
-        
-        panelEspecifico.Controls.AddRange(new Control[] { lblPorcentaje, txtPorcentaje, lblVentas, txtVentas });
-    }
-    
-    private void MostrarCamposGerente()
-    {
-        Label lblDepartamento = new Label { Text = "Departamento:", Left = 10, Top = 10, Width = 120 };
-        TextBox txtDepartamento = new TextBox { Name = "txtDepartamento", Left = 140, Top = 10, Width = 150 };
-        
-        Label lblBono = new Label { Text = "Bono Gerencial:", Left = 10, Top = 40, Width = 120 };
-        TextBox txtBono = new TextBox { Name = "txtBono", Left = 140, Top = 40, Width = 150 };
-        
-        panelEspecifico.Controls.AddRange(new Control[] { lblDepartamento, txtDepartamento, lblBono, txtBono });
-    }
-    
-    private void btnAgregar_Click(object sender, EventArgs e)
-    {
-        try
-        {
-            // Datos comunes
-            string nombre = txtNombre.Text;
-            string apellido = txtApellido.Text;
-            string cedula = txtCedula.Text;
-            decimal salarioBase = decimal.Parse(txtSalarioBase.Text);
-            
-            Empleado nuevoEmpleado = null;
-            
-            // Crear el tipo correcto de empleado según la selección
-            if (rdoPorHora.Checked)
+            if (disposing && (components != null))
             {
-                TextBox txtTarifa = panelEspecifico.Controls["txtTarifa"] as TextBox;
-                TextBox txtHoras = panelEspecifico.Controls["txtHoras"] as TextBox;
-                
-                decimal tarifa = decimal.Parse(txtTarifa.Text);
-                int horas = int.Parse(txtHoras.Text);
-                
-                EmpleadoPorHora emp = new EmpleadoPorHora(nombre, apellido, cedula, salarioBase, tarifa);
-                emp.HorasTrabajadas = horas;
-                nuevoEmpleado = emp;
+                components.Dispose();
             }
-            else if (rdoComision.Checked)
-            {
-                TextBox txtPorcentaje = panelEspecifico.Controls["txtPorcentaje"] as TextBox;
-                TextBox txtVentas = panelEspecifico.Controls["txtVentas"] as TextBox;
-                
-                decimal porcentaje = decimal.Parse(txtPorcentaje.Text);
-                decimal ventas = decimal.Parse(txtVentas.Text);
-                
-                EmpleadoComision emp = new EmpleadoComision(nombre, apellido, cedula, salarioBase, porcentaje);
-                emp.TotalVentas = ventas;
-                nuevoEmpleado = emp;
-            }
-            else if (rdoGerente.Checked)
-            {
-                TextBox txtDepartamento = panelEspecifico.Controls["txtDepartamento"] as TextBox;
-                TextBox txtBono = panelEspecifico.Controls["txtBono"] as TextBox;
-                
-                string departamento = txtDepartamento.Text;
-                decimal bono = decimal.Parse(txtBono.Text);
-                
-                nuevoEmpleado = new Gerente(nombre, apellido, cedula, salarioBase, departamento, bono);
-            }
-            
-            // Agregar a la lista (¡Polimorfismo en acción!)
-            empleados.Add(nuevoEmpleado);
-            
-            ActualizarLista();
-            LimpiarCampos();
-            
-            MessageBox.Show("Empleado agregado exitosamente", "Éxito", 
-                          MessageBoxButtons.OK, MessageBoxIcon.Information);
+            base.Dispose(disposing);
         }
-        catch (Exception ex)
+
+        #region Código generado por el Diseñador de Windows Forms
+
+        /// <summary>
+        /// Método necesario para admitir el Diseñador.
+        /// No se puede modificar el contenido de este método con el editor de código.
+        /// </summary>
+        private void InitializeComponent()
         {
-            MessageBox.Show($"Error: {ex.Message}", "Error", 
-                          MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-    }
-    
-    private void ActualizarLista()
-    {
-        lstEmpleados.Items.Clear();
-        
-        foreach (Empleado emp in empleados)
-        {
-            // Determinar el tipo de empleado
-            string tipo = "";
-            if (emp is EmpleadoPorHora)
-                tipo = "⏰";
-            else if (emp is EmpleadoComision)
-                tipo = "💰";
-            else if (emp is Gerente)
-                tipo = "👨‍💼";
+            this.grpDatosBasicos = new System.Windows.Forms.GroupBox();
+            this.txtNombre = new System.Windows.Forms.TextBox();
+            this.txtApellido = new System.Windows.Forms.TextBox();
+            this.txtCedula = new System.Windows.Forms.TextBox();
+            this.txtSalarioBase = new System.Windows.Forms.TextBox();
+            this.lblNombre = new System.Windows.Forms.Label();
+            this.lblApellido = new System.Windows.Forms.Label();
+            this.lblCedula = new System.Windows.Forms.Label();
+            this.lblSalarioBase = new System.Windows.Forms.Label();
             
-            // Polimorfismo: cada objeto usa su propia versión de CalcularSalario()
-            lstEmpleados.Items.Add($"{tipo} {emp.ObtenerNombreCompleto()} - ${emp.CalcularSalario():N2}");
-        }
-    }
-    
-    private void lstEmpleados_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        if (lstEmpleados.SelectedIndex < 0) return;
-        
-        Empleado empSeleccionado = empleados[lstEmpleados.SelectedIndex];
-        
-        // Polimorfismo: cada objeto usa su propia versión de ObtenerInfo()
-        txtDetalles.Text = empSeleccionado.ObtenerInfo();
-    }
-    
-    private void btnCalcularTodos_Click(object sender, EventArgs e)
-    {
-        if (empleados.Count == 0)
-        {
-            MessageBox.Show("No hay empleados registrados");
-            return;
-        }
-        
-        decimal totalNomina = 0;
-        string reporte = "═══════════════════════════════════\n";
-        reporte += "   REPORTE DE NÓMINA\n";
-        reporte += "═══════════════════════════════════\n\n";
-        
-        foreach (Empleado emp in empleados)
-        {
-            decimal salario = emp.CalcularSalario();
-            totalNomina += salario;
+            this.grpTipoEmpleado = new System.Windows.Forms.GroupBox();
+            this.rdoPorHora = new System.Windows.Forms.RadioButton();
+            this.rdoComision = new System.Windows.Forms.RadioButton();
+            this.rdoGerente = new System.Windows.Forms.RadioButton();
             
-            reporte += $"{emp.ObtenerNombreCompleto()}\n";
-            reporte += $"Salario: ${salario:N2}\n";
-            reporte += "───────────────────────────────────\n";
+            this.panelEspecifico = new System.Windows.Forms.Panel();
+            
+            this.btnAgregar = new System.Windows.Forms.Button();
+            this.btnCalcularTodos = new System.Windows.Forms.Button();
+            this.btnLimpiar = new System.Windows.Forms.Button();
+            
+            this.lstEmpleados = new System.Windows.Forms.ListBox();
+            this.txtDetalles = new System.Windows.Forms.TextBox();
+            
+            this.grpDatosBasicos.SuspendLayout();
+            this.grpTipoEmpleado.SuspendLayout();
+            this.SuspendLayout();
+            
+            // 
+            // grpDatosBasicos
+            // 
+            this.grpDatosBasicos.Controls.Add(this.lblNombre);
+            this.grpDatosBasicos.Controls.Add(this.txtNombre);
+            this.grpDatosBasicos.Controls.Add(this.lblApellido);
+            this.grpDatosBasicos.Controls.Add(this.txtApellido);
+            this.grpDatosBasicos.Controls.Add(this.lblCedula);
+            this.grpDatosBasicos.Controls.Add(this.txtCedula);
+            this.grpDatosBasicos.Controls.Add(this.lblSalarioBase);
+            this.grpDatosBasicos.Controls.Add(this.txtSalarioBase);
+            this.grpDatosBasicos.Location = new System.Drawing.Point(12, 12);
+            this.grpDatosBasicos.Name = "grpDatosBasicos";
+            this.grpDatosBasicos.Size = new System.Drawing.Size(760, 100);
+            this.grpDatosBasicos.TabIndex = 0;
+            this.grpDatosBasicos.TabStop = false;
+            this.grpDatosBasicos.Text = "Datos Básicos";
+            
+            // 
+            // lblNombre
+            // 
+            this.lblNombre.AutoSize = true;
+            this.lblNombre.Location = new System.Drawing.Point(20, 30);
+            this.lblNombre.Name = "lblNombre";
+            this.lblNombre.Size = new System.Drawing.Size(50, 13);
+            this.lblNombre.TabIndex = 0;
+            this.lblNombre.Text = "Nombre:";
+            
+            // 
+            // txtNombre
+            // 
+            this.txtNombre.Location = new System.Drawing.Point(100, 27);
+            this.txtNombre.Name = "txtNombre";
+            this.txtNombre.Size = new System.Drawing.Size(200, 20);
+            this.txtNombre.TabIndex = 1;
+            
+            // 
+            // lblApellido
+            // 
+            this.lblApellido.AutoSize = true;
+            this.lblApellido.Location = new System.Drawing.Point(320, 30);
+            this.lblApellido.Name = "lblApellido";
+            this.lblApellido.Size = new System.Drawing.Size(50, 13);
+            this.lblApellido.TabIndex = 2;
+            this.lblApellido.Text = "Apellido:";
+            
+            // 
+            // txtApellido
+            // 
+            this.txtApellido.Location = new System.Drawing.Point(400, 27);
+            this.txtApellido.Name = "txtApellido";
+            this.txtApellido.Size = new System.Drawing.Size(200, 20);
+            this.txtApellido.TabIndex = 3;
+            
+            // 
+            // lblCedula
+            // 
+            this.lblCedula.AutoSize = true;
+            this.lblCedula.Location = new System.Drawing.Point(20, 60);
+            this.lblCedula.Name = "lblCedula";
+            this.lblCedula.Size = new System.Drawing.Size(43, 13);
+            this.lblCedula.TabIndex = 4;
+            this.lblCedula.Text = "Cédula:";
+            
+            // 
+            // txtCedula
+            // 
+            this.txtCedula.Location = new System.Drawing.Point(100, 57);
+            this.txtCedula.Name = "txtCedula";
+            this.txtCedula.Size = new System.Drawing.Size(200, 20);
+            this.txtCedula.TabIndex = 5;
+            
+            // 
+            // lblSalarioBase
+            // 
+            this.lblSalarioBase.AutoSize = true;
+            this.lblSalarioBase.Location = new System.Drawing.Point(320, 60);
+            this.lblSalarioBase.Name = "lblSalarioBase";
+            this.lblSalarioBase.Size = new System.Drawing.Size(70, 13);
+            this.lblSalarioBase.TabIndex = 6;
+            this.lblSalarioBase.Text = "Salario Base:";
+            
+            // 
+            // txtSalarioBase
+            // 
+            this.txtSalarioBase.Location = new System.Drawing.Point(400, 57);
+            this.txtSalarioBase.Name = "txtSalarioBase";
+            this.txtSalarioBase.Size = new System.Drawing.Size(200, 20);
+            this.txtSalarioBase.TabIndex = 7;
+            
+            // 
+            // grpTipoEmpleado
+            // 
+            this.grpTipoEmpleado.Controls.Add(this.rdoPorHora);
+            this.grpTipoEmpleado.Controls.Add(this.rdoComision);
+            this.grpTipoEmpleado.Controls.Add(this.rdoGerente);
+            this.grpTipoEmpleado.Location = new System.Drawing.Point(12, 118);
+            this.grpTipoEmpleado.Name = "grpTipoEmpleado";
+            this.grpTipoEmpleado.Size = new System.Drawing.Size(760, 60);
+            this.grpTipoEmpleado.TabIndex = 1;
+            this.grpTipoEmpleado.TabStop = false;
+            this.grpTipoEmpleado.Text = "Tipo de Empleado";
+            
+            // 
+            // rdoPorHora
+            // 
+            this.rdoPorHora.AutoSize = true;
+            this.rdoPorHora.Location = new System.Drawing.Point(50, 25);
+            this.rdoPorHora.Name = "rdoPorHora";
+            this.rdoPorHora.Size = new System.Drawing.Size(70, 17);
+            this.rdoPorHora.TabIndex = 0;
+            this.rdoPorHora.TabStop = true;
+            this.rdoPorHora.Text = "Por Hora";
+            this.rdoPorHora.UseVisualStyleBackColor = true;
+            
+            // 
+            // rdoComision
+            // 
+            this.rdoComision.AutoSize = true;
+            this.rdoComision.Location = new System.Drawing.Point(250, 25);
+            this.rdoComision.Name = "rdoComision";
+            this.rdoComision.Size = new System.Drawing.Size(68, 17);
+            this.rdoComision.TabIndex = 1;
+            this.rdoComision.Text = "Comisión";
+            this.rdoComision.UseVisualStyleBackColor = true;
+            
+            // 
+            // rdoGerente
+            // 
+            this.rdoGerente.AutoSize = true;
+            this.rdoGerente.Location = new System.Drawing.Point(450, 25);
+            this.rdoGerente.Name = "rdoGerente";
+            this.rdoGerente.Size = new System.Drawing.Size(62, 17);
+            this.rdoGerente.TabIndex = 2;
+            this.rdoGerente.Text = "Gerente";
+            this.rdoGerente.UseVisualStyleBackColor = true;
+            
+            // 
+            // panelEspecifico
+            // 
+            this.panelEspecifico.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelEspecifico.Location = new System.Drawing.Point(12, 184);
+            this.panelEspecifico.Name = "panelEspecifico";
+            this.panelEspecifico.Size = new System.Drawing.Size(760, 80);
+            this.panelEspecifico.TabIndex = 2;
+            
+            // 
+            // btnAgregar
+            // 
+            this.btnAgregar.Location = new System.Drawing.Point(12, 280);
+            this.btnAgregar.Name = "btnAgregar";
+            this.btnAgregar.Size = new System.Drawing.Size(150, 35);
+            this.btnAgregar.TabIndex = 3;
+            this.btnAgregar.Text = "Agregar Empleado";
+            this.btnAgregar.UseVisualStyleBackColor = true;
+            this.btnAgregar.Click += new System.EventHandler(this.btnAgregar_Click);
+            
+            // 
+            // btnCalcularTodos
+            // 
+            this.btnCalcularTodos.Location = new System.Drawing.Point(312, 280);
+            this.btnCalcularTodos.Name = "btnCalcularTodos";
+            this.btnCalcularTodos.Size = new System.Drawing.Size(150, 35);
+            this.btnCalcularTodos.TabIndex = 4;
+            this.btnCalcularTodos.Text = "Calcular Nómina";
+            this.btnCalcularTodos.UseVisualStyleBackColor = true;
+            this.btnCalcularTodos.Click += new System.EventHandler(this.btnCalcularTodos_Click);
+            
+            // 
+            // btnLimpiar
+            // 
+            this.btnLimpiar.Location = new System.Drawing.Point(622, 280);
+            this.btnLimpiar.Name = "btnLimpiar";
+            this.btnLimpiar.Size = new System.Drawing.Size(150, 35);
+            this.btnLimpiar.TabIndex = 5;
+            this.btnLimpiar.Text = "Limpiar";
+            this.btnLimpiar.UseVisualStyleBackColor = true;
+            this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
+            
+            // 
+            // lstEmpleados
+            // 
+            this.lstEmpleados.FormattingEnabled = true;
+            this.lstEmpleados.Location = new System.Drawing.Point(12, 330);
+            this.lstEmpleados.Name = "lstEmpleados";
+            this.lstEmpleados.Size = new System.Drawing.Size(760, 120);
+            this.lstEmpleados.TabIndex = 6;
+            this.lstEmpleados.SelectedIndexChanged += new System.EventHandler(this.lstEmpleados_SelectedIndexChanged);
+            
+            // 
+            // txtDetalles
+            // 
+            this.txtDetalles.Location = new System.Drawing.Point(12, 460);
+            this.txtDetalles.Multiline = true;
+            this.txtDetalles.Name = "txtDetalles";
+            this.txtDetalles.ReadOnly = true;
+            this.txtDetalles.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtDetalles.Size = new System.Drawing.Size(760, 120);
+            this.txtDetalles.TabIndex = 7;
+            
+            // 
+            // FormEmpleados
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(784, 592);
+            this.Controls.Add(this.txtDetalles);
+            this.Controls.Add(this.lstEmpleados);
+            this.Controls.Add(this.btnLimpiar);
+            this.Controls.Add(this.btnCalcularTodos);
+            this.Controls.Add(this.btnAgregar);
+            this.Controls.Add(this.panelEspecifico);
+            this.Controls.Add(this.grpTipoEmpleado);
+            this.Controls.Add(this.grpDatosBasicos);
+            this.Name = "FormEmpleados";
+            this.Text = "Sistema de Gestión de Empleados";
+            this.grpDatosBasicos.ResumeLayout(false);
+            this.grpDatosBasicos.PerformLayout();
+            this.grpTipoEmpleado.ResumeLayout(false);
+            this.grpTipoEmpleado.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
         }
+
+        #endregion
+
+        // Declaración de controles (Visual Studio los genera automáticamente)
+        private System.Windows.Forms.GroupBox grpDatosBasicos;
+        private System.Windows.Forms.Label lblNombre;
+        private System.Windows.Forms.TextBox txtNombre;
+        private System.Windows.Forms.Label lblApellido;
+        private System.Windows.Forms.TextBox txtApellido;
+        private System.Windows.Forms.Label lblCedula;
+        private System.Windows.Forms.TextBox txtCedula;
+        private System.Windows.Forms.Label lblSalarioBase;
+        private System.Windows.Forms.TextBox txtSalarioBase;
         
-        reporte += $"\nTOTAL NÓMINA: ${totalNomina:N2}";
+        private System.Windows.Forms.GroupBox grpTipoEmpleado;
+        private System.Windows.Forms.RadioButton rdoPorHora;
+        private System.Windows.Forms.RadioButton rdoComision;
+        private System.Windows.Forms.RadioButton rdoGerente;
         
-        txtDetalles.Text = reporte;
-    }
-    
-    private void LimpiarCampos()
-    {
-        txtNombre.Clear();
-        txtApellido.Clear();
-        txtCedula.Clear();
-        txtSalarioBase.Clear();
+        private System.Windows.Forms.Panel panelEspecifico;
         
-        foreach (Control control in panelEspecifico.Controls)
-        {
-            if (control is TextBox)
-                ((TextBox)control).Clear();
-        }
+        private System.Windows.Forms.Button btnAgregar;
+        private System.Windows.Forms.Button btnCalcularTodos;
+        private System.Windows.Forms.Button btnLimpiar;
         
-        txtNombre.Focus();
+        private System.Windows.Forms.ListBox lstEmpleados;
+        private System.Windows.Forms.TextBox txtDetalles;
     }
 }
 ```
+
+### 💻 Archivo: FormEmpleados.cs
+
+**Este archivo contiene la LÓGICA del formulario (aquí escribes tu código)**
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+
+namespace SistemaEmpleados
+{
+    public partial class FormEmpleados : Form
+    {
+        // ═══════════════════════════════════════════════════
+        // VARIABLES DE CLASE
+        // ═══════════════════════════════════════════════════
+        
+        // Lista que puede contener cualquier tipo de Empleado (¡Polimorfismo!)
+        private List<Empleado> empleados;
+        
+        // ═══════════════════════════════════════════════════
+        // CONSTRUCTOR
+        // ═══════════════════════════════════════════════════
+        
+        public FormEmpleados()
+        {
+            InitializeComponent();  // Inicializa los controles del Designer
+            empleados = new List<Empleado>();
+            ConfigurarFormulario();
+        }
+        
+        // ═══════════════════════════════════════════════════
+        // CONFIGURACIÓN INICIAL
+        // ═══════════════════════════════════════════════════
+        
+        private void ConfigurarFormulario()
+        {
+            // Conectar eventos de los radio buttons
+            rdoPorHora.CheckedChanged += TipoEmpleado_CheckedChanged;
+            rdoComision.CheckedChanged += TipoEmpleado_CheckedChanged;
+            rdoGerente.CheckedChanged += TipoEmpleado_CheckedChanged;
+            
+            // Seleccionar "Por Hora" por defecto
+            rdoPorHora.Checked = true;
+        }
+        
+        // ═══════════════════════════════════════════════════
+        // EVENTOS DE CONTROLES
+        // ═══════════════════════════════════════════════════
+        
+        // Evento cuando cambia el tipo de empleado seleccionado
+        private void TipoEmpleado_CheckedChanged(object sender, EventArgs e)
+        {
+            // Limpiar el panel de campos específicos
+            panelEspecifico.Controls.Clear();
+            
+            // Mostrar los campos correspondientes al tipo seleccionado
+            if (rdoPorHora.Checked)
+            {
+                MostrarCamposPorHora();
+            }
+            else if (rdoComision.Checked)
+            {
+                MostrarCamposComision();
+            }
+            else if (rdoGerente.Checked)
+            {
+                MostrarCamposGerente();
+            }
+        }
+        
+        // Evento cuando se selecciona un empleado de la lista
+        private void lstEmpleados_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lstEmpleados.SelectedIndex < 0) return;
+            
+            // Obtener el empleado seleccionado
+            Empleado empSeleccionado = empleados[lstEmpleados.SelectedIndex];
+            
+            // Polimorfismo: cada objeto usa su propia versión de ObtenerInfo()
+            txtDetalles.Text = empSeleccionado.ObtenerInfo();
+        }
+        
+        // ═══════════════════════════════════════════════════
+        // MÉTODOS PARA MOSTRAR CAMPOS ESPECÍFICOS
+        // ═══════════════════════════════════════════════════
+        
+        // Mostrar campos para empleado por hora
+        private void MostrarCamposPorHora()
+        {
+            // Crear controles dinámicamente
+            Label lblTarifa = new Label 
+            { 
+                Text = "Tarifa por Hora:", 
+                Left = 10, 
+                Top = 10, 
+                Width = 120 
+            };
+            TextBox txtTarifa = new TextBox 
+            { 
+                Name = "txtTarifa", 
+                Left = 140, 
+                Top = 10, 
+                Width = 150 
+            };
+            
+            Label lblHoras = new Label 
+            { 
+                Text = "Horas Trabajadas:", 
+                Left = 10, 
+                Top = 40, 
+                Width = 120 
+            };
+            TextBox txtHoras = new TextBox 
+            { 
+                Name = "txtHoras", 
+                Left = 140, 
+                Top = 40, 
+                Width = 150 
+            };
+            
+            // Agregar controles al panel
+            panelEspecifico.Controls.AddRange(new Control[] { lblTarifa, txtTarifa, lblHoras, txtHoras });
+        }
+        
+        // Mostrar campos para empleado con comisión
+        private void MostrarCamposComision()
+        {
+            Label lblPorcentaje = new Label 
+            { 
+                Text = "% Comisión:", 
+                Left = 10, 
+                Top = 10, 
+                Width = 120 
+            };
+            TextBox txtPorcentaje = new TextBox 
+            { 
+                Name = "txtPorcentaje", 
+                Left = 140, 
+                Top = 10, 
+                Width = 150 
+            };
+            
+            Label lblVentas = new Label 
+            { 
+                Text = "Total Ventas:", 
+                Left = 10, 
+                Top = 40, 
+                Width = 120 
+            };
+            TextBox txtVentas = new TextBox 
+            { 
+                Name = "txtVentas", 
+                Left = 140, 
+                Top = 40, 
+                Width = 150 
+            };
+            
+            panelEspecifico.Controls.AddRange(new Control[] { lblPorcentaje, txtPorcentaje, lblVentas, txtVentas });
+        }
+        
+        // Mostrar campos para gerente
+        private void MostrarCamposGerente()
+        {
+            Label lblDepartamento = new Label 
+            { 
+                Text = "Departamento:", 
+                Left = 10, 
+                Top = 10, 
+                Width = 120 
+            };
+            TextBox txtDepartamento = new TextBox 
+            { 
+                Name = "txtDepartamento", 
+                Left = 140, 
+                Top = 10, 
+                Width = 150 
+            };
+            
+            Label lblBono = new Label 
+            { 
+                Text = "Bono Gerencial:", 
+                Left = 10, 
+                Top = 40, 
+                Width = 120 
+            };
+            TextBox txtBono = new TextBox 
+            { 
+                Name = "txtBono", 
+                Left = 140, 
+                Top = 40, 
+                Width = 150 
+            };
+            
+            panelEspecifico.Controls.AddRange(new Control[] { lblDepartamento, txtDepartamento, lblBono, txtBono });
+        }
+        
+        // ═══════════════════════════════════════════════════
+        // EVENTOS DE BOTONES
+        // ═══════════════════════════════════════════════════
+        
+        // Botón: Agregar empleado
+        private void btnAgregar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Validar campos básicos
+                if (string.IsNullOrWhiteSpace(txtNombre.Text) || 
+                    string.IsNullOrWhiteSpace(txtApellido.Text) ||
+                    string.IsNullOrWhiteSpace(txtCedula.Text))
+                {
+                    MessageBox.Show("Complete todos los campos básicos", "Validación",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                
+                // Obtener datos comunes
+                string nombre = txtNombre.Text;
+                string apellido = txtApellido.Text;
+                string cedula = txtCedula.Text;
+                decimal salarioBase = decimal.Parse(txtSalarioBase.Text);
+                
+                Empleado nuevoEmpleado = null;
+                
+                // Crear el tipo correcto de empleado según la selección
+                // ¡Aquí aplicamos HERENCIA Y POLIMORFISMO!
+                
+                if (rdoPorHora.Checked)
+                {
+                    // Obtener controles específicos del panel
+                    TextBox txtTarifa = panelEspecifico.Controls["txtTarifa"] as TextBox;
+                    TextBox txtHoras = panelEspecifico.Controls["txtHoras"] as TextBox;
+                    
+                    decimal tarifa = decimal.Parse(txtTarifa.Text);
+                    int horas = int.Parse(txtHoras.Text);
+                    
+                    // Crear objeto EmpleadoPorHora
+                    EmpleadoPorHora emp = new EmpleadoPorHora(nombre, apellido, cedula, salarioBase, tarifa);
+                    emp.HorasTrabajadas = horas;
+                    nuevoEmpleado = emp;  // Polimorfismo: EmpleadoPorHora ES UN Empleado
+                }
+                else if (rdoComision.Checked)
+                {
+                    TextBox txtPorcentaje = panelEspecifico.Controls["txtPorcentaje"] as TextBox;
+                    TextBox txtVentas = panelEspecifico.Controls["txtVentas"] as TextBox;
+                    
+                    decimal porcentaje = decimal.Parse(txtPorcentaje.Text);
+                    decimal ventas = decimal.Parse(txtVentas.Text);
+                    
+                    // Crear objeto EmpleadoComision
+                    EmpleadoComision emp = new EmpleadoComision(nombre, apellido, cedula, salarioBase, porcentaje);
+                    emp.TotalVentas = ventas;
+                    nuevoEmpleado = emp;  // Polimorfismo: EmpleadoComision ES UN Empleado
+                }
+                else if (rdoGerente.Checked)
+                {
+                    TextBox txtDepartamento = panelEspecifico.Controls["txtDepartamento"] as TextBox;
+                    TextBox txtBono = panelEspecifico.Controls["txtBono"] as TextBox;
+                    
+                    string departamento = txtDepartamento.Text;
+                    decimal bono = decimal.Parse(txtBono.Text);
+                    
+                    // Crear objeto Gerente
+                    nuevoEmpleado = new Gerente(nombre, apellido, cedula, salarioBase, departamento, bono);
+                    // Polimorfismo: Gerente ES UN Empleado
+                }
+                
+                // Agregar a la lista (¡Polimorfismo en acción!)
+                // La lista puede contener diferentes tipos de empleados
+                empleados.Add(nuevoEmpleado);
+                
+                // Actualizar interfaz
+                ActualizarLista();
+                LimpiarCampos();
+                
+                MessageBox.Show("Empleado agregado exitosamente", "Éxito", 
+                              MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("Por favor ingrese valores numéricos válidos", "Error de Formato", 
+                              MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", 
+                              MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        
+        // Botón: Calcular nómina total
+        private void btnCalcularTodos_Click(object sender, EventArgs e)
+        {
+            if (empleados.Count == 0)
+            {
+                MessageBox.Show("No hay empleados registrados", "Información",
+                              MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            
+            decimal totalNomina = 0;
+            string reporte = "═══════════════════════════════════\n";
+            reporte += "   REPORTE DE NÓMINA\n";
+            reporte += "═══════════════════════════════════\n\n";
+            
+            // Polimorfismo: cada empleado calcula su salario de forma diferente
+            foreach (Empleado emp in empleados)
+            {
+                decimal salario = emp.CalcularSalario();  // ¡Polimorfismo!
+                totalNomina += salario;
+                
+                reporte += $"{emp.ObtenerNombreCompleto()}\n";
+                reporte += $"Salario: ${salario:N2}\n";
+                reporte += "───────────────────────────────────\n";
+            }
+            
+            reporte += $"\nTOTAL NÓMINA: ${totalNomina:N2}";
+            
+            txtDetalles.Text = reporte;
+        }
+        
+        // Botón: Limpiar campos
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            LimpiarCampos();
+        }
+        
+        // ═══════════════════════════════════════════════════
+        // MÉTODOS AUXILIARES
+        // ═══════════════════════════════════════════════════
+        
+        // Actualizar la lista de empleados mostrada
+        private void ActualizarLista()
+        {
+            lstEmpleados.Items.Clear();
+            
+            foreach (Empleado emp in empleados)
+            {
+                // Usar operador 'is' para determinar el tipo de empleado
+                string tipo = "";
+                if (emp is EmpleadoPorHora)
+                    tipo = "⏰";
+                else if (emp is EmpleadoComision)
+                    tipo = "💰";
+                else if (emp is Gerente)
+                    tipo = "👨‍💼";
+                
+                // Polimorfismo: cada objeto usa su propia versión de CalcularSalario()
+                decimal salario = emp.CalcularSalario();
+                
+                lstEmpleados.Items.Add($"{tipo} {emp.ObtenerNombreCompleto()} - ${salario:N2}");
+            }
+        }
+        
+        // Limpiar todos los campos del formulario
+        private void LimpiarCampos()
+        {
+            // Limpiar campos básicos
+            txtNombre.Clear();
+            txtApellido.Clear();
+            txtCedula.Clear();
+            txtSalarioBase.Clear();
+            
+            // Limpiar campos del panel específico
+            foreach (Control control in panelEspecifico.Controls)
+            {
+                if (control is TextBox)
+                    ((TextBox)control).Clear();
+            }
+            
+            // Limpiar detalles
+            txtDetalles.Clear();
+            
+            // Establecer foco en el primer campo
+            txtNombre.Focus();
+        }
+    }  // Fin de la clase FormEmpleados
+}  // Fin del namespace
+```
+
+---
+
+## 📝 Notas Importantes sobre la Separación de Archivos
+
+### 🎯 ¿Por Qué Dos Archivos?
+
+```
+FormEmpleados.Designer.cs       FormEmpleados.cs
+        ↓                              ↓
+    DISEÑO VISUAL                    LÓGICA
+    ═════════════                  ═══════════
+    - InitializeComponent()        - Eventos de botones
+    - Posiciones (Left, Top)       - Métodos auxiliares
+    - Tamaños (Width, Height)      - Lógica de negocio
+    - Declaración de controles     - Operaciones con datos
+    
+    ¡NO MODIFICAR A MANO!          ¡AQUÍ PROGRAMAS TÚ!
+    (Visual Studio lo genera)      (Tu código personalizado)
+```
+
+### ✅ Ventajas de Esta Separación
+
+1. **Organización**: Código más limpio y fácil de mantener
+2. **Protección**: El Designer no sobrescribe tu lógica
+3. **Colaboración**: Varios programadores pueden trabajar sin conflictos
+4. **Profesionalismo**: Así trabajan los proyectos reales
+
+### 🔍 ¿Qué Va en Cada Archivo?
+
+**FormEmpleados.Designer.cs:**
+- Creación de controles (new Button(), new TextBox(), etc.)
+- Propiedades visuales (tamaño, posición, color, fuente)
+- Método InitializeComponent()
+- Declaración de variables de controles
+
+**FormEmpleados.cs:**
+- Lógica de negocio
+- Eventos (_Click, _Changed, etc.)
+- Métodos auxiliares
+- Validaciones
+- Operaciones con datos
 
 ### Visual del Polimorfismo en Acción
 
