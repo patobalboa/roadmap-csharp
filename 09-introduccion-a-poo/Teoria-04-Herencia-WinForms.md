@@ -136,54 +136,40 @@ string saludo = est.Saludar();  // "Hola, soy Ana García"
 string accion = est.Estudiar();  // "Ana García está estudiando"
 ```
 
-## 🎨 Ejemplo Completo: Sistema de Empleados
+## 🎨 Ejemplo Completo Simplificado: Animales
 
 ### Paso 1: Clase Base
 
 ```csharp
-// Clase Padre - Empleado Base
-public class Empleado
+// Clase Padre - Animal
+public class Animal
 {
-    // Propiedades comunes a TODOS los empleados
+    // Propiedades comunes a TODOS los animales
     public string Nombre { get; set; }
-    public string Apellido { get; set; }
-    public string Cedula { get; set; }
-    public decimal SalarioBase { get; set; }
+    public int Edad { get; set; }
     
     // Constructor
-    public Empleado()
+    public Animal()
     {
         Nombre = "";
-        Apellido = "";
-        Cedula = "";
-        SalarioBase = 0;
+        Edad = 0;
     }
     
-    public Empleado(string nombre, string apellido, string cedula, decimal salarioBase)
+    public Animal(string nombre, int edad)
     {
         Nombre = nombre;
-        Apellido = apellido;
-        Cedula = cedula;
-        SalarioBase = salarioBase;
+        Edad = edad;
     }
     
-    // Método común
-    public string ObtenerNombreCompleto()
+    // Método virtual (puede ser sobreescrito por hijos)
+    public virtual string HacerSonido()
     {
-        return $"{Nombre} {Apellido}";
-    }
-    
-    // Método virtual (puede ser sobreescrito)
-    public virtual decimal CalcularSalario()
-    {
-        return SalarioBase;
+        return "El animal hace un sonido";
     }
     
     public virtual string ObtenerInfo()
     {
-        return $"Empleado: {ObtenerNombreCompleto()}\n" +
-               $"Cédula: {Cedula}\n" +
-               $"Salario Base: ${SalarioBase:N2}";
+        return $"Nombre: {Nombre}\nEdad: {Edad} años";
     }
 }
 ```
@@ -192,129 +178,105 @@ public class Empleado
 
 ```csharp
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Clase Hija 1: Empleado por Hora
+// Clase Hija 1: Perro
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-public class EmpleadoPorHora : Empleado
+public class Perro : Animal
 {
-    // Propiedades adicionales
-    public int HorasTrabajadas { get; set; }
-    public decimal TarifaPorHora { get; set; }
+    // Propiedad adicional
+    public string Raza { get; set; }
     
-    // Constructor sin parámetros
-    public EmpleadoPorHora() : base()
+    // Constructor
+    public Perro() : base()
     {
-        HorasTrabajadas = 0;
-        TarifaPorHora = 0;
+        Raza = "";
     }
     
-    // Constructor con parámetros
-    public EmpleadoPorHora(string nombre, string apellido, string cedula, 
-                           decimal salarioBase, decimal tarifaPorHora)
-        : base(nombre, apellido, cedula, salarioBase)
+    public Perro(string nombre, int edad, string raza) : base(nombre, edad)
     {
-        TarifaPorHora = tarifaPorHora;
-        HorasTrabajadas = 0;
+        Raza = raza;
     }
     
-    // Sobreescribir método
-    public override decimal CalcularSalario()
+    // Sobreescribir método del padre
+    public override string HacerSonido()
     {
-        return SalarioBase + (HorasTrabajadas * TarifaPorHora);
+        return "Guau Guau! 🐕";
     }
     
     public override string ObtenerInfo()
     {
         return base.ObtenerInfo() + 
-               $"\nTipo: Empleado por Hora" +
-               $"\nHoras trabajadas: {HorasTrabajadas}" +
-               $"\nTarifa por hora: ${TarifaPorHora:N2}" +
-               $"\nSalario Total: ${CalcularSalario():N2}";
+               $"\nTipo: Perro" +
+               $"\nRaza: {Raza}" +
+               $"\nSonido: {HacerSonido()}";
     }
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Clase Hija 2: Empleado con Comisión
+// Clase Hija 2: Gato
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-public class EmpleadoComision : Empleado
+public class Gato : Animal
 {
-    // Propiedades adicionales
-    public decimal TotalVentas { get; set; }
-    public decimal PorcentajeComision { get; set; }
+    // Propiedad adicional
+    public string Color { get; set; }
     
     // Constructor
-    public EmpleadoComision() : base()
+    public Gato() : base()
     {
-        TotalVentas = 0;
-        PorcentajeComision = 0;
+        Color = "";
     }
     
-    public EmpleadoComision(string nombre, string apellido, string cedula,
-                           decimal salarioBase, decimal porcentajeComision)
-        : base(nombre, apellido, cedula, salarioBase)
+    public Gato(string nombre, int edad, string color) : base(nombre, edad)
     {
-        PorcentajeComision = porcentajeComision;
-        TotalVentas = 0;
+        Color = color;
     }
     
-    // Método propio
-    public void RegistrarVenta(decimal monto)
+    // Sobreescribir método del padre
+    public override string HacerSonido()
     {
-        TotalVentas += monto;
-    }
-    
-    // Sobreescribir método
-    public override decimal CalcularSalario()
-    {
-        return SalarioBase + (TotalVentas * PorcentajeComision / 100);
+        return "Miau Miau! 🐱";
     }
     
     public override string ObtenerInfo()
     {
         return base.ObtenerInfo() + 
-               $"\nTipo: Empleado con Comisión" +
-               $"\nVentas totales: ${TotalVentas:N2}" +
-               $"\nPorcentaje comisión: {PorcentajeComision}%" +
-               $"\nSalario Total: ${CalcularSalario():N2}";
+               $"\nTipo: Gato" +
+               $"\nColor: {Color}" +
+               $"\nSonido: {HacerSonido()}";
     }
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Clase Hija 3: Gerente
+// Clase Hija 3: Pajaro
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-public class Gerente : Empleado
+public class Pajaro : Animal
 {
-    // Propiedades adicionales
-    public string Departamento { get; set; }
-    public decimal BonoGerencial { get; set; }
+    // Propiedad adicional
+    public bool PuedeVolar { get; set; }
     
     // Constructor
-    public Gerente() : base()
+    public Pajaro() : base()
     {
-        Departamento = "";
-        BonoGerencial = 0;
+        PuedeVolar = true;
     }
     
-    public Gerente(string nombre, string apellido, string cedula,
-                  decimal salarioBase, string departamento, decimal bonoGerencial)
-        : base(nombre, apellido, cedula, salarioBase)
+    public Pajaro(string nombre, int edad, bool puedeVolar) : base(nombre, edad)
     {
-        Departamento = departamento;
-        BonoGerencial = bonoGerencial;
+        PuedeVolar = puedeVolar;
     }
     
-    // Sobreescribir método
-    public override decimal CalcularSalario()
+    // Sobreescribir método del padre
+    public override string HacerSonido()
     {
-        return SalarioBase + BonoGerencial;
+        return "Pío Pío! 🐦";
     }
     
     public override string ObtenerInfo()
     {
+        string volar = PuedeVolar ? "Sí" : "No";
         return base.ObtenerInfo() + 
-               $"\nTipo: Gerente" +
-               $"\nDepartamento: {Departamento}" +
-               $"\nBono gerencial: ${BonoGerencial:N2}" +
-               $"\nSalario Total: ${CalcularSalario():N2}";
+               $"\nTipo: Pájaro" +
+               $"\nPuede volar: {volar}" +
+               $"\nSonido: {HacerSonido()}";
     }
 }
 ```
@@ -322,27 +284,22 @@ public class Gerente : Empleado
 ### Visual de la Jerarquía
 
 ```
-                    👔 EMPLEADO
-                    ═══════════
+                    � ANIMAL (Clase Padre)
+                    ═══════════════════════
                     - Nombre
-                    - Apellido
-                    - Cedula
-                    - SalarioBase
-                    - ObtenerNombreCompleto()
-                    - CalcularSalario()
+                    - Edad
+                    - HacerSonido()
                     - ObtenerInfo()
                          │
         ┌────────────────┼────────────────┐
         │                │                │
         ↓                ↓                ↓
-    ⏰ POR HORA      💰 COMISIÓN      👨‍💼 GERENTE
-    ═══════════      ═══════════      ═══════════
+    🐕 PERRO         � GATO         � PAJARO
+    ═════════        ═════════        ══════════
     + Hereda todo    + Hereda todo    + Hereda todo
-    + HorasTrabaj.   + TotalVentas    + Departamento
-    + TarifaPorHora  + %Comision      + BonoGerencial
-    + Override       + RegistrarVenta + Override
-      CalcularSal.     + Override       CalcularSal.
-                         CalcularSal.
+    + Raza           + Color          + PuedeVolar
+    + Override       + Override       + Override
+      HacerSonido()    HacerSonido()    HacerSonido()
 ```
 
 ## 💻 Aplicación Windows Forms
@@ -350,62 +307,46 @@ public class Gerente : Empleado
 ### Diseño del Formulario
 
 ```
-┌──────────────────────────────────────────────────────┐
-│  👔 Sistema de Gestión de Empleados                  │
-├──────────────────────────────────────────────────────┤
-│                                                      │
-│  Datos Básicos:                                      │
-│  ┌────────────────────────────────────────────────┐ │
-│  │ Nombre:    [txtNombre        ]                 │ │
-│  │ Apellido:  [txtApellido      ]                 │ │
-│  │ Cédula:    [txtCedula        ]                 │ │
-│  │ Salario Base: [txtSalarioBase]                 │ │
-│  └────────────────────────────────────────────────┘ │
-│                                                      │
-│  Tipo de Empleado:                                   │
-│  ( ) Por Hora    ( ) Comisión    ( ) Gerente        │
-│                                                      │
-│  ┌─ Datos Específicos ────────────────────────────┐ │
-│  │                                                 │ │
-│  │  [panelEspecifico]                             │ │
-│  │  (Cambia según el tipo seleccionado)           │ │
-│  │                                                 │ │
-│  └─────────────────────────────────────────────────┘ │
-│                                                      │
-│  [btnAgregar]  [btnCalcularTodos]  [btnLimpiar]     │
-│                                                      │
-│  Lista de Empleados:                                 │
-│  ┌────────────────────────────────────────────────┐ │
-│  │ lstEmpleados                                   │ │
-│  │                                                │ │
-│  └────────────────────────────────────────────────┘ │
-│                                                      │
-│  Información Detallada:                              │
-│  ┌────────────────────────────────────────────────┐ │
-│  │ txtDetalles                                    │ │
-│  │                                                │ │
-│  │                                                │ │
-│  └────────────────────────────────────────────────┘ │
-└──────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────┐
+│  � Registro de Animales                         │
+├──────────────────────────────────────────────────┤
+│                                                  │
+│  Nombre: [txtNombre          ]                   │
+│  Edad:   [txtEdad            ]                   │
+│                                                  │
+│  Tipo de Animal:                                 │
+│  ( ) Perro    ( ) Gato    ( ) Pájaro            │
+│                                                  │
+│  Dato específico: [txtDatoEspecifico]           │
+│                                                  │
+│  [btnAgregar]        [btnHacerSonidos]          │
+│                                                  │
+│  Lista de Animales:                              │
+│  ┌────────────────────────────────────────────┐ │
+│  │ lstAnimales                                │ │
+│  │                                            │ │
+│  └────────────────────────────────────────────┘ │
+│                                                  │
+│  Información:                                    │
+│  ┌────────────────────────────────────────────┐ │
+│  │ txtInfo                                    │ │
+│  │                                            │ │
+│  └────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────┘
 ```
 
-### 🎨 Archivo: FormEmpleados.Designer.cs
+### 🎨 Archivo: FormAnimales.Designer.cs
 
 **Este archivo contiene el DISEÑO VISUAL del formulario (lo genera Visual Studio)**
 
 ```csharp
-namespace SistemaEmpleados
+namespace MisAnimales
 {
-    partial class FormEmpleados
+    partial class FormAnimales
     {
-        /// <summary>
-        /// Variable del diseñador necesaria.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
-
-        /// <summary>
-        /// Limpiar los recursos que se estén usando.
-        /// </summary>
+        
+        // Limpiar recursos
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -415,297 +356,124 @@ namespace SistemaEmpleados
             base.Dispose(disposing);
         }
 
-        #region Código generado por el Diseñador de Windows Forms
-
-        /// <summary>
-        /// Método necesario para admitir el Diseñador.
-        /// No se puede modificar el contenido de este método con el editor de código.
-        /// </summary>
+        // Método para crear los controles
         private void InitializeComponent()
         {
-            this.grpDatosBasicos = new System.Windows.Forms.GroupBox();
-            this.txtNombre = new System.Windows.Forms.TextBox();
-            this.txtApellido = new System.Windows.Forms.TextBox();
-            this.txtCedula = new System.Windows.Forms.TextBox();
-            this.txtSalarioBase = new System.Windows.Forms.TextBox();
+            // Crear todos los controles
             this.lblNombre = new System.Windows.Forms.Label();
-            this.lblApellido = new System.Windows.Forms.Label();
-            this.lblCedula = new System.Windows.Forms.Label();
-            this.lblSalarioBase = new System.Windows.Forms.Label();
+            this.txtNombre = new System.Windows.Forms.TextBox();
+            this.lblEdad = new System.Windows.Forms.Label();
+            this.txtEdad = new System.Windows.Forms.TextBox();
             
-            this.grpTipoEmpleado = new System.Windows.Forms.GroupBox();
-            this.rdoPorHora = new System.Windows.Forms.RadioButton();
-            this.rdoComision = new System.Windows.Forms.RadioButton();
-            this.rdoGerente = new System.Windows.Forms.RadioButton();
+            this.rdoPerro = new System.Windows.Forms.RadioButton();
+            this.rdoGato = new System.Windows.Forms.RadioButton();
+            this.rdoPajaro = new System.Windows.Forms.RadioButton();
             
-            this.panelEspecifico = new System.Windows.Forms.Panel();
+            this.lblDatoEspecifico = new System.Windows.Forms.Label();
+            this.txtDatoEspecifico = new System.Windows.Forms.TextBox();
             
             this.btnAgregar = new System.Windows.Forms.Button();
-            this.btnCalcularTodos = new System.Windows.Forms.Button();
-            this.btnLimpiar = new System.Windows.Forms.Button();
+            this.btnHacerSonidos = new System.Windows.Forms.Button();
             
-            this.lstEmpleados = new System.Windows.Forms.ListBox();
-            this.txtDetalles = new System.Windows.Forms.TextBox();
+            this.lstAnimales = new System.Windows.Forms.ListBox();
+            this.txtInfo = new System.Windows.Forms.TextBox();
             
-            this.grpDatosBasicos.SuspendLayout();
-            this.grpTipoEmpleado.SuspendLayout();
-            this.SuspendLayout();
-            
-            // 
-            // grpDatosBasicos
-            // 
-            this.grpDatosBasicos.Controls.Add(this.lblNombre);
-            this.grpDatosBasicos.Controls.Add(this.txtNombre);
-            this.grpDatosBasicos.Controls.Add(this.lblApellido);
-            this.grpDatosBasicos.Controls.Add(this.txtApellido);
-            this.grpDatosBasicos.Controls.Add(this.lblCedula);
-            this.grpDatosBasicos.Controls.Add(this.txtCedula);
-            this.grpDatosBasicos.Controls.Add(this.lblSalarioBase);
-            this.grpDatosBasicos.Controls.Add(this.txtSalarioBase);
-            this.grpDatosBasicos.Location = new System.Drawing.Point(12, 12);
-            this.grpDatosBasicos.Name = "grpDatosBasicos";
-            this.grpDatosBasicos.Size = new System.Drawing.Size(760, 100);
-            this.grpDatosBasicos.TabIndex = 0;
-            this.grpDatosBasicos.TabStop = false;
-            this.grpDatosBasicos.Text = "Datos Básicos";
-            
-            // 
-            // lblNombre
-            // 
-            this.lblNombre.AutoSize = true;
-            this.lblNombre.Location = new System.Drawing.Point(20, 30);
-            this.lblNombre.Name = "lblNombre";
-            this.lblNombre.Size = new System.Drawing.Size(50, 13);
-            this.lblNombre.TabIndex = 0;
+            // Configurar lblNombre
             this.lblNombre.Text = "Nombre:";
+            this.lblNombre.Location = new System.Drawing.Point(20, 20);
             
-            // 
-            // txtNombre
-            // 
-            this.txtNombre.Location = new System.Drawing.Point(100, 27);
-            this.txtNombre.Name = "txtNombre";
+            // Configurar txtNombre
+            this.txtNombre.Location = new System.Drawing.Point(120, 20);
             this.txtNombre.Size = new System.Drawing.Size(200, 20);
-            this.txtNombre.TabIndex = 1;
             
-            // 
-            // lblApellido
-            // 
-            this.lblApellido.AutoSize = true;
-            this.lblApellido.Location = new System.Drawing.Point(320, 30);
-            this.lblApellido.Name = "lblApellido";
-            this.lblApellido.Size = new System.Drawing.Size(50, 13);
-            this.lblApellido.TabIndex = 2;
-            this.lblApellido.Text = "Apellido:";
+            // Configurar lblEdad
+            this.lblEdad.Text = "Edad:";
+            this.lblEdad.Location = new System.Drawing.Point(20, 50);
             
-            // 
-            // txtApellido
-            // 
-            this.txtApellido.Location = new System.Drawing.Point(400, 27);
-            this.txtApellido.Name = "txtApellido";
-            this.txtApellido.Size = new System.Drawing.Size(200, 20);
-            this.txtApellido.TabIndex = 3;
+            // Configurar txtEdad
+            this.txtEdad.Location = new System.Drawing.Point(120, 50);
+            this.txtEdad.Size = new System.Drawing.Size(200, 20);
             
-            // 
-            // lblCedula
-            // 
-            this.lblCedula.AutoSize = true;
-            this.lblCedula.Location = new System.Drawing.Point(20, 60);
-            this.lblCedula.Name = "lblCedula";
-            this.lblCedula.Size = new System.Drawing.Size(43, 13);
-            this.lblCedula.TabIndex = 4;
-            this.lblCedula.Text = "Cédula:";
+            // Configurar radio buttons
+            this.rdoPerro.Text = "Perro";
+            this.rdoPerro.Location = new System.Drawing.Point(20, 90);
+            this.rdoPerro.Checked = true;
             
-            // 
-            // txtCedula
-            // 
-            this.txtCedula.Location = new System.Drawing.Point(100, 57);
-            this.txtCedula.Name = "txtCedula";
-            this.txtCedula.Size = new System.Drawing.Size(200, 20);
-            this.txtCedula.TabIndex = 5;
+            this.rdoGato.Text = "Gato";
+            this.rdoGato.Location = new System.Drawing.Point(120, 90);
             
-            // 
-            // lblSalarioBase
-            // 
-            this.lblSalarioBase.AutoSize = true;
-            this.lblSalarioBase.Location = new System.Drawing.Point(320, 60);
-            this.lblSalarioBase.Name = "lblSalarioBase";
-            this.lblSalarioBase.Size = new System.Drawing.Size(70, 13);
-            this.lblSalarioBase.TabIndex = 6;
-            this.lblSalarioBase.Text = "Salario Base:";
+            this.rdoPajaro.Text = "Pájaro";
+            this.rdoPajaro.Location = new System.Drawing.Point(220, 90);
             
-            // 
-            // txtSalarioBase
-            // 
-            this.txtSalarioBase.Location = new System.Drawing.Point(400, 57);
-            this.txtSalarioBase.Name = "txtSalarioBase";
-            this.txtSalarioBase.Size = new System.Drawing.Size(200, 20);
-            this.txtSalarioBase.TabIndex = 7;
+            // Configurar dato específico
+            this.lblDatoEspecifico.Text = "Raza:";
+            this.lblDatoEspecifico.Location = new System.Drawing.Point(20, 130);
             
-            // 
-            // grpTipoEmpleado
-            // 
-            this.grpTipoEmpleado.Controls.Add(this.rdoPorHora);
-            this.grpTipoEmpleado.Controls.Add(this.rdoComision);
-            this.grpTipoEmpleado.Controls.Add(this.rdoGerente);
-            this.grpTipoEmpleado.Location = new System.Drawing.Point(12, 118);
-            this.grpTipoEmpleado.Name = "grpTipoEmpleado";
-            this.grpTipoEmpleado.Size = new System.Drawing.Size(760, 60);
-            this.grpTipoEmpleado.TabIndex = 1;
-            this.grpTipoEmpleado.TabStop = false;
-            this.grpTipoEmpleado.Text = "Tipo de Empleado";
+            this.txtDatoEspecifico.Location = new System.Drawing.Point(120, 130);
+            this.txtDatoEspecifico.Size = new System.Drawing.Size(200, 20);
             
-            // 
-            // rdoPorHora
-            // 
-            this.rdoPorHora.AutoSize = true;
-            this.rdoPorHora.Location = new System.Drawing.Point(50, 25);
-            this.rdoPorHora.Name = "rdoPorHora";
-            this.rdoPorHora.Size = new System.Drawing.Size(70, 17);
-            this.rdoPorHora.TabIndex = 0;
-            this.rdoPorHora.TabStop = true;
-            this.rdoPorHora.Text = "Por Hora";
-            this.rdoPorHora.UseVisualStyleBackColor = true;
+            // Configurar botones
+            this.btnAgregar.Text = "Agregar Animal";
+            this.btnAgregar.Location = new System.Drawing.Point(20, 170);
+            this.btnAgregar.Size = new System.Drawing.Size(120, 30);
             
-            // 
-            // rdoComision
-            // 
-            this.rdoComision.AutoSize = true;
-            this.rdoComision.Location = new System.Drawing.Point(250, 25);
-            this.rdoComision.Name = "rdoComision";
-            this.rdoComision.Size = new System.Drawing.Size(68, 17);
-            this.rdoComision.TabIndex = 1;
-            this.rdoComision.Text = "Comisión";
-            this.rdoComision.UseVisualStyleBackColor = true;
+            this.btnHacerSonidos.Text = "Hacer Sonidos";
+            this.btnHacerSonidos.Location = new System.Drawing.Point(200, 170);
+            this.btnHacerSonidos.Size = new System.Drawing.Size(120, 30);
             
-            // 
-            // rdoGerente
-            // 
-            this.rdoGerente.AutoSize = true;
-            this.rdoGerente.Location = new System.Drawing.Point(450, 25);
-            this.rdoGerente.Name = "rdoGerente";
-            this.rdoGerente.Size = new System.Drawing.Size(62, 17);
-            this.rdoGerente.TabIndex = 2;
-            this.rdoGerente.Text = "Gerente";
-            this.rdoGerente.UseVisualStyleBackColor = true;
+            // Configurar lista
+            this.lstAnimales.Location = new System.Drawing.Point(20, 220);
+            this.lstAnimales.Size = new System.Drawing.Size(460, 100);
             
-            // 
-            // panelEspecifico
-            // 
-            this.panelEspecifico.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelEspecifico.Location = new System.Drawing.Point(12, 184);
-            this.panelEspecifico.Name = "panelEspecifico";
-            this.panelEspecifico.Size = new System.Drawing.Size(760, 80);
-            this.panelEspecifico.TabIndex = 2;
+            // Configurar cuadro de información
+            this.txtInfo.Multiline = true;
+            this.txtInfo.ReadOnly = true;
+            this.txtInfo.Location = new System.Drawing.Point(20, 340);
+            this.txtInfo.Size = new System.Drawing.Size(460, 120);
             
-            // 
-            // btnAgregar
-            // 
-            this.btnAgregar.Location = new System.Drawing.Point(12, 280);
-            this.btnAgregar.Name = "btnAgregar";
-            this.btnAgregar.Size = new System.Drawing.Size(150, 35);
-            this.btnAgregar.TabIndex = 3;
-            this.btnAgregar.Text = "Agregar Empleado";
-            this.btnAgregar.UseVisualStyleBackColor = true;
-            this.btnAgregar.Click += new System.EventHandler(this.btnAgregar_Click);
+            // Configurar formulario
+            this.ClientSize = new System.Drawing.Size(500, 480);
+            this.Text = "Registro de Animales";
             
-            // 
-            // btnCalcularTodos
-            // 
-            this.btnCalcularTodos.Location = new System.Drawing.Point(312, 280);
-            this.btnCalcularTodos.Name = "btnCalcularTodos";
-            this.btnCalcularTodos.Size = new System.Drawing.Size(150, 35);
-            this.btnCalcularTodos.TabIndex = 4;
-            this.btnCalcularTodos.Text = "Calcular Nómina";
-            this.btnCalcularTodos.UseVisualStyleBackColor = true;
-            this.btnCalcularTodos.Click += new System.EventHandler(this.btnCalcularTodos_Click);
-            
-            // 
-            // btnLimpiar
-            // 
-            this.btnLimpiar.Location = new System.Drawing.Point(622, 280);
-            this.btnLimpiar.Name = "btnLimpiar";
-            this.btnLimpiar.Size = new System.Drawing.Size(150, 35);
-            this.btnLimpiar.TabIndex = 5;
-            this.btnLimpiar.Text = "Limpiar";
-            this.btnLimpiar.UseVisualStyleBackColor = true;
-            this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
-            
-            // 
-            // lstEmpleados
-            // 
-            this.lstEmpleados.FormattingEnabled = true;
-            this.lstEmpleados.Location = new System.Drawing.Point(12, 330);
-            this.lstEmpleados.Name = "lstEmpleados";
-            this.lstEmpleados.Size = new System.Drawing.Size(760, 120);
-            this.lstEmpleados.TabIndex = 6;
-            this.lstEmpleados.SelectedIndexChanged += new System.EventHandler(this.lstEmpleados_SelectedIndexChanged);
-            
-            // 
-            // txtDetalles
-            // 
-            this.txtDetalles.Location = new System.Drawing.Point(12, 460);
-            this.txtDetalles.Multiline = true;
-            this.txtDetalles.Name = "txtDetalles";
-            this.txtDetalles.ReadOnly = true;
-            this.txtDetalles.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtDetalles.Size = new System.Drawing.Size(760, 120);
-            this.txtDetalles.TabIndex = 7;
-            
-            // 
-            // FormEmpleados
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 592);
-            this.Controls.Add(this.txtDetalles);
-            this.Controls.Add(this.lstEmpleados);
-            this.Controls.Add(this.btnLimpiar);
-            this.Controls.Add(this.btnCalcularTodos);
+            // Agregar controles al formulario
+            this.Controls.Add(this.lblNombre);
+            this.Controls.Add(this.txtNombre);
+            this.Controls.Add(this.lblEdad);
+            this.Controls.Add(this.txtEdad);
+            this.Controls.Add(this.rdoPerro);
+            this.Controls.Add(this.rdoGato);
+            this.Controls.Add(this.rdoPajaro);
+            this.Controls.Add(this.lblDatoEspecifico);
+            this.Controls.Add(this.txtDatoEspecifico);
             this.Controls.Add(this.btnAgregar);
-            this.Controls.Add(this.panelEspecifico);
-            this.Controls.Add(this.grpTipoEmpleado);
-            this.Controls.Add(this.grpDatosBasicos);
-            this.Name = "FormEmpleados";
-            this.Text = "Sistema de Gestión de Empleados";
-            this.grpDatosBasicos.ResumeLayout(false);
-            this.grpDatosBasicos.PerformLayout();
-            this.grpTipoEmpleado.ResumeLayout(false);
-            this.grpTipoEmpleado.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            this.Controls.Add(this.btnHacerSonidos);
+            this.Controls.Add(this.lstAnimales);
+            this.Controls.Add(this.txtInfo);
         }
 
-        #endregion
-
-        // Declaración de controles (Visual Studio los genera automáticamente)
-        private System.Windows.Forms.GroupBox grpDatosBasicos;
+        // Declaración de controles
         private System.Windows.Forms.Label lblNombre;
         private System.Windows.Forms.TextBox txtNombre;
-        private System.Windows.Forms.Label lblApellido;
-        private System.Windows.Forms.TextBox txtApellido;
-        private System.Windows.Forms.Label lblCedula;
-        private System.Windows.Forms.TextBox txtCedula;
-        private System.Windows.Forms.Label lblSalarioBase;
-        private System.Windows.Forms.TextBox txtSalarioBase;
+        private System.Windows.Forms.Label lblEdad;
+        private System.Windows.Forms.TextBox txtEdad;
         
-        private System.Windows.Forms.GroupBox grpTipoEmpleado;
-        private System.Windows.Forms.RadioButton rdoPorHora;
-        private System.Windows.Forms.RadioButton rdoComision;
-        private System.Windows.Forms.RadioButton rdoGerente;
+        private System.Windows.Forms.RadioButton rdoPerro;
+        private System.Windows.Forms.RadioButton rdoGato;
+        private System.Windows.Forms.RadioButton rdoPajaro;
         
-        private System.Windows.Forms.Panel panelEspecifico;
+        private System.Windows.Forms.Label lblDatoEspecifico;
+        private System.Windows.Forms.TextBox txtDatoEspecifico;
         
         private System.Windows.Forms.Button btnAgregar;
-        private System.Windows.Forms.Button btnCalcularTodos;
-        private System.Windows.Forms.Button btnLimpiar;
+        private System.Windows.Forms.Button btnHacerSonidos;
         
-        private System.Windows.Forms.ListBox lstEmpleados;
-        private System.Windows.Forms.TextBox txtDetalles;
+        private System.Windows.Forms.ListBox lstAnimales;
+        private System.Windows.Forms.TextBox txtInfo;
     }
 }
 ```
 
-### 💻 Archivo: FormEmpleados.cs
+### 💻 Archivo: FormAnimales.cs
 
 **Este archivo contiene la LÓGICA del formulario (aquí escribes tu código)**
 
@@ -714,375 +482,195 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace SistemaEmpleados
+namespace MisAnimales
 {
-    public partial class FormEmpleados : Form
+    public partial class FormAnimales : Form
     {
         // ═══════════════════════════════════════════════════
-        // VARIABLES DE CLASE
+        // VARIABLE PRINCIPAL
         // ═══════════════════════════════════════════════════
         
-        // Lista que puede contener cualquier tipo de Empleado (¡Polimorfismo!)
-        private List<Empleado> empleados;
+        // Lista que puede guardar cualquier tipo de Animal
+        // ¡Aquí vemos el POLIMORFISMO en acción!
+        private List<Animal> animales;
         
         // ═══════════════════════════════════════════════════
         // CONSTRUCTOR
         // ═══════════════════════════════════════════════════
         
-        public FormEmpleados()
+        public FormAnimales()
         {
-            InitializeComponent();  // Inicializa los controles del Designer
-            empleados = new List<Empleado>();
-            ConfigurarFormulario();
+            InitializeComponent();  // Crea todos los controles del Designer
+            animales = new List<Animal>();  // Inicializar la lista
+            ConfigurarEventos();
         }
         
         // ═══════════════════════════════════════════════════
-        // CONFIGURACIÓN INICIAL
+        // CONFIGURACIÓN
         // ═══════════════════════════════════════════════════
         
-        private void ConfigurarFormulario()
+        private void ConfigurarEventos()
         {
-            // Conectar eventos de los radio buttons
-            rdoPorHora.CheckedChanged += TipoEmpleado_CheckedChanged;
-            rdoComision.CheckedChanged += TipoEmpleado_CheckedChanged;
-            rdoGerente.CheckedChanged += TipoEmpleado_CheckedChanged;
+            // Conectar eventos de los botones
+            btnAgregar.Click += btnAgregar_Click;
+            btnHacerSonidos.Click += btnHacerSonidos_Click;
             
-            // Seleccionar "Por Hora" por defecto
-            rdoPorHora.Checked = true;
+            // Conectar evento de la lista
+            lstAnimales.SelectedIndexChanged += lstAnimales_SelectedIndexChanged;
+            
+            // Conectar eventos de radio buttons para cambiar la etiqueta
+            rdoPerro.CheckedChanged += TipoAnimal_CheckedChanged;
+            rdoGato.CheckedChanged += TipoAnimal_CheckedChanged;
+            rdoPajaro.CheckedChanged += TipoAnimal_CheckedChanged;
         }
         
         // ═══════════════════════════════════════════════════
-        // EVENTOS DE CONTROLES
+        // EVENTOS
         // ═══════════════════════════════════════════════════
         
-        // Evento cuando cambia el tipo de empleado seleccionado
-        private void TipoEmpleado_CheckedChanged(object sender, EventArgs e)
+        // Cambiar la etiqueta del campo específico según el tipo
+        private void TipoAnimal_CheckedChanged(object sender, EventArgs e)
         {
-            // Limpiar el panel de campos específicos
-            panelEspecifico.Controls.Clear();
-            
-            // Mostrar los campos correspondientes al tipo seleccionado
-            if (rdoPorHora.Checked)
+            if (rdoPerro.Checked)
             {
-                MostrarCamposPorHora();
+                lblDatoEspecifico.Text = "Raza:";
             }
-            else if (rdoComision.Checked)
+            else if (rdoGato.Checked)
             {
-                MostrarCamposComision();
+                lblDatoEspecifico.Text = "Color:";
             }
-            else if (rdoGerente.Checked)
+            else if (rdoPajaro.Checked)
             {
-                MostrarCamposGerente();
+                lblDatoEspecifico.Text = "¿Puede volar? (si/no):";
             }
+            txtDatoEspecifico.Clear();
         }
         
-        // Evento cuando se selecciona un empleado de la lista
-        private void lstEmpleados_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (lstEmpleados.SelectedIndex < 0) return;
-            
-            // Obtener el empleado seleccionado
-            Empleado empSeleccionado = empleados[lstEmpleados.SelectedIndex];
-            
-            // Polimorfismo: cada objeto usa su propia versión de ObtenerInfo()
-            txtDetalles.Text = empSeleccionado.ObtenerInfo();
-        }
-        
-        // ═══════════════════════════════════════════════════
-        // MÉTODOS PARA MOSTRAR CAMPOS ESPECÍFICOS
-        // ═══════════════════════════════════════════════════
-        
-        // Mostrar campos para empleado por hora
-        private void MostrarCamposPorHora()
-        {
-            // Crear controles dinámicamente
-            Label lblTarifa = new Label 
-            { 
-                Text = "Tarifa por Hora:", 
-                Left = 10, 
-                Top = 10, 
-                Width = 120 
-            };
-            TextBox txtTarifa = new TextBox 
-            { 
-                Name = "txtTarifa", 
-                Left = 140, 
-                Top = 10, 
-                Width = 150 
-            };
-            
-            Label lblHoras = new Label 
-            { 
-                Text = "Horas Trabajadas:", 
-                Left = 10, 
-                Top = 40, 
-                Width = 120 
-            };
-            TextBox txtHoras = new TextBox 
-            { 
-                Name = "txtHoras", 
-                Left = 140, 
-                Top = 40, 
-                Width = 150 
-            };
-            
-            // Agregar controles al panel
-            panelEspecifico.Controls.AddRange(new Control[] { lblTarifa, txtTarifa, lblHoras, txtHoras });
-        }
-        
-        // Mostrar campos para empleado con comisión
-        private void MostrarCamposComision()
-        {
-            Label lblPorcentaje = new Label 
-            { 
-                Text = "% Comisión:", 
-                Left = 10, 
-                Top = 10, 
-                Width = 120 
-            };
-            TextBox txtPorcentaje = new TextBox 
-            { 
-                Name = "txtPorcentaje", 
-                Left = 140, 
-                Top = 10, 
-                Width = 150 
-            };
-            
-            Label lblVentas = new Label 
-            { 
-                Text = "Total Ventas:", 
-                Left = 10, 
-                Top = 40, 
-                Width = 120 
-            };
-            TextBox txtVentas = new TextBox 
-            { 
-                Name = "txtVentas", 
-                Left = 140, 
-                Top = 40, 
-                Width = 150 
-            };
-            
-            panelEspecifico.Controls.AddRange(new Control[] { lblPorcentaje, txtPorcentaje, lblVentas, txtVentas });
-        }
-        
-        // Mostrar campos para gerente
-        private void MostrarCamposGerente()
-        {
-            Label lblDepartamento = new Label 
-            { 
-                Text = "Departamento:", 
-                Left = 10, 
-                Top = 10, 
-                Width = 120 
-            };
-            TextBox txtDepartamento = new TextBox 
-            { 
-                Name = "txtDepartamento", 
-                Left = 140, 
-                Top = 10, 
-                Width = 150 
-            };
-            
-            Label lblBono = new Label 
-            { 
-                Text = "Bono Gerencial:", 
-                Left = 10, 
-                Top = 40, 
-                Width = 120 
-            };
-            TextBox txtBono = new TextBox 
-            { 
-                Name = "txtBono", 
-                Left = 140, 
-                Top = 40, 
-                Width = 150 
-            };
-            
-            panelEspecifico.Controls.AddRange(new Control[] { lblDepartamento, txtDepartamento, lblBono, txtBono });
-        }
-        
-        // ═══════════════════════════════════════════════════
-        // EVENTOS DE BOTONES
-        // ═══════════════════════════════════════════════════
-        
-        // Botón: Agregar empleado
+        // Botón: Agregar Animal
         private void btnAgregar_Click(object sender, EventArgs e)
         {
             try
             {
-                // Validar campos básicos
-                if (string.IsNullOrWhiteSpace(txtNombre.Text) || 
-                    string.IsNullOrWhiteSpace(txtApellido.Text) ||
-                    string.IsNullOrWhiteSpace(txtCedula.Text))
+                // 1. Validar que los campos no estén vacíos
+                if (string.IsNullOrWhiteSpace(txtNombre.Text))
                 {
-                    MessageBox.Show("Complete todos los campos básicos", "Validación",
-                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Por favor ingrese el nombre", "Validación");
                     return;
                 }
                 
-                // Obtener datos comunes
+                // 2. Obtener los datos comunes
                 string nombre = txtNombre.Text;
-                string apellido = txtApellido.Text;
-                string cedula = txtCedula.Text;
-                decimal salarioBase = decimal.Parse(txtSalarioBase.Text);
+                int edad = int.Parse(txtEdad.Text);
+                string datoEspecifico = txtDatoEspecifico.Text;
                 
-                Empleado nuevoEmpleado = null;
+                Animal nuevoAnimal = null;
                 
-                // Crear el tipo correcto de empleado según la selección
-                // ¡Aquí aplicamos HERENCIA Y POLIMORFISMO!
+                // 3. Crear el tipo correcto de animal según la selección
+                // ¡AQUÍ USAMOS HERENCIA!
                 
-                if (rdoPorHora.Checked)
+                if (rdoPerro.Checked)
                 {
-                    // Obtener controles específicos del panel
-                    TextBox txtTarifa = panelEspecifico.Controls["txtTarifa"] as TextBox;
-                    TextBox txtHoras = panelEspecifico.Controls["txtHoras"] as TextBox;
-                    
-                    decimal tarifa = decimal.Parse(txtTarifa.Text);
-                    int horas = int.Parse(txtHoras.Text);
-                    
-                    // Crear objeto EmpleadoPorHora
-                    EmpleadoPorHora emp = new EmpleadoPorHora(nombre, apellido, cedula, salarioBase, tarifa);
-                    emp.HorasTrabajadas = horas;
-                    nuevoEmpleado = emp;  // Polimorfismo: EmpleadoPorHora ES UN Empleado
+                    // Crear un Perro
+                    nuevoAnimal = new Perro(nombre, edad, datoEspecifico);
                 }
-                else if (rdoComision.Checked)
+                else if (rdoGato.Checked)
                 {
-                    TextBox txtPorcentaje = panelEspecifico.Controls["txtPorcentaje"] as TextBox;
-                    TextBox txtVentas = panelEspecifico.Controls["txtVentas"] as TextBox;
-                    
-                    decimal porcentaje = decimal.Parse(txtPorcentaje.Text);
-                    decimal ventas = decimal.Parse(txtVentas.Text);
-                    
-                    // Crear objeto EmpleadoComision
-                    EmpleadoComision emp = new EmpleadoComision(nombre, apellido, cedula, salarioBase, porcentaje);
-                    emp.TotalVentas = ventas;
-                    nuevoEmpleado = emp;  // Polimorfismo: EmpleadoComision ES UN Empleado
+                    // Crear un Gato
+                    nuevoAnimal = new Gato(nombre, edad, datoEspecifico);
                 }
-                else if (rdoGerente.Checked)
+                else if (rdoPajaro.Checked)
                 {
-                    TextBox txtDepartamento = panelEspecifico.Controls["txtDepartamento"] as TextBox;
-                    TextBox txtBono = panelEspecifico.Controls["txtBono"] as TextBox;
-                    
-                    string departamento = txtDepartamento.Text;
-                    decimal bono = decimal.Parse(txtBono.Text);
-                    
-                    // Crear objeto Gerente
-                    nuevoEmpleado = new Gerente(nombre, apellido, cedula, salarioBase, departamento, bono);
-                    // Polimorfismo: Gerente ES UN Empleado
+                    // Crear un Pájaro
+                    bool puedeVolar = datoEspecifico.ToLower() == "si";
+                    nuevoAnimal = new Pajaro(nombre, edad, puedeVolar);
                 }
                 
-                // Agregar a la lista (¡Polimorfismo en acción!)
-                // La lista puede contener diferentes tipos de empleados
-                empleados.Add(nuevoEmpleado);
+                // 4. Agregar a la lista (¡POLIMORFISMO!)
+                // La lista de tipo Animal puede guardar Perros, Gatos y Pájaros
+                animales.Add(nuevoAnimal);
                 
-                // Actualizar interfaz
+                // 5. Actualizar la interfaz
                 ActualizarLista();
                 LimpiarCampos();
                 
-                MessageBox.Show("Empleado agregado exitosamente", "Éxito", 
-                              MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (FormatException)
-            {
-                MessageBox.Show("Por favor ingrese valores numéricos válidos", "Error de Formato", 
-                              MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Animal agregado exitosamente", "Éxito");
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}", "Error", 
-                              MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: " + ex.Message, "Error");
             }
         }
         
-        // Botón: Calcular nómina total
-        private void btnCalcularTodos_Click(object sender, EventArgs e)
+        // Botón: Hacer que todos los animales hagan su sonido
+        private void btnHacerSonidos_Click(object sender, EventArgs e)
         {
-            if (empleados.Count == 0)
+            if (animales.Count == 0)
             {
-                MessageBox.Show("No hay empleados registrados", "Información",
-                              MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("No hay animales registrados", "Información");
                 return;
             }
             
-            decimal totalNomina = 0;
-            string reporte = "═══════════════════════════════════\n";
-            reporte += "   REPORTE DE NÓMINA\n";
-            reporte += "═══════════════════════════════════\n\n";
+            string sonidos = "🔊 SONIDOS DE LOS ANIMALES:\n\n";
             
-            // Polimorfismo: cada empleado calcula su salario de forma diferente
-            foreach (Empleado emp in empleados)
+            // ¡POLIMORFISMO EN ACCIÓN!
+            // Cada animal hace su propio sonido
+            foreach (Animal animal in animales)
             {
-                decimal salario = emp.CalcularSalario();  // ¡Polimorfismo!
-                totalNomina += salario;
-                
-                reporte += $"{emp.ObtenerNombreCompleto()}\n";
-                reporte += $"Salario: ${salario:N2}\n";
-                reporte += "───────────────────────────────────\n";
+                // Aunque todos son de tipo Animal, cada uno ejecuta
+                // su propia versión de HacerSonido()
+                sonidos += animal.Nombre + ": " + animal.HacerSonido() + "\n";
             }
             
-            reporte += $"\nTOTAL NÓMINA: ${totalNomina:N2}";
-            
-            txtDetalles.Text = reporte;
+            txtInfo.Text = sonidos;
         }
         
-        // Botón: Limpiar campos
-        private void btnLimpiar_Click(object sender, EventArgs e)
+        // Evento: Cuando se selecciona un animal de la lista
+        private void lstAnimales_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LimpiarCampos();
+            if (lstAnimales.SelectedIndex < 0) return;
+            
+            // Obtener el animal seleccionado
+            Animal animalSeleccionado = animales[lstAnimales.SelectedIndex];
+            
+            // ¡POLIMORFISMO!
+            // Cada tipo de animal muestra su propia información
+            txtInfo.Text = animalSeleccionado.ObtenerInfo();
         }
         
         // ═══════════════════════════════════════════════════
         // MÉTODOS AUXILIARES
         // ═══════════════════════════════════════════════════
         
-        // Actualizar la lista de empleados mostrada
+        // Actualizar la lista de animales
         private void ActualizarLista()
         {
-            lstEmpleados.Items.Clear();
+            lstAnimales.Items.Clear();
             
-            foreach (Empleado emp in empleados)
+            foreach (Animal animal in animales)
             {
-                // Usar operador 'is' para determinar el tipo de empleado
-                string tipo = "";
-                if (emp is EmpleadoPorHora)
-                    tipo = "⏰";
-                else if (emp is EmpleadoComision)
-                    tipo = "💰";
-                else if (emp is Gerente)
-                    tipo = "👨‍💼";
+                // Usar 'is' para saber qué tipo de animal es
+                string icono = "";
+                if (animal is Perro)
+                    icono = "🐕";
+                else if (animal is Gato)
+                    icono = "�";
+                else if (animal is Pajaro)
+                    icono = "�";
                 
-                // Polimorfismo: cada objeto usa su propia versión de CalcularSalario()
-                decimal salario = emp.CalcularSalario();
-                
-                lstEmpleados.Items.Add($"{tipo} {emp.ObtenerNombreCompleto()} - ${salario:N2}");
+                lstAnimales.Items.Add($"{icono} {animal.Nombre} ({animal.Edad} años)");
             }
         }
         
-        // Limpiar todos los campos del formulario
+        // Limpiar los campos del formulario
         private void LimpiarCampos()
         {
-            // Limpiar campos básicos
             txtNombre.Clear();
-            txtApellido.Clear();
-            txtCedula.Clear();
-            txtSalarioBase.Clear();
-            
-            // Limpiar campos del panel específico
-            foreach (Control control in panelEspecifico.Controls)
-            {
-                if (control is TextBox)
-                    ((TextBox)control).Clear();
-            }
-            
-            // Limpiar detalles
-            txtDetalles.Clear();
-            
-            // Establecer foco en el primer campo
+            txtEdad.Clear();
+            txtDatoEspecifico.Clear();
             txtNombre.Focus();
         }
-    }  // Fin de la clase FormEmpleados
-}  // Fin del namespace
+    }
+}
 ```
 
 ---
@@ -1247,168 +835,113 @@ if (empHora != null)
 }
 ```
 
-## 🎯 Ejemplo Práctico: Formas Geométricas
+## 🎯 Ejemplo Práctico para Practicar: Vehículos
 
-### Las Clases
+### Ejercicio: Sistema de Vehículos
+
+Crea tu propio sistema de herencia con vehículos:
 
 ```csharp
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// CLASE BASE
+// CLASE BASE - Vehiculo
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-public abstract class Forma
+public class Vehiculo
 {
-    public string Color { get; set; }
+    public string Marca { get; set; }
+    public string Modelo { get; set; }
+    public int Año { get; set; }
     
-    public Forma(string color)
+    public Vehiculo(string marca, string modelo, int año)
     {
-        Color = color;
+        Marca = marca;
+        Modelo = modelo;
+        Año = año;
     }
     
-    // Métodos abstractos (DEBEN ser implementados)
-    public abstract double CalcularArea();
-    public abstract double CalcularPerimetro();
+    public virtual string Acelerar()
+    {
+        return "El vehículo está acelerando";
+    }
     
-    // Método normal
     public virtual string ObtenerInfo()
     {
-        return $"Forma de color {Color}";
+        return $"Marca: {Marca}\nModelo: {Modelo}\nAño: {Año}";
     }
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// RECTANGULO
+// CLASE HIJA - Auto
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-public class Rectangulo : Forma
+public class Auto : Vehiculo
 {
-    public double Base { get; set; }
-    public double Altura { get; set; }
+    public int NumeroPuertas { get; set; }
     
-    public Rectangulo(string color, double baseRect, double altura) 
-        : base(color)
+    public Auto(string marca, string modelo, int año, int puertas) 
+        : base(marca, modelo, año)
     {
-        Base = baseRect;
-        Altura = altura;
+        NumeroPuertas = puertas;
     }
     
-    public override double CalcularArea()
+    public override string Acelerar()
     {
-        return Base * Altura;
-    }
-    
-    public override double CalcularPerimetro()
-    {
-        return 2 * (Base + Altura);
+        return "El auto acelera suavemente 🚗";
     }
     
     public override string ObtenerInfo()
     {
         return base.ObtenerInfo() + 
-               $"\nTipo: Rectángulo" +
-               $"\nBase: {Base}" +
-               $"\nAltura: {Altura}" +
-               $"\nÁrea: {CalcularArea():N2}" +
-               $"\nPerímetro: {CalcularPerimetro():N2}";
+               $"\nTipo: Auto" +
+               $"\nPuertas: {NumeroPuertas}";
     }
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// CIRCULO
+// CLASE HIJA - Moto
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-public class Circulo : Forma
+public class Moto : Vehiculo
 {
-    public double Radio { get; set; }
+    public int Cilindrada { get; set; }
     
-    public Circulo(string color, double radio) : base(color)
+    public Moto(string marca, string modelo, int año, int cilindrada) 
+        : base(marca, modelo, año)
     {
-        Radio = radio;
+        Cilindrada = cilindrada;
     }
     
-    public override double CalcularArea()
+    public override string Acelerar()
     {
-        return Math.PI * Radio * Radio;
-    }
-    
-    public override double CalcularPerimetro()
-    {
-        return 2 * Math.PI * Radio;
+        return "La moto acelera rápidamente 🏍️";
     }
     
     public override string ObtenerInfo()
     {
         return base.ObtenerInfo() + 
-               $"\nTipo: Círculo" +
-               $"\nRadio: {Radio}" +
-               $"\nÁrea: {CalcularArea():N2}" +
-               $"\nPerímetro: {CalcularPerimetro():N2}";
-    }
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// TRIANGULO
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-public class Triangulo : Forma
-{
-    public double Base { get; set; }
-    public double Altura { get; set; }
-    public double Lado1 { get; set; }
-    public double Lado2 { get; set; }
-    public double Lado3 { get; set; }
-    
-    public Triangulo(string color, double baseT, double altura, 
-                    double lado1, double lado2, double lado3) 
-        : base(color)
-    {
-        Base = baseT;
-        Altura = altura;
-        Lado1 = lado1;
-        Lado2 = lado2;
-        Lado3 = lado3;
-    }
-    
-    public override double CalcularArea()
-    {
-        return (Base * Altura) / 2;
-    }
-    
-    public override double CalcularPerimetro()
-    {
-        return Lado1 + Lado2 + Lado3;
-    }
-    
-    public override string ObtenerInfo()
-    {
-        return base.ObtenerInfo() + 
-               $"\nTipo: Triángulo" +
-               $"\nBase: {Base}" +
-               $"\nAltura: {Altura}" +
-               $"\nÁrea: {CalcularArea():N2}" +
-               $"\nPerímetro: {CalcularPerimetro():N2}";
+               $"\nTipo: Moto" +
+               $"\nCilindrada: {Cilindrada}cc";
     }
 }
 ```
 
-### Jerarquía Visual
+### Visual de Vehículos
 
 ```
-                    🔷 FORMA (Abstracta)
-                    ════════════════════
-                    + Color
-                    + CalcularArea() [abstracto]
-                    + CalcularPerimetro() [abstracto]
-                    + ObtenerInfo() [virtual]
-                          │
-        ┌─────────────────┼─────────────────┐
-        │                 │                 │
-        ↓                 ↓                 ↓
-    📐 RECTANGULO      ⭕ CIRCULO        🔺 TRIANGULO
-    ═════════════      ═══════════      ══════════════
-    + Base             + Radio          + Base
-    + Altura                            + Altura
-                                        + Lado1, 2, 3
-    Override:          Override:        Override:
-    - CalcularArea()   - CalcularArea() - CalcularArea()
-    - CalcularPerim()  - CalcularPerim()- CalcularPerim()
-    - ObtenerInfo()    - ObtenerInfo()  - ObtenerInfo()
+                    � VEHICULO
+                    ═══════════
+                    - Marca
+                    - Modelo
+                    - Año
+                    - Acelerar()
+                    - ObtenerInfo()
+                         │
+        ┌────────────────┴────────────────┐
+        │                                 │
+        ↓                                 ↓
+    � AUTO                           🏍️ MOTO
+    ════════                          ═══════
+    + Hereda todo                     + Hereda todo
+    + NumeroPuertas                   + Cilindrada
+    + Override Acelerar()             + Override Acelerar()
+    + Override ObtenerInfo()          + Override ObtenerInfo()
 ```
 
 ## 📊 Ventajas de la Herencia
@@ -1436,80 +969,76 @@ public class Triangulo : Forma
 └────────────────────────────────────────────────────────┘
 ```
 
-## 🎓 Conceptos Avanzados
+## 🔍 Preguntas Frecuentes
 
-### Clase Abstracta vs Clase Normal
+### ❓ ¿Cuándo usar herencia?
+
+Usa herencia cuando tengas una relación **"ES UN"**:
+- Un Perro **ES UN** Animal ✅
+- Un Auto **ES UN** Vehículo ✅
+- Un Estudiante **ES UNA** Persona ✅
+
+NO uses herencia cuando sea **"TIENE UN"**:
+- Un Auto **TIENE UN** Motor ❌ (mejor usar composición)
+
+### ❓ ¿Puedo heredar de múltiples clases?
+
+**NO** en C#. Solo puedes heredar de UNA clase padre:
 
 ```csharp
-// CLASE ABSTRACTA (no se puede instanciar)
-public abstract class Animal
-{
-    public abstract string HacerSonido();  // Método abstracto
-}
+// ❌ ESTO NO FUNCIONA
+public class Perro : Animal, Mascota  // ERROR
 
-// NO PUEDES HACER:
-// Animal a = new Animal();  ❌ ERROR
+// ✅ ESTO SÍ FUNCIONA
+public class Perro : Animal  // OK
+```
 
-// CLASE NORMAL
-public class Perro : Animal
+### ❓ ¿Qué es `base`?
+
+`base` se usa para llamar al constructor o métodos de la clase padre:
+
+```csharp
+public class Hijo : Padre
 {
-    public override string HacerSonido()
+    // Llamar al constructor del padre
+    public Hijo(string dato) : base(dato)
     {
-        return "Guau";
+        // Tu código
+    }
+    
+    // Llamar a un método del padre
+    public override string Metodo()
+    {
+        return base.Metodo() + " más cosas";
     }
 }
-
-// SÍ PUEDES HACER:
-Perro p = new Perro();  ✅ OK
-```
-
-### Herencia Multinivel
-
-```csharp
-public class Ser { }
-public class SerVivo : Ser { }
-public class Animal : SerVivo { }
-public class Mamifero : Animal { }
-public class Perro : Mamifero { }
-```
-
-**Visual:**
-```
-    🌍 Ser
-     │
-     └─► 🦠 SerVivo
-          │
-          └─► 🐾 Animal
-               │
-               └─► 🐕 Mamífero
-                    │
-                    └─► 🐶 Perro
 ```
 
 ## 📝 Ejercicios Prácticos
 
-### Ejercicio 1: Sistema de Vehículos
+### Ejercicio 1: Frutas (Fácil) ⭐
 
-Crea una jerarquía de vehículos:
-- Clase base: `Vehiculo` (marca, modelo, año)
-- Clases derivadas: `Auto`, `Moto`, `Camion`
-- Cada uno con sus propiedades específicas
-- Método `CalcularImpuesto()` diferente para cada uno
+Crea:
+- Clase base: `Fruta` (nombre, color, precio)
+- Clases hijas: `Manzana`, `Naranja`, `Platano`
+- Cada una con una propiedad especial (dulzura, vitamina C, largo)
+- Método `ObtenerInfo()` que muestre toda la información
 
-### Ejercicio 2: Cuentas Bancarias
+### Ejercicio 2: Instrumentos Musicales (Medio) ⭐⭐
 
 Implementa:
-- Clase base: `CuentaBancaria` (numero, titular, saldo)
-- Derivadas: `CuentaAhorro`, `CuentaCorriente`, `CuentaNomina`
-- Método `CalcularInteres()` específico para cada tipo
-- Formulario para gestionar múltiples cuentas
+- Clase base: `Instrumento` (nombre, marca)
+- Clases derivadas: `Guitarra` (numCuerdas), `Piano` (numTeclas), `Tambor` (tamaño)
+- Método `TocarSonido()` diferente para cada uno
+- Formulario Windows Forms para agregar y hacer sonar instrumentos
 
-### Ejercicio 3: Sistema de Figuras 3D
+### Ejercicio 3: Tienda de Productos (Avanzado) ⭐⭐⭐
 
-Extiende el ejemplo de formas geométricas:
-- Clase base: `Forma3D`
-- Derivadas: `Cubo`, `Esfera`, `Cilindro`
-- Métodos: `CalcularVolumen()`, `CalcularSuperficie()`
+Crea un sistema completo:
+- Clase base: `Producto` (nombre, precio)
+- Derivadas: `ProductoFisico` (peso), `ProductoDigital` (tamaño MB)
+- Método `CalcularEnvio()` (físicos pagan por peso, digitales gratis)
+- Formulario con lista de productos y cálculo total con envío
 
 ## 🎯 Resumen Final
 
@@ -1517,71 +1046,52 @@ Extiende el ejemplo de formas geométricas:
 
 ```
 ╔═══════════════════════════════════════════════════════╗
-║  🎓 RESUMEN DE HERENCIA                               ║
+║  📚 LO QUE APRENDISTE HOY                             ║
 ╠═══════════════════════════════════════════════════════╣
 ║                                                       ║
-║  HERENCIA                                             ║
-║  ─────────                                            ║
-║  • Permite reutilizar código                          ║
-║  • Crea jerarquías de clases                          ║
-║  • Sintaxis: class Hijo : Padre                       ║
+║  ✅ QUÉ ES LA HERENCIA                                ║
+║     • Reutilizar código de una clase padre           ║
+║     • class Hijo : Padre                             ║
 ║                                                       ║
-║  PALABRAS CLAVE                                       ║
-║  ───────────────                                      ║
-║  • base      → Acceder a la clase padre              ║
-║  • virtual   → Método que PUEDE sobrescribirse        ║
-║  • override  → Sobrescribir método del padre          ║
-║  • abstract  → Método que DEBE implementarse          ║
-║  • is        → Verificar tipo de objeto               ║
-║  • as        → Convertir tipo de objeto               ║
+║  ✅ PALABRAS IMPORTANTES                              ║
+║     • virtual   → El hijo puede cambiar este método  ║
+║     • override  → Cambiar método del padre           ║
+║     • base      → Llamar al padre                    ║
+║     • is        → Verificar el tipo                  ║
 ║                                                       ║
-║  POLIMORFISMO                                         ║
-║  ─────────────                                        ║
-║  • Objetos de diferentes tipos responden igual        ║
-║  • Una variable del padre puede contener hijos        ║
-║  • Cada hijo ejecuta su propia versión                ║
+║  ✅ POLIMORFISMO                                      ║
+║     • Una lista de Animal puede tener                ║
+║       Perros, Gatos y Pájaros                        ║
+║     • Cada uno hace su propio sonido                 ║
 ║                                                       ║
 ╚═══════════════════════════════════════════════════════╝
 ```
 
-### Diagrama Completo
+### Diagrama Simple
 
 ```
-                    📋 CLASE BASE
-                    ═════════════
-                    Propiedades comunes
-                    Métodos comunes
-                    Métodos virtuales
+                    � ANIMAL
+                    Nombre, Edad
+                    HacerSonido()
                           │
-                          │ hereda
-                          ↓
         ┌─────────────────┼─────────────────┐
-        │                 │                 │
         ↓                 ↓                 ↓
-    HIJO 1           HIJO 2           HIJO 3
-    ══════           ══════           ══════
-    + Hereda todo    + Hereda todo    + Hereda todo
-    + Agrega props   + Agrega props   + Agrega props
-    + Override mtds  + Override mtds  + Override mtds
-        │                 │                 │
-        └─────────────────┴─────────────────┘
-                          │
-                          ↓
-              🎭 POLIMORFISMO
-              Lista<Base> puede contener
-              todos los tipos de hijos
+    🐕 Perro          🐱 Gato          🐦 Pájaro
+    + Raza           + Color          + PuedeVolar
+    Guau Guau!       Miau Miau!       Pío Pío!
 ```
 
-## 🚀 Próximos Pasos
+## 🎯 Para Practicar
 
-Has completado los fundamentos de POO. Ahora estás listo para:
-- ✅ Interfaces
-- ✅ Clases abstractas avanzadas
-- ✅ Patrones de diseño
-- ✅ Proyectos más complejos
+1. **Haz el ejercicio de Frutas** - Es el más fácil y te ayudará a entender
+2. **Modifica el ejemplo de Animales** - Agrega más animales (Conejo, Pez, etc.)
+3. **Crea tu propio sistema** - Piensa en algo que te guste (videojuegos, deportes, etc.)
 
 ---
 
-**💡 Recuerda:** La herencia es una herramienta poderosa. Úsala cuando tengas una relación **"ES UN"**. Por ejemplo: Un Perro **ES UN** Animal, Un Auto **ES UN** Vehículo.
+**💡 Recuerda:** 
+- Herencia = **"ES UN"** (Perro ES UN Animal)
+- Use herencia para no repetir código
+- Cada hijo puede tener su propia versión de los métodos
 
-**🎯 Practica mucho:** Crea jerarquías, experimenta con polimorfismo, y verás cómo tu código se vuelve más organizado y reutilizable.
+**🎯 Siguiente paso:** Practica con los ejercicios y luego avanzaremos a temas más interesantes!
