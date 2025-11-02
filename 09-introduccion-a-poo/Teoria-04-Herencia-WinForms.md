@@ -1,4 +1,4 @@
-# 📖 Teoría 04: Herencia en POO con Windows Forms
+﻿# 📖 Teoría 04: Herencia en POO con Windows Forms
 
 ## 🎯 Objetivos de Aprendizaje
 Al finalizar esta lección, podrás:
@@ -246,20 +246,20 @@ public class Gato : Animal
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Clase Hija 3: Pajaro
+// Clase Hija 3: PAJARO
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-public class Pajaro : Animal
+public class PAJARO : Animal
 {
     // Propiedad adicional
     public bool PuedeVolar { get; set; }
     
     // Constructor
-    public Pajaro() : base()
+    public PAJARO() : base()
     {
         PuedeVolar = true;
     }
     
-    public Pajaro(string nombre, int edad, bool puedeVolar) : base(nombre, edad)
+    public PAJARO(string nombre, int edad, bool puedeVolar) : base(nombre, edad)
     {
         PuedeVolar = puedeVolar;
     }
@@ -284,7 +284,7 @@ public class Pajaro : Animal
 ### Visual de la Jerarquía
 
 ```
-                    � ANIMAL (Clase Padre)
+                    🐾 ANIMAL (Clase Padre)
                     ═══════════════════════
                     - Nombre
                     - Edad
@@ -294,7 +294,7 @@ public class Pajaro : Animal
         ┌────────────────┼────────────────┐
         │                │                │
         ↓                ↓                ↓
-    🐕 PERRO         � GATO         � PAJARO
+    🐕 Perro          Gato          PAJARO
     ═════════        ═════════        ══════════
     + Hereda todo    + Hereda todo    + Hereda todo
     + Raza           + Color          + PuedeVolar
@@ -308,7 +308,7 @@ public class Pajaro : Animal
 
 ```
 ┌──────────────────────────────────────────────────┐
-│  � Registro de Animales                         │
+│   Registro de Animales                         │
 ├──────────────────────────────────────────────────┤
 │                                                  │
 │  Nombre: [txtNombre          ]                   │
@@ -582,7 +582,7 @@ namespace MisAnimales
                 {
                     // Crear un Pájaro
                     bool puedeVolar = datoEspecifico.ToLower() == "si";
-                    nuevoAnimal = new Pajaro(nombre, edad, puedeVolar);
+                    nuevoAnimal = new PAJARO(nombre, edad, puedeVolar);
                 }
                 
                 // 4. Agregar a la lista (¡POLIMORFISMO!)
@@ -653,9 +653,9 @@ namespace MisAnimales
                 if (animal is Perro)
                     icono = "🐕";
                 else if (animal is Gato)
-                    icono = "�";
-                else if (animal is Pajaro)
-                    icono = "�";
+                    icono = "🐈";
+                else if (animal is PAJARO)
+                    icono = "🐦";
                 
                 lstAnimales.Items.Add($"{icono} {animal.Nombre} ({animal.Edad} años)");
             }
@@ -680,7 +680,7 @@ namespace MisAnimales
 ### 🎯 ¿Por Qué Dos Archivos?
 
 ```
-FormEmpleados.Designer.cs       FormEmpleados.cs
+FormAnimales.Designer.cs       FormAnimales.cs
         ↓                              ↓
     DISEÑO VISUAL                    LÓGICA
     ═════════════                  ═══════════
@@ -702,13 +702,13 @@ FormEmpleados.Designer.cs       FormEmpleados.cs
 
 ### 🔍 ¿Qué Va en Cada Archivo?
 
-**FormEmpleados.Designer.cs:**
+**FormAnimales.Designer.cs:**
 - Creación de controles (new Button(), new TextBox(), etc.)
 - Propiedades visuales (tamaño, posición, color, fuente)
 - Método InitializeComponent()
 - Declaración de variables de controles
 
-**FormEmpleados.cs:**
+**FormAnimales.cs:**
 - Lógica de negocio
 - Eventos (_Click, _Changed, etc.)
 - Métodos auxiliares
@@ -719,24 +719,24 @@ FormEmpleados.Designer.cs       FormEmpleados.cs
 
 ```
 ┌───────────────────────────────────────────────────────┐
-│  Lista: List<Empleado> empleados                      │
-│  ═══════════════════════════════════                  │
+│  Lista: List<Animal> animales                         │
+│  ═════════════════════════                            │
 │                                                       │
-│  [0] ──→ 📦 EmpleadoPorHora                           │
-│           (ES UN Empleado)                            │
-│           CalcularSalario() → Base + (Horas * Tarifa)│
+│  [0] ──→  🐕 Perro                                     │
+│           (ES UN Animal)                              │
+│           HacerSonido() → "Guau Guau!"               │
 │                                                       │
-│  [1] ──→ 📦 EmpleadoComision                          │
-│           (ES UN Empleado)                            │
-│           CalcularSalario() → Base + (Ventas * %)    │
+│  [1] ──→  🐈 Gato                                      │
+│           (ES UN Animal)                              │
+│           HacerSonido() → "Miau Miau!"               │
 │                                                       │
-│  [2] ──→ 📦 Gerente                                   │
-│           (ES UN Empleado)                            │
-│           CalcularSalario() → Base + Bono            │
+│  [2] ──→  🐦 Pájaro                                   │
+│           (ES UN Animal)                              │
+│           HacerSonido() → "Pío Pío!"                 │
 │                                                       │
 └───────────────────────────────────────────────────────┘
 
-Cuando haces: empleado.CalcularSalario()
+Cuando haces: animal.HacerSonido()
 
 El programa AUTOMÁTICAMENTE sabe qué versión usar
 según el tipo REAL del objeto (Polimorfismo)
@@ -808,30 +808,30 @@ public override string Metodo()
 ### 3. El operador `is`
 
 ```csharp
-Empleado emp = empleados[0];
+Animal animal = animales[0];
 
-if (emp is EmpleadoPorHora)
+if (animal is Perro)
 {
-    MessageBox.Show("Este empleado es por hora");
+    MessageBox.Show("Este animal es un Perro");
 }
-else if (emp is Gerente)
+else if (animal is Gato)
 {
-    MessageBox.Show("Este empleado es gerente");
+    MessageBox.Show("Este animal es un Gato");
 }
 ```
 
 ### 4. El operador `as`
 
 ```csharp
-Empleado emp = empleados[0];
+Animal animal = animales[0];
 
-// Intentar convertir a EmpleadoPorHora
-EmpleadoPorHora empHora = emp as EmpleadoPorHora;
+// Intentar convertir a Perro
+Perro Perro = animal as Perro;
 
-if (empHora != null)
+if (perro != null)
 {
-    // Sí es EmpleadoPorHora, usar propiedades específicas
-    MessageBox.Show($"Horas: {empHora.HorasTrabajadas}");
+    // Sí es un Perro, usar propiedades específicas
+    MessageBox.Show($"Raza: {perro.Raza}");
 }
 ```
 
@@ -843,15 +843,15 @@ Crea tu propio sistema de herencia con vehículos:
 
 ```csharp
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// CLASE BASE - Vehiculo
+// CLASE BASE - VEHICULO
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-public class Vehiculo
+public class VEHICULO
 {
     public string Marca { get; set; }
     public string Modelo { get; set; }
     public int Año { get; set; }
     
-    public Vehiculo(string marca, string modelo, int año)
+    public VEHICULO(string marca, string modelo, int año)
     {
         Marca = marca;
         Modelo = modelo;
@@ -870,13 +870,13 @@ public class Vehiculo
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// CLASE HIJA - Auto
+// CLASE HIJA - AUTO
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-public class Auto : Vehiculo
+public class AUTO : VEHICULO
 {
     public int NumeroPuertas { get; set; }
     
-    public Auto(string marca, string modelo, int año, int puertas) 
+    public AUTO(string marca, string modelo, int año, int puertas) 
         : base(marca, modelo, año)
     {
         NumeroPuertas = puertas;
@@ -884,13 +884,13 @@ public class Auto : Vehiculo
     
     public override string Acelerar()
     {
-        return "El auto acelera suavemente 🚗";
+        return "El AUTO acelera suavemente 🚗";
     }
     
     public override string ObtenerInfo()
     {
         return base.ObtenerInfo() + 
-               $"\nTipo: Auto" +
+               $"\nTipo: AUTO" +
                $"\nPuertas: {NumeroPuertas}";
     }
 }
@@ -898,7 +898,7 @@ public class Auto : Vehiculo
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // CLASE HIJA - Moto
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-public class Moto : Vehiculo
+public class Moto : VEHICULO
 {
     public int Cilindrada { get; set; }
     
@@ -925,7 +925,7 @@ public class Moto : Vehiculo
 ### Visual de Vehículos
 
 ```
-                    � VEHICULO
+                     VEHICULO
                     ═══════════
                     - Marca
                     - Modelo
@@ -936,7 +936,7 @@ public class Moto : Vehiculo
         ┌────────────────┴────────────────┐
         │                                 │
         ↓                                 ↓
-    � AUTO                           🏍️ MOTO
+    🚗 AUTO                           🏍️ MOTO
     ════════                          ═══════
     + Hereda todo                     + Hereda todo
     + NumeroPuertas                   + Cilindrada
@@ -975,11 +975,11 @@ public class Moto : Vehiculo
 
 Usa herencia cuando tengas una relación **"ES UN"**:
 - Un Perro **ES UN** Animal ✅
-- Un Auto **ES UN** Vehículo ✅
+- Un AUTO **ES UN** Vehículo ✅
 - Un Estudiante **ES UNA** Persona ✅
 
 NO uses herencia cuando sea **"TIENE UN"**:
-- Un Auto **TIENE UN** Motor ❌ (mejor usar composición)
+- Un AUTO **TIENE UN** Motor ❌ (mejor usar composición)
 
 ### ❓ ¿Puedo heredar de múltiples clases?
 
@@ -1070,7 +1070,7 @@ Crea un sistema completo:
 ### Diagrama Simple
 
 ```
-                    � ANIMAL
+                    🐾 ANIMAL
                     Nombre, Edad
                     HacerSonido()
                           │
